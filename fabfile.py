@@ -174,16 +174,6 @@ def test():
 
 # production (fabric-public methods) ==========================================
 
-@task
-def fast_deploy():
-    """
-    Update code on the servers, does not start or restart any services
-    """
-    local("git push")
-    with cd(DEPLOY_PATH):
-        puts("Deploying project %s" % PROJECT)
-        run('git pull')
-
 
 @task
 def update_nginx():
@@ -318,11 +308,13 @@ def check_sudo():
     """
     sudo("uname -a")
 
+
 def nginx(cmd):
     """
     Manage the nginx service. For example, `fab nginx:restart`.
     """
     sudo('/etc/init.d/nginx %s' % cmd)
+
 
 def memcached(cmd):
     """
@@ -330,6 +322,7 @@ def memcached(cmd):
     """
     return None
     sudo('/etc/init.d/memcached %s' % cmd)
+
 
 def managepy(cmd, remote=True):
     """
@@ -342,11 +335,13 @@ def managepy(cmd, remote=True):
         with lcd(BASEDIR):
             local('%s/%s %s %s' % (CMSHOSTING_LOCAL, PYTHON, MANAGE, cmd))
 
+
 def collectstatic(remote=True):
     """
     Run django collectstatic
     """
     managepy('collectstatic --noinput', remote)
+
 
 def migrate(remote=True, first=False):
     with lcd(BASEDIR):
@@ -365,10 +360,12 @@ def migrate(remote=True, first=False):
     else:
         managepy('syncdb --noinput', remote)
 
+
 def check_installed_app(app):
     with lcd(BASEDIR):
         return bool(local("%s/%s -c 'from %s.settings import INSTALLED_APPS; print(\"%s\" in INSTALLED_APPS)'" % (CMSHOSTING_LOCAL, PYTHON, PROJECT, app), capture=True))
     return False
+
 
 def supervisor(cmd):
     """
