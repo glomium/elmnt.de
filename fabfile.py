@@ -32,6 +32,13 @@ PYTHON = "virtenv/bin/python"
 DJANGO = "virtenv/bin/django-admin.py"
 MANAGE = "manage.py"
 
+# used as template variables for uploaded files
+KWARGS = {
+    'project': PROJECT,
+    'user': env.user,
+    'basedir': DEPLOY_PATH,
+    'app': None,
+}
 
 # overwrite this methods ======================================================
 
@@ -173,6 +180,7 @@ def test():
 
 
 # production (fabric-public methods) ==========================================
+#       files.upload_template('remote_settings.py', PROJECT+'/local_settings.py', context=KWARGS, use_jinja=True)
 
 
 @task
@@ -182,12 +190,22 @@ def update_nginx():
 
 @task
 def install_remote():
-    pass
+    if files.exists(DEPLOY_PATH):
+        puts("%s already exists on remote" % DEPLOY_PATH)
+        exit(1)
+    git = local("git remote -v | grep origin | grep push | awk '{ print $2 }'", capture=True)
+    run('git clone %s %s' % (git, DEPLOY_PATH))
+    for app in APPS:
+        files.upload_template('remote_settings.py', app+'/local_settings.py', context=KWARGS, use_jinja=True)
+
+    managepy('syncdb --noinput --all', remote)
+    managepy('migrate --fake', remote)
 
 
 @task
 def upgrade_remote():
     if not files.exists(DEPLOY_PATH):
+        puts("%s does not exist on remote" % DEPLOY_PATH)
         exit(1)
 
 
@@ -196,6 +214,9 @@ def deploy():
     """
     Update code on the servers, no nginx changes!
     """
+    if not files.exists(DEPLOY_PATH):
+        puts("%s does not exist on remote" % DEPLOY_PATH)
+        exit(1)
     local("git push")
     run('git pull')
     managepy('collectstatic --noinput')
