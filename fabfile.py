@@ -180,7 +180,6 @@ def test():
 
 
 # production (fabric-public methods) ==========================================
-#       files.upload_template('remote_settings.py', PROJECT+'/local_settings.py', context=KWARGS, use_jinja=True)
 
 
 @task
@@ -198,8 +197,8 @@ def install_remote():
     for app in APPS:
         files.upload_template('remote_settings.py', DEPLOY_PATH + '/' + app + '/local_settings.py', context=KWARGS, use_jinja=True)
 
-    managepy('syncdb --noinput --all', remote)
-    managepy('migrate --fake', remote)
+    managepy('syncdb --noinput --all', True)
+    managepy('migrate --fake', True)
 
 
 @task
