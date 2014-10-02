@@ -137,6 +137,9 @@ def install():
             managepy('loaddata fixtures_live.json', False)
         elif os.path.exists('fixtures_initial.json'):
             managepy('loaddata fixtures_initial.json', False)
+        else:
+            managepy('createsuperuser', False)
+
 
         project.rsync_project(
             remote_dir=DEPLOY_PATH + '/media/',
@@ -184,22 +187,38 @@ def test():
 
 @task
 def update_nginx():
-    pass
+    """
+    install
+    R: ln -s /var/www/cmshosting/projects/griba/nginx.conf /var/www/cmshosting/configs/nginx/griba-griba.conf
+    R: touch /var/www/cmshosting/configs/uwsgi.ini
+    R: sudo service nginx reload
+    """
+    check_sudo()
 
 
 @task
 def install_remote():
+    """
+    install the project on the remote server
+    """
+    check_sudo()
+
     if files.exists(DEPLOY_PATH):
         puts("%s already exists on remote" % DEPLOY_PATH)
         exit(1)
+
     git = local("git remote -v | grep origin | grep push | awk '{ print $2 }'", capture=True)
     run('git clone %s %s' % (git, DEPLOY_PATH))
     for app in APPS:
-        files.upload_template('remote_settings.py', DEPLOY_PATH + '/' + app + '/local_settings.py', context=KWARGS, use_jinja=True)
+        files.upload_template('remote_settings.py', DEPLOY_PATH + '/' + app + '/local_settings.py', context=KWARGS, use_jinja=True)  # TODO
 
     managepy('syncdb --noinput --all', True)
     managepy('migrate --fake', True)
+    managepy('collectstatic --noinput', True)
+    # TODO create superuser or upload db
+    # managepy('createsuperuser', True)
 
+    update_nginx()
 
 @task
 def upgrade_remote():
@@ -236,18 +255,6 @@ def deploy():
 
 #   exit(1)
 
-    """
-    install
-    L: git push
-    R: git clone git@igelware.de:griba
-    L: scp remote_settings.py igelware-group:/var/www/cmshosting/projects/griba/griba/local_settings.py
-    R: /var/www/cmshosting/virtenv/bin/python manage.py collectstatic --noinput
-    R: /var/www/cmshosting/virtenv/bin/python manage.py syncdb --all --noinput
-    R: /var/www/cmshosting/virtenv/bin/python manage.py migrate --fake
-    R: ln -s /var/www/cmshosting/projects/griba/nginx.conf /var/www/cmshosting/configs/nginx/griba-griba.conf
-    R: touch /var/www/cmshosting/configs/uwsgi.ini
-    R: sudo service nginx reload
-    """
 
     """
     update
