@@ -196,7 +196,7 @@ def install_remote():
     git = local("git remote -v | grep origin | grep push | awk '{ print $2 }'", capture=True)
     run('git clone %s %s' % (git, DEPLOY_PATH))
     for app in APPS:
-        files.upload_template('remote_settings.py', app+'/local_settings.py', context=KWARGS, use_jinja=True)
+        files.upload_template('remote_settings.py', DEPLOY_PATH + '/' + app + '/local_settings.py', context=KWARGS, use_jinja=True)
 
     managepy('syncdb --noinput --all', remote)
     managepy('migrate --fake', remote)
