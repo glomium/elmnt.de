@@ -236,11 +236,12 @@ def deploy():
         puts("%s does not exist on remote" % DEPLOY_PATH)
         exit(1)
     local("git push")
-    run('git pull')
-    managepy('collectstatic --noinput')
-    managepy('syncdb --noinput')
-    managepy('migrate')
-    run('touch %s/configs/uwsgi.ini')
+    with cd(DEPLOY_PATH):
+        run('git pull')
+        managepy('collectstatic --noinput')
+        managepy('syncdb --noinput')
+        managepy('migrate')
+        run('touch %s/configs/uwsgi.ini' % CMSHOSTING_REMOTE)
 
 
 #   # check_sudo()
