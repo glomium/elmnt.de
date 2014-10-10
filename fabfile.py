@@ -230,7 +230,7 @@ def upgrade_remote():
 @task
 def fast_deploy():
     """
-    Update code on the servers, no nginx changes!
+    Update code on the servers, no nginx+uwsgi changes!
     """
     if not files.exists(DEPLOY_PATH):
         puts("%s does not exist on remote" % DEPLOY_PATH)
@@ -245,12 +245,9 @@ def deploy():
     """
     Update code on the servers, no nginx changes!
     """
-    if not files.exists(DEPLOY_PATH):
-        puts("%s does not exist on remote" % DEPLOY_PATH)
-        exit(1)
-    local("git push")
+    fast_deploy()
+
     with cd(DEPLOY_PATH):
-        run('git pull')
         managepy('collectstatic --noinput')
         managepy('syncdb --noinput')
         managepy('migrate')
