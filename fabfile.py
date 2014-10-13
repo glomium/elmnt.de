@@ -166,6 +166,7 @@ def install():
         else:
             managepy('createsuperuser', False)
 
+        managepy('collectstatic --noinput', False)
 
         project.rsync_project(
             remote_dir=DEPLOY_PATH + '/media/',
@@ -173,7 +174,6 @@ def install():
             upload=False,
         )
 
-        managepy('collectstatic --noinput', False)
 
 @task
 def copy_db():
