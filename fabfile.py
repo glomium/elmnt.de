@@ -397,10 +397,10 @@ def managepy(cmd, remote=True, app=None):
 
     if remote:
         with cd(DEPLOY_PATH):
-            run('export DJANGO_SETTINGS_MODULE=%s && %s/%s %s %s' % (app, CMSHOSTING_REMOTE, PYTHON, MANAGE, cmd))
+            run('export DJANGO_SETTINGS_MODULE=%s.settings && %s/%s %s %s' % (app, CMSHOSTING_REMOTE, PYTHON, MANAGE, cmd))
     else:
         with lcd(BASEDIR):
-            local('export DJANGO_SETTINGS_MODULE=%s && %s/%s %s %s' % (app, CMSHOSTING_LOCAL, PYTHON, MANAGE, cmd))
+            local('export DJANGO_SETTINGS_MODULE=%s.settings && %s/%s %s %s' % (app, CMSHOSTING_LOCAL, PYTHON, MANAGE, cmd))
 
 
 def collectstatic(remote=True):
