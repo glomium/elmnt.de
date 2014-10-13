@@ -126,27 +126,25 @@ def watchstatic():
 @task
 def init():
     with lcd(BASEDIR):
-        if os.path.exists("media"):
+        if not os.path.exists("media"):
             local("mkdir media")
-        if os.path.exists("static"):
+        if not os.path.exists("static"):
             local("mkdir static")
-        if os.path.exists("less"):
+        if not os.path.exists("less"):
             local("mkdir less")
-        if os.path.exists("js"):
+        if not os.path.exists("js"):
             local("mkdir js")
         for app in APPS:
-            if os.path.exists(app) and os.path.isdir(app):
-                continue
+            if not os.path.exists(app) and not os.path.isdir(app):
+                local("git checkout project_template -- project_template")
+                local("mv project_template %s" % app)
+                local("git rm -r project_template")
+                local("sed -i 's/{{ APP }}/%s/g' %s/settings.py" % (app, app))
 
-            local("git checkout project_template -- project_template")
-            local("mv project_template %s" % app)
-            local("git rm -r project_template")
-            local("sed -i 's/{{ APP }}/%s/g' %s/settings.py" % (app, app))
-
-            if os.path.exists('less/%s.less' % app):
+            if not os.path.exists('less/%s.less' % app):
                 local("touch less/%s.less" % app)
 
-            if os.path.exists('js/%s.js' % app):
+            if not os.path.exists('js/%s.js' % app):
                 local("touch js/%s.js" % app)
 
 
