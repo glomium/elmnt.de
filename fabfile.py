@@ -177,6 +177,13 @@ def install():
             upload=False,
         )
 
+@task
+def export_local_db():
+    '''
+    '''
+    with lcd(BASEDIR):
+        managepy('dumpdata -n --indent=1 %s > fixtures_live.json' % (' -e '.join(COPY_DB_EXCLUDE)), False)
+
 
 @task
 def copy_db():
