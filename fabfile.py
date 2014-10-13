@@ -187,25 +187,25 @@ def copy_db():
         managepy('loaddata fixtures_live.json', False)
 
 @task
-def start():
+def start(app=None):
     """
     starts the project locally
     """
-    managepy('runserver 8000', False)
+    managepy('runserver 8000', False, app)
 
 @task
-def shell():
+def shell(app=None):
     """
     starts a shell locally
     """
-    managepy('shell', False)
+    managepy('shell', False, app)
 
 @task
-def test():
+def test(app=None):
     """
     starts a test locally
     """
-    managepy('test', False)
+    managepy('test', False, app)
 
 
 # production (fabric-public methods) ==========================================
@@ -388,16 +388,19 @@ def memcached(cmd):
     sudo('/etc/init.d/memcached %s' % cmd)
 
 
-def managepy(cmd, remote=True):
+def managepy(cmd, remote=True, app=None):
     """
     Helper: run a management command remotely.
     """
+    if not app:
+        app = APPS.keys()[0]
+
     if remote:
         with cd(DEPLOY_PATH):
-            run('%s/%s %s %s' % (CMSHOSTING_REMOTE, PYTHON, MANAGE, cmd))
+            run('export DJANGO_SETTINGS_MODULE=%s && %s/%s %s %s' % (app, CMSHOSTING_REMOTE, PYTHON, MANAGE, cmd))
     else:
         with lcd(BASEDIR):
-            local('%s/%s %s %s' % (CMSHOSTING_LOCAL, PYTHON, MANAGE, cmd))
+            local('export DJANGO_SETTINGS_MODULE=%s && %s/%s %s %s' % (app, CMSHOSTING_LOCAL, PYTHON, MANAGE, cmd))
 
 
 def collectstatic(remote=True):
