@@ -123,6 +123,17 @@ def watchstatic():
         notifier.loop()
 
 @task
+def init():
+    with lcd(BASEDIR):
+        for app in APPS:
+            if os.path.exists(app) and os.path.isdir(app):
+                continue
+
+            local("git checkout project_template -- project_template")
+            local("mv project_template %s" % app)
+            local("sed -i 's/{{ APP }}/%s/g' %s/settings.py" % (app, app))
+
+@task
 def install():
     """
     installs the project locally
