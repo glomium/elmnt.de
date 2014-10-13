@@ -72,7 +72,7 @@ def css():
     with lcd(BASEDIR):
         for app in APPS.keys():
             local('lessc less/%s.less > bootstrap.css' % app)
-            local('yui-compressor --type css -o media/css/%s-bootstrap.min.css bootstrap.css' % app)
+            local('yui-compressor --type css -o media/css/%s.min.css bootstrap.css' % app)
         local('rm bootstrap.css')
 
 @task
@@ -81,9 +81,9 @@ def js():
     compiles/copies js
     """
     with lcd(BASEDIR):
+        local('cp submodules/bootstrap/dist/js/bootstrap.min.js media/js/')
         for app in APPS:
-            local('cp js/jquery.min.js media/js/')
-            local('cp submodules/bootstrap/dist/js/bootstrap.min.js media/js/')
+            local('yui-compressor --type js -o media/js/%s.min.js js/%s.js' % (app, app))
 
 
 # development (fabric-public methods) =========================================
@@ -128,6 +128,9 @@ def init():
     with lcd(BASEDIR):
         if not os.path.exists("media"):
             local("mkdir media")
+            local("mkdir media/js")
+            local("mkdir media/css")
+            local("mkdir media/fonts")
         if not os.path.exists("static"):
             local("mkdir static")
         if not os.path.exists("less"):
