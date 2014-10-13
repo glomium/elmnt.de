@@ -164,8 +164,6 @@ def install():
             copy_db()
         elif os.path.exists('fixtures_live.json'):
             managepy('loaddata fixtures_live.json', False)
-        elif os.path.exists('fixtures_initial.json'):
-            managepy('loaddata fixtures_initial.json', False)
         else:
             managepy('createsuperuser', False)
 
@@ -251,8 +249,6 @@ def install_remote():
     managepy('syncdb --noinput --all', True)
     managepy('migrate --fake', True)
     managepy('collectstatic --noinput', True)
-    # TODO create superuser or upload db
-    # managepy('createsuperuser', True)
 
     update_nginx()
 
