@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 """
 
 import os
+import sys
+
 gettext = lambda s: s
 BASE_DIR = os.path.dirname(__file__)
 
@@ -189,12 +191,13 @@ except ImportError:
         }
     }
 
-    INSTALLED_APPS += (
-        'debug_toolbar',
-    )
-    MIDDLEWARE_CLASSES += (
-        'debug_toolbar.middleware.DebugToolbarMiddleware',
-    )
+    if 'runserver' in sys.argv:
+        INSTALLED_APPS += (
+            'debug_toolbar',
+        )
+        MIDDLEWARE_CLASSES += (
+            'debug_toolbar.middleware.DebugToolbarMiddleware',
+        )
 
 
 # LOGGING =========================================================================
