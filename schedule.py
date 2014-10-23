@@ -20,4 +20,4 @@ if __name__ == "__main__":
         call_command('clearsessions', interactive=False)
 
     if intervall == "h" and "haystack" in settings.INSTALLED_APPS:
-        call_command('update_index', interactive=False, verbosity=0)
+        call_command('update_index', age=24, interactive=False, verbosity=0)
