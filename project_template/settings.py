@@ -25,8 +25,6 @@ ADMINS = (
 )
 MANAGERS = ADMINS
 INTERNAL_IPS = ('127.0.0.1', '85.25.139.15')
-#DEFAULT_FROM_EMAIL="info@griba-kristiansen.de"
-#SERVER_EMAIL="griba-noreply@igel-ware.de"
 DEFAULT_FROM_EMAIL="team@igelware.de"
 SERVER_EMAIL="noreply@igelware.de"
 
@@ -42,6 +40,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.sitemaps',
+
+  # 'aldryn_search',
 
   # 'cmsplugin_bootstrap',
   # 'cmsplugin_cascade',
@@ -65,6 +65,7 @@ INSTALLED_APPS = (
     'sekizai',
     'reversion',
   # 'filer',
+  # 'haystack',
   # 'easy_thumbnails',
   # 'crispy_forms',
 )
@@ -123,6 +124,15 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, "templates"),
 )
+
+# HAYSTACK ====================================================================
+
+#HAYSTACK_CONNECTIONS = {
+#    'default': {
+#        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+#        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+#    },
+#}
 
 # CMS =========================================================================
 
