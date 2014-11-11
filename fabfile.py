@@ -7,10 +7,6 @@ from fabric.contrib import project
 
 import os
 
-# Fab settings
-env.hosts = ['igelware-group']
-env.use_ssh_config = True
-
 PROJECT = "PROJECT"
 APPS = {
     "PROJECT": {
@@ -20,13 +16,63 @@ APPS = {
     }
 }
 
+DEPLOY = {
+    'dev': {
+        # False/None/Empty or path to (shared) hosting env
+        # if Path the project won't be installed with the cmshosting package
+        'cmshosting': '/var/www/cmshosting',
+        # path to the project
+        'project_path': "%(cmshosting)s/projects/%(project)s",
+        'nginx': "",
+        'use_sudo': True,
+        'ssh_host': 'igelware-group',
+        # overwrite virtualenv executable
+        # 'virtualenv': 'virtualenv',
+    },
+}
+DEPLOY_DEFAULT = 'dev'
 
 CMSHOSTING_REMOTE = "/var/www/cmshosting"
 CMSHOSTING_LOCAL = "/home/sbraun/Projects/cmshosting"
 BASEDIR = os.path.dirname( env.real_fabfile )
 
+
+def parse_deploy(config=DEPLOY_DEFAULT):
+    template = DEPLOY.get(config)
+    template['project'] = PROJECT
+
+    deploy = {}
+    if not template.get('cmshosting', False):
+        deploy['use_cmshosting'] = False
+        deploy['cmshosting'] = template['project_path'] % template
+    else:
+        deploy['use_cmshosting'] = True
+        deploy['cmshosting'] = template['cmshosting'] % template
+    deploy['project_path'] = template['project_path'] % template
+    deploy['use_sudo'] = template.get('use_sudo', False)
+    deploy['settings'] = template.get(
+        'settings',
+        'settings_%s_%%s.py' % config
+    )
+    deploy['ssh_host'] = template.get('ssh_host', None)
+    deploy['virtualenv'] = template.get('virtualenv', 'virtualenv')
+
+    return deploy
+
+DEPLOY_INFO = parse_deploy();
+
+# Fab settings
+if DEPLOY_INFO['ssh_host']:
+    env.hosts = [DEPLOY_INFO['ssh_host'],]
+env.use_ssh_config = True
+
+
 DEPLOY_PATH = "%s/projects/%s" % (CMSHOSTING_REMOTE, PROJECT)
 DEPLOY_NGINX = "%s/configs/nginx/%s-%%s.conf" % (CMSHOSTING_REMOTE, PROJECT)
+# Fab settings
+env.hosts = ['igelware-group']
+env.use_ssh_config = True
+
 
 PYTHON = "virtenv/bin/python"
 DJANGO = "virtenv/bin/django-admin.py"
@@ -36,9 +82,20 @@ MANAGE = "manage.py"
 KWARGS = {
     'project': PROJECT,
     'user': env.user,
-    'basedir': DEPLOY_PATH,
+    'basedir': DEPLOY_INFO['project_path'],
     'app': None,
+    'cmshosting': DEPLOY_INFO['cmshosting'],
+    'use_cmshosting': DEPLOY_INFO['use_cmshosting'],
 }
+
+### OLD SETTINGS BELOW THIS LINE ########################################################
+
+CMSHOSTING_REMOTE = "/var/www/cmshosting" # OLD
+
+DEPLOY_PATH = "%s/projects/%s" % (CMSHOSTING_REMOTE, PROJECT)
+DEPLOY_NGINX = "%s/configs/nginx/%s-%%s.conf" % (CMSHOSTING_REMOTE, PROJECT)
+
+
 
 # overwrite this methods ======================================================
 
@@ -195,6 +252,7 @@ def copy_db():
         run('rm %s/dumpdata.json' % DEPLOY_PATH)
         managepy('loaddata fixtures_live.json', False)
 
+
 @task
 def start(app=None):
     """
@@ -202,12 +260,14 @@ def start(app=None):
     """
     managepy('runserver 8000', False, app)
 
+
 @task
 def shell(app=None):
     """
     starts a shell locally
     """
     managepy('shell', False, app)
+
 
 @task
 def test(app=None):
@@ -238,20 +298,38 @@ def install_remote():
     """
     check_sudo()
 
-    if files.exists(DEPLOY_PATH):
-        puts("%s already exists on remote" % DEPLOY_PATH)
+    if files.exists(DEPLOY_INFO['project_path']):
+        puts("%s already exists on remote" % DEPLOY_INFO['project_path'])
         exit(1)
 
     git = local("git remote -v | grep origin | grep push | awk '{ print $2 }'", capture=True)
-    run('git clone %s %s' % (git, DEPLOY_PATH))
-    for app in APPS:
-        files.upload_template('remote_settings.py', DEPLOY_PATH + '/' + app + '/local_settings.py', context=KWARGS, use_jinja=True)  # TODO
+    run('git clone %s %s' % (git, DEPLOY_INFO['project_path']))
 
+    if not DEPLOY_INFO['cms_hosting']:
+        # create virtualenv and install requirements
+        # TODO
+        print("TODO: create virtualenv and install requirements")
+        pass
+
+    upgrade_remote_settings()
+
+    # TODO Do this for every APP
     managepy('syncdb --noinput --all', True)
     managepy('migrate --fake', True)
     managepy('collectstatic --noinput', True)
 
     update_nginx()
+
+
+def upgrade_remote_settings():
+    for app in APPS:
+        files.upload_template(
+            DEPLOY_INFO['settings'] % app,
+            DEPLOY_INFO['project_path'] + '/' + app + '/local_settings.py',
+            context=KWARGS,
+            use_jinja=True,
+        )
+
 
 @task
 def upgrade_remote():
@@ -265,11 +343,11 @@ def fast_deploy():
     """
     Update code on the servers, no nginx+uwsgi changes!
     """
-    if not files.exists(DEPLOY_PATH):
-        puts("%s does not exist on remote" % DEPLOY_PATH)
+    if not files.exists(DEPLOY_INFO['project_path']):
+        puts("%s already exists on remote" % DEPLOY_INFO['project_path'])
         exit(1)
     local("git push")
-    with cd(DEPLOY_PATH):
+    with cd(DEPLOY_INFO['project_path']):
         run('git pull')
 
 
@@ -280,10 +358,13 @@ def deploy():
     """
     fast_deploy()
 
+    upgrade_remote_settings()
+
     with cd(DEPLOY_PATH):
         managepy('collectstatic --noinput')
         managepy('syncdb --noinput')
         managepy('migrate')
+
     run('touch %s/configs/uwsgi.ini' % CMSHOSTING_REMOTE)
 
 
@@ -377,7 +458,8 @@ def check_sudo():
     """
     check if user has sudo permissions
     """
-    sudo("uname -a")
+    if DEPLOY_INFO['use_sudo']:
+        sudo("uname -a")
 
 
 def nginx(cmd):
