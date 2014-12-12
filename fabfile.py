@@ -309,6 +309,16 @@ def start(app=None):
     """
     if not hasattr(env, 'CFG'):
         localhost()
+    managepy('runserver 0.0.0.0:8000')
+
+
+@task
+def start_uwsgi(app=None):
+    """
+    starts the project locally using uwsgi
+    """
+    if not hasattr(env, 'CFG'):
+        localhost()
 
     if not app:
         app = APPS.keys()[0]
