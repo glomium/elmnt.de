@@ -1,0 +1,39 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-10 01:32+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: settings.py:152
+msgid "Template without sidebar"
+msgstr "Template ohne Sidebar"
+
+#: settings.py:153
+msgid "Template with sidebar"
+msgstr "Template mit Sidebar"
+
+#: settings.py:154
+msgid "Template coverpage"
+msgstr "Template Startseite"
+
+#: templates/language_chooser.html:6 templates/language_chooser.html.py:7
+msgid "Change language"
+msgstr "Ändere Sprache"
+
+#: templates/language_chooser.html:21
+msgid "current language"
+msgstr "Aktuelle Sprache"

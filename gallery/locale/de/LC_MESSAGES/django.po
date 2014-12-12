@@ -1,0 +1,67 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-12 10:57+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#: cms_app.py:7
+msgid "Gallery"
+msgstr "Galerie"
+
+#: models.py:14
+msgid "date"
+msgstr "Datum"
+
+#: models.py:16
+msgid "slug"
+msgstr "Schlagzeile"
+
+#: models.py:20
+msgid "created"
+msgstr "Erstellt"
+
+#: models.py:21
+msgid "modified"
+msgstr "Bearbeitet"
+
+#: models.py:26
+msgid "photo"
+msgstr "Photo"
+
+#: models.py:27
+msgid "photos"
+msgstr "Photos"
+
+#: templates/gallery/photo_detail.html:14 templates/gallery/photo_list.html:17
+msgid "Newer images"
+msgstr "Neuere Bilder"
+
+#: templates/gallery/photo_detail.html:16
+msgid "Back to the gallery"
+msgstr "Zurück zur Galerie"
+
+#: templates/gallery/photo_detail.html:18 templates/gallery/photo_list.html:21
+msgid "Older images"
+msgstr "Ältere Bilder"
+
+#: templates/gallery/photo_list.html:19
+msgid "Page"
+msgstr "Seite"
+
+#: templates/gallery/photo_list.html:19
+msgid "from"
+msgstr "von"

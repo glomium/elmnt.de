@@ -1,0 +1,36 @@
+{% extends CMS_TEMPLATE %}
+
+{% block title %}{{ block.super }} - {{ object.title }} {{ object.start|date:"l, d. F Y" }} {% endblock %}
+
+{% block content %}
+{% with object as item %}
+<div class="item-page">
+  <h2>{{ item.title }} ({{ item.location }})</h2>
+  <p>
+  {% if item.days %}
+    <b>Von: </b> {{ item.start|date:"l, d. F Y (H:i)" }}<br />
+    <b>Bis: </b> {{ item.end|date:"l, d. F Y (H:i)" }}
+  {% else %}
+    <b>Datum: </b> {{ item.start|date:"l, d. F Y" }} <br />
+    <b>Zeit: </b> {{ item.start|date:"H:i" }} - {{ item.end|date:"H:i" }} Uhr
+  {% endif %}<br />
+  {% if item.description %}
+    {{ item.description|linebreaks }}
+  {% endif %}
+  {% if item.check_participents %}
+  <ul>
+    {% for p in item.get_participents %}
+      {{ p.get_status|safe }}
+    {% endfor %}
+  </ul>
+  {% endif %}
+</div>
+{% endwith %}
+
+<form action="{{ object.get_absolute_url }}" method="post">
+{% csrf_token %}
+{{ form.as_p }}
+<input type="submit" value="Speichern" />
+</form>
+
+{% endblock %}

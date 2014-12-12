@@ -1,0 +1,12 @@
+*~
+*.swp
+*.pyc
+*-journal
+
+/\.tox
+/virtenv
+
+/media/pictures/
+/static
+/elmnt/database\.sqlite
+/elmnt\.egg-info

@@ -1,0 +1,49 @@
+{% extends "template_base.html" %}
+
+{% load cms_tags %}
+
+{% block showcase %}
+<div id="showcase" class="carousel slide hidden-xs">
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner">
+    <div class="item active" style="background-image:url({{ MEDIA_URL }}img/turkei.jpg);">
+      <img src="{{ MEDIA_URL }}img/blank.png" alt="">
+      <div class="carousel-caption">
+        <p>Aus der Luft &uuml;ber &Ouml;l&uuml;deniz</p>
+      </div>
+    </div>
+    <div class="item" style="background-image:url({{ MEDIA_URL }}img/tolmin.jpg);">
+      <img src="{{ MEDIA_URL }}img/blank.png" alt="">
+      <div class="carousel-caption">
+        <p>Das slowenische Tolmin aus dem Gleitschirm fotografiert</p>
+      </div>
+    </div>
+    <div class="item" style="background-image:url({{ MEDIA_URL }}img/zweilaender.jpg);">
+      <img src="{{ MEDIA_URL }}img/blank.png" alt="">
+      <div class="carousel-caption">
+        <p>Zweil&auml;nder-Kletterseig an der Kanzelwand bei Obersdorf</p>
+      </div>
+    </div>
+    <div class="item" style="background-image:url({{ MEDIA_URL }}img/bassano.jpg);">
+      <img src="{{ MEDIA_URL }}img/blank.png" alt="">
+      <div class="carousel-caption">
+        <p>Ein sp&auml;ter Nachmittag am Panettone in Bassano</p>
+      </div>
+    </div>
+    <div class="item" style="background-image:url({{ MEDIA_URL }}img/schirm.jpg);">
+      <img src="{{ MEDIA_URL }}img/blank.png" alt="">
+      <div class="carousel-caption">
+        <p>Mein Schirm der Arcus 6 compact von Swing</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <a class="left carousel-control" href="#showcase" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+  <a class="right carousel-control" href="#showcase" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+</div>
+{% endblock %}
+
+{% block base_content %}
+{% block content %}{% placeholder "content" %}{% endblock %}
+{% endblock %}

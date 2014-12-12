@@ -1,0 +1,50 @@
+{% load i18n cms_tags menu_tags sekizai_tags staticfiles %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="robots" content="all" />
+        <meta name="author" content="Sebastian Braun" />
+        <meta name="copyright" content="Sebastian Braun, {{ YEAR }}" />
+        <meta name="Content-Language" content="{{ LANGUAGE_CODE }}" />
+        <meta name="language" content="{{ LANGUAGE_CODE }}" />
+        <meta name="description" content="{% block meta-description %}{% endblock %}" />
+        <title>Sebastian Braun - {% block title %}{% endblock %}</title>
+        <link href="{{ MEDIA_URL }}css/elmnt.min.css" rel="stylesheet">{% render_block "css" %}
+        <link rel="shortcut icon" href="/favicon.ico" />
+    </head>
+    <body>{% cms_toolbar %}{% render_block "body" %}
+        <div class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/{{ LANGUAGE_CODE }}/">Sebastian Braun</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        {% show_menu 0 0 0 0 "bootstrap_menu.html" %}
+                        {% language_chooser "language_chooser.html" %}
+                    </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+        <div id="wrap">
+            {% block showcase %}{% endblock %}
+            <div id="main" class="container">{% block base_content %}{% endblock %}</div>
+        </div>
+    <footer>
+        <div class="container">
+            <p class="pull-right"><a href="#"><span class="glyphicon glyphicon-chevron-up"></span></a></p>
+            {% block footer %}{% endblock %}
+        </div>
+    </footer>
+    <script src="{% static "admin/js/jquery.min.js" %}"></script>
+    <script src="{{ MEDIA_URL }}js/bootstrap.min.js"></script>
+    <script src="{{ MEDIA_URL }}js/elmnt.min.js"></script>
+    {% render_block "js" %}
+    </body>
+</html>

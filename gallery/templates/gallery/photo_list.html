@@ -1,0 +1,24 @@
+{% extends CMS_TEMPLATE %}
+
+{% load thumbnail i18n %}
+
+{% block content %}
+<div class="row">
+{% for object in object_list %}
+<div class="col-sm-3"><div class="thumbnail">
+    <a href="{{ object.get_absolute_url }}">
+      <img src="{{ object.image|thumbnail_url:'gallery_thumbnail' }}" alt="{{ object.title }}">
+    </a>
+</div></div>
+{% endfor %}
+</div>
+<ul class="pager">
+    {% if page_obj.has_previous %}
+    <li class="previous"><a href="?page={{ page_obj.previous_page_number }}">{% trans "Newer images" %}</a></li>
+    {% endif %}
+    <li class="disabled"><a href="#">{% trans "Page" %} {{ page_obj.number }} {% trans "from" %} {{ paginator.num_pages }}</a></li>
+    {% if page_obj.has_next %}
+    <li class="next"><a href="?page={{ page_obj.next_page_number }}">{% trans "Older images" %}</a></li>
+    {% endif %}
+</ul>
+{% endblock %}

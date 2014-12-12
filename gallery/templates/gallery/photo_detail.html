@@ -1,0 +1,21 @@
+{% extends CMS_TEMPLATE %}
+
+{% load thumbnail i18n %}
+
+{% block title %}{{ block.super }} - {{ object.title }}{% endblock %}
+
+{% block content %}
+<h2>{{ object.title }}</h2>
+
+<img class="img-responsive img-rounded center-block" src="{{ object.image|thumbnail_url:'gallery_display' }}" alt="{{ object.title }}">
+
+<ul class="pager">
+    {% if object.get_next_by_date %}
+    <li class="previous"><a href="{{ object.get_next_by_date.get_absolute_url }}">{% trans "Newer images" %}</a></li>
+    {% endif %}
+    <li><a href="{% url "gallery-index" %}">{% trans "Back to the gallery" %}</a></li>
+    {% if object.get_previous_by_date %}
+    <li class="next"><a href="{{ object.get_previous_by_date.get_absolute_url }}">{% trans "Older images" %}</a></li>
+    {% endif %}
+</ul>
+{% endblock %}
