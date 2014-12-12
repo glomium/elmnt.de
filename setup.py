@@ -13,18 +13,14 @@ __docformat__ = 'restructuredtext'
 setup(
     name='elmnt',
     version=__version__,
-    packages=find_packages(exclude=[
-        'elmnt',
-        'gallery',
-        'groupplaner',
-#       'djangoerp',
-    ]),
+    packages=[],
     install_requires = [
         'pytz',
         'Pillow',
         'django',
         'django>=1.7,<1.8',
         'django-sekizai',
+        'uwsgi',
 
         'django-reversion',
         'django-cms',

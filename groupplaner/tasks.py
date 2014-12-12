@@ -1,18 +1,21 @@
 #!/usr/bin/python
 # ex:set fileencoding=utf-8:
 
-from celery.schedules import crontab
-from celery.task import periodic_task
+from django.utils.timezone import now
+from django.utils.timezone import make_aware
+from django.utils.timezone import get_current_timezone
 
-from django.utils.timezone import now, make_aware, get_current_timezone
-
-from datetime import datetime, timedelta
+from datetime import datetime
+from datetime import timedelta
 
 from .models import Event
 from .models import WeeklyEvent
 
-@periodic_task(run_every=crontab(hour='0',minute='0'))
-def update():
+from uwsgidecorators import cron
+
+@cron(0, 0, -1, -1, -1)
+def update(num):
+
     # date-range
     time = now()
     timerange = 14
