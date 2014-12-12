@@ -309,7 +309,13 @@ def start(app=None):
     """
     if not hasattr(env, 'CFG'):
         localhost()
-    managepy('runserver 8000', app)
+
+    if not app:
+        app = APPS.keys()[0]
+
+    if env.CFG['local']:
+        with lcd(env.CFG['basedir']):
+            local('%s/bin/uwsgi uwsgi.ini --http=0.0.0.0:8000' % env.CFG['virtenv'])
 
 
 @task
@@ -539,8 +545,8 @@ def managepy(cmd, app=None):
     if not app:
         app = APPS.keys()[0]
 
-    with cd(env.CFG['basedir']):
-        if env.CFG['local']:
+    if env.CFG['local']:
+        with lcd(env.CFG['basedir']):
             local(
                 'export DJANGO_SETTINGS_MODULE=%s.settings && %s/%s %s %s' % (
                     app,
@@ -550,7 +556,8 @@ def managepy(cmd, app=None):
                     cmd
                 )
             )
-        else:
+    else:
+        with cd(env.CFG['basedir']):
             run(
                 'export DJANGO_SETTINGS_MODULE=%s.settings && %s/%s %s %s' % (
                     app,
@@ -560,6 +567,7 @@ def managepy(cmd, app=None):
                     cmd
                 )
             )
+
 
 def collectstatic(remote=True):
     """

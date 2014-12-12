@@ -13,8 +13,7 @@ from .models import WeeklyEvent
 
 from uwsgidecorators import cron
 
-#@cron(0, 0, -1, -1, -1)
-@cron(-1, -1, -1, -1, -1)
+@cron(0, 0, -1, -1, -1)
 def update(num):
 
     # date-range
