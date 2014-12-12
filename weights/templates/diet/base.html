@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load i18n %}{% load crispy_forms_tags %}
+
+{% block title %}{{ block.super }}{% trans "Diet" %}{% endblock %}
+
+{% block main %}
+<div class="mainrow">
+  <div id="content" class="span8">{% block content %}{% endblock %}</div>
+  <div id="sitebar" class="span4">
+    <ul>
+      <li><a href="{% url "diet_profile"   %}">{% trans "Profile" %}</a></li>
+      <li><a href="{% url "diet_statistic" %}">{% trans "Statistic" %}</a></li>
+      <li><a href="{% url "diet_overview"  %}">{% trans "Overview" %}</a></li>
+    </ul>
+  </div>
+</div>
+{% endblock %}
+
+{% block Content %}
+
+{% if user.is_authenticated %}
+
+{% if form %}
+<h1>{% trans "Form" %}</h1>
+<div class="document">
+<form action="{% url diet_statistic %}" method="post">
+<table>
+{{ form.as_p }}
+<tr>
+<td></td><td><input type="submit" />{{ formsave }}</td>
+</tr>
+</table>
+</form>
+</div>
+{% endif %}
+
+<h1>Statistic</h1>
+<div class="document">
+<ul>
+{% for stat in statistic %}
+    <li><a href="{{ stat.get_absolute_url }}"> {{ stat.date|date:"F Y" }}</a></li>
+{% endfor %}
+</ul>
+</div>
+{% endif %}
+
+{% endblock %}

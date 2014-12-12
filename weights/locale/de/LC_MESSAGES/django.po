@@ -1,0 +1,281 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-02-28 11:11+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#: models.py:14
+msgid "pretag"
+msgstr ""
+
+#: models.py:15
+msgid "image"
+msgstr ""
+
+#: models.py:16
+msgid "expire"
+msgstr ""
+
+#: models.py:17
+msgid "expires"
+msgstr ""
+
+#: models.py:20
+msgid "Graph"
+msgstr ""
+
+#: models.py:21
+msgid "Graphs"
+msgstr ""
+
+#: models.py:159
+msgid "Weight (kg)"
+msgstr ""
+
+#: models.py:180
+msgid "Male"
+msgstr ""
+
+#: models.py:181
+msgid "Female"
+msgstr ""
+
+#: models.py:184
+msgid "birthday"
+msgstr ""
+
+#: models.py:185
+msgid "Your birthday is used to check your target-BMI"
+msgstr ""
+
+#: models.py:186
+msgid "gender"
+msgstr ""
+
+#: models.py:187
+msgid "Your gender is used to check yout target-BMI"
+msgstr ""
+
+#: models.py:188
+msgid "height"
+msgstr ""
+
+#: models.py:189
+msgid "Your height is used for calculating your BMI (X.XXX m)"
+msgstr ""
+
+#: models.py:190
+msgid "delta height"
+msgstr ""
+
+#: models.py:191
+msgid ""
+"The error of your height is used to calculate the error of your BMI (X.XXX m)"
+msgstr ""
+
+#: models.py:192
+msgid "bmi target"
+msgstr ""
+
+#: models.py:193
+msgid "Enter Your target BMI (XX.XX)"
+msgstr ""
+
+#: models.py:196 templates/diet/base.html:9
+msgid "Profile"
+msgstr ""
+
+#: models.py:197
+msgid "Profiles"
+msgstr ""
+
+#: models.py:218 models.py:399
+msgid "date"
+msgstr ""
+
+#: models.py:219
+msgid "Enter the Date (YYYY-MM-DD) of the Dataset"
+msgstr ""
+
+#: models.py:220 models.py:401
+msgid "weight"
+msgstr ""
+
+#: models.py:221
+msgid "Enter your todays weight (XXX.X)"
+msgstr ""
+
+#: models.py:222
+msgid "calculated weight"
+msgstr ""
+
+#: models.py:223
+msgid "calculated weight error"
+msgstr ""
+
+#: models.py:224
+msgid "calculated slope"
+msgstr ""
+
+#: models.py:225
+msgid "calculated slope error"
+msgstr ""
+
+#: models.py:226
+msgid "calculated bmi"
+msgstr ""
+
+#: models.py:227
+msgid "calculated bmi error"
+msgstr ""
+
+#: models.py:228
+msgid "max weight last two months"
+msgstr ""
+
+#: models.py:229
+msgid "min weight last two months"
+msgstr ""
+
+#: models.py:233 models.py:234
+msgid "Data"
+msgstr ""
+
+#: models.py:275 models.py:290
+msgid "Not enoth datapoints"
+msgstr ""
+
+#: models.py:294
+msgid "Wrong trend"
+msgstr ""
+
+#: models.py:400
+msgid "evaluate"
+msgstr ""
+
+#: models.py:402
+msgid "delta weight"
+msgstr ""
+
+#: models.py:403
+msgid "bmi"
+msgstr ""
+
+#: models.py:404
+msgid "delta bmi"
+msgstr ""
+
+#: models.py:408
+msgid "Month"
+msgstr ""
+
+#: models.py:409
+msgid "Months"
+msgstr ""
+
+#: templates/diet/base.html:4 templates/diet/base.html.py:5
+msgid "Diet"
+msgstr ""
+
+#: templates/diet/base.html:10 templates/diet/statistic.html:4
+#: templates/diet/statistic_month.html:7
+#: templates/diet/statistic_month.html:12
+msgid "Statistic"
+msgstr ""
+
+#: templates/diet/base.html:11 templates/diet/overview.html:4
+#: templates/diet/overview.html.py:7
+msgid "Overview"
+msgstr ""
+
+#: templates/diet/base.html:13
+msgid "You need an account to use this function"
+msgstr ""
+
+#: templates/diet/base.html:24
+msgid "Form"
+msgstr ""
+
+#: templates/diet/overview.html:12
+msgid "Table"
+msgstr ""
+
+#: templates/diet/overview.html:17
+msgid "Date"
+msgstr ""
+
+#: templates/diet/overview.html:18 templates/diet/statistic.html:13
+msgid "Weight"
+msgstr ""
+
+#: templates/diet/overview.html:19
+msgid "BMI"
+msgstr ""
+
+#: templates/diet/overview.html:20
+msgid "Details"
+msgstr ""
+
+#: templates/diet/overview.html:25
+msgid "Download data as csv"
+msgstr ""
+
+#: templates/diet/overview.html:36
+msgid "show"
+msgstr ""
+
+#: templates/diet/statistic.html:7
+msgid "Chart"
+msgstr ""
+
+#: templates/diet/statistic.html:11
+msgid "Status"
+msgstr ""
+
+#: templates/diet/statistic.html:15
+msgid "Slope"
+msgstr ""
+
+#: templates/diet/statistic.html:15
+msgid "gramm per week"
+msgstr ""
+
+#: templates/diet/statistic.html:18
+msgid "Target-BMI"
+msgstr ""
+
+#: templates/diet/statistic.html:22
+msgid "Prediction"
+msgstr ""
+
+#: templates/diet/statistic.html:25
+#, python-format
+msgid ""
+"\n"
+"    Reaching target BMI in approximate %(var1)s weeks arround %(var2)s "
+msgstr ""
+
+#: templates/diet/statistic.html:28
+msgid "A prediction is not possible"
+msgstr ""
+
+#: templates/diet/statistic_month.html:14
+msgid "average weight"
+msgstr ""
+
+#: templates/diet/statistic_month.html:15
+msgid "average BMI"
+msgstr ""
