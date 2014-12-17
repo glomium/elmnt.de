@@ -58,7 +58,7 @@ class EventDetail(SingleObjectTemplateResponseMixin, FormMixin, SingleObjectMixi
         return super(EventDetail, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
-        self.request._language_changer = lambda l: '/%s/' % request.language  # TODO: update language properly
+        self.request._language_changer = lambda l: '/%s/' % self.request.language  # TODO: update language properly
         context = {'object': self.object}
         context.update(kwargs)
         return super(EventDetail, self).get_context_data(**context)
