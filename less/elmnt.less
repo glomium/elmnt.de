@@ -10,6 +10,7 @@
 // -----------------------------------------------------
 
 @body-bg: #fff;
+@body-outer-bg: @gray;
 
 @font-family-sans-serif:  'Open Sans', Tahoma, sans-serif;
 @headings-font-family:    'Ubuntu', Tahoma, sans-serif;
@@ -17,6 +18,8 @@
 
 @brand-primary: hsv(220, 90%, 60%);
 @brand-secondary: hsv(40, 90%, 90%);
+
+@footer-height: 100px;
 
 @navbar-height: 50px;
 @navbar-li-border: 2px;
@@ -101,28 +104,43 @@
 /* Sticky footer styles
 -------------------------------------------------- */
 
-html,
-body {
-    height: 100%;
-    /* The html and body elements cannot have any padding or margin. */
+html {
+    min-height: 100%;
+    position: relative;
 }
 
 body {
-    padding-top: (@navbar-height + 2*@navbar-li-border);
+    background: @body-outer-bg;
+    margin: (@navbar-height + 2*@navbar-li-border) 0 100px 0;
 }
 
-/* Wrapper for page content to push down footer */
-#wrap {
+#body-bg {
+    position: absolute;
+    background: @body-bg;
+    margin: 0 auto;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
     width: 100%;
-    min-height: 100%; /* Mindesthöhe für moderne Browser */
-    height:auto !important; /* Important Regel für moderne Browser */
-    height:100%; /* Mindesthöhe für den IE */
-    overflow: hidden !important; /* FF Scroll-leiste */ 
-    padding-bottom: 0.4*@line-height-computed;
+    z-index: -1;
+    .box-shadow(0 0 16px @gray-dark);
+
+    @media (min-width: @screen-sm-min) {
+        width: @container-sm;
+    }
+    @media (min-width: @screen-md-min) {
+        width: @container-md;
+    }
+    @media (min-width: @screen-lg-min) {
+        width: @container-lg;
+    }
 }
 
 #main {
-    margin-top: 2*(@line-height-computed - @font-size-base);
+    background: @body-bg;
+    padding-top: 2*(@line-height-computed - @font-size-base);
+    padding-bottom: 0.4*@line-height-computed;
 }
 
 #showcase {
@@ -157,6 +175,10 @@ body {
 }
 
 footer {
+    position: absolute;
+    bottom: 0;
+    height: @footer-height;
+    width: 100%;
     .box-shadow(inset 0 3px 6px rgba(0,0,0,0.6));
     padding: (14px + 2*(@line-height-computed - @font-size-base)) 0 14px 0;
     color: @gray;

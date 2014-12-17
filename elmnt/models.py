@@ -9,7 +9,6 @@ except ImportError:
 from cms.signals import urls_need_reloading
 
 def server_restart(**kwargs):
-    print "SERVER RELOAD!!!"
     if uwsgi is not None and uwsgi.masterpid() > 0:
         uwsgi.reload()
 
