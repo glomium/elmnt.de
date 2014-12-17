@@ -10,7 +10,8 @@
 // -----------------------------------------------------
 
 @body-bg: #fff;
-@body-outer-bg: @gray;
+@body-outer-bg: @gray-lighter;
+@body-outer-border: darken(@gray-lighter, 15%);
 
 @font-family-sans-serif:  'Open Sans', Tahoma, sans-serif;
 @headings-font-family:    'Ubuntu', Tahoma, sans-serif;
@@ -19,7 +20,7 @@
 @brand-primary: hsv(220, 90%, 60%);
 @brand-secondary: hsv(40, 90%, 90%);
 
-@footer-height: 100px;
+@footer-height: 70px;
 
 @navbar-height: 50px;
 @navbar-li-border: 2px;
@@ -124,7 +125,7 @@ body {
     left: 0;
     width: 100%;
     z-index: -1;
-    .box-shadow(0 0 16px @gray-dark);
+    .box-shadow(0 0 16px @body-outer-border);
 
     @media (min-width: @screen-sm-min) {
         width: @container-sm;
