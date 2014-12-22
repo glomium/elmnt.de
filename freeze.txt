@@ -19,7 +19,6 @@ djangocms-googlemap==0.2
 djangocms-link==1.5
 djangocms-text-ckeditor==2.4.2
 easy-thumbnails==2.2
--e git+git@github.com:glomium/elmnt.de.git@f5ae5168739aae3295d2affe5693f20563ef0824#egg=elmnt-origin/develop
 html5lib==1.0b3
 python-memcached==1.53
 pytz==2014.10
