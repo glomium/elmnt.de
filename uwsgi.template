@@ -1,0 +1,29 @@
+[uwsgi]
+
+; path to the project
+chdir = {{ dir }}/{{ app }} 
+
+; path to the virtual environment
+virtualenv = {{ dir }}/{{ app }}/virtenv
+
+; load the wsgi module from the django project
+module = {{ project }}.wsgi:application
+
+; use the project's setting
+env = DJANGO_SETTINGS_MODULE={{ project }}.settings
+
+; load the tasks.py module
+import = tasks
+
+; clear environment on exit
+vacuum = true
+
+socket = 127.0.0.1:0
+enable-threads = true
+master = true
+processes = {{ data.worker }}
+threads = {{ data.threads }}
+
+http = :8080
+
+subscribe-to=127.0.0.1:4231:django-{{ app }}-{{ project }}
