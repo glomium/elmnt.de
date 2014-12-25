@@ -26,4 +26,4 @@ threads = {{ data.threads }}
 
 http = :8080
 
-subscribe-to=127.0.0.1:4231:django-{{ app }}-{{ project }}
+subscribe-to=127.0.0.1:2626:django-{{ app }}-{{ project }}
