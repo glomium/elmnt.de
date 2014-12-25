@@ -21,9 +21,7 @@ vacuum = true
 socket = 127.0.0.1:0
 enable-threads = true
 master = true
-processes = {{ data.worker }}
-threads = {{ data.threads }}
-
-http = :8080
+processes = 1
+threads = 2
 
 subscribe-to=127.0.0.1:2626:django-{{ app }}-{{ project }}
