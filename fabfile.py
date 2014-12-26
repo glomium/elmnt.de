@@ -312,6 +312,9 @@ def push():
 
 @task
 def deploy():
+    # this is semi okay ... is syncs all projects, which is a bit overhead,
+    # but the salt state-layout requires this (TODO)
+    # better: sudo('salt-call state.sls projects.django')
     sudo('salt-call state.highstate')
 
 
