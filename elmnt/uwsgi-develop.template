@@ -1,5 +1,8 @@
 [uwsgi]
 
+uid = {{ uid }}
+gid = {{ gid }}
+
 ; path to the project
 chdir = {{ dir }}/{{ app }} 
 
