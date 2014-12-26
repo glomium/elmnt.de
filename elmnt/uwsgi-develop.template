@@ -18,6 +18,8 @@ import = tasks
 ; clear environment on exit
 vacuum = true
 
+idle = 600
+
 socket = 127.0.0.1:0
 enable-threads = true
 master = true
