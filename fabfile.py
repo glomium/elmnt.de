@@ -312,6 +312,10 @@ def push():
 
 @task
 def deploy():
+    if not hasattr(env, 'CFG'):
+        puts("You need to load an environment")
+        return False
+
     # this is semi okay ... is syncs all projects, which is a bit overhead,
     # but the salt state-layout requires this (TODO)
     # better: sudo('salt-call state.sls projects.django')
