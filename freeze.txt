@@ -19,6 +19,7 @@ djangocms-link==1.5
 djangocms-text-ckeditor==2.4.2
 easy-thumbnails==2.2
 html5lib==1.0b3
+psycopg2==2.5.4
 python-memcached==1.53
 pytz==2014.10
 six==1.8.0
