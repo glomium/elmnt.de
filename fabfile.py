@@ -227,8 +227,8 @@ def push_db():
         puts("You need to load an environment")
         return False
 
-    if not PRODUCTION and PRODUCTION == env.CFG['env']:
-        puts("SKIPPING push_media: Not allowed to push to production")
+    if PRODUCTION and PRODUCTION == env.CFG['env']:
+        puts("SKIPPING push_db: Not allowed to push to production")
         return False
 
     with lcd(BASEDIR):
@@ -266,7 +266,7 @@ def push_media():
         puts("You need to load an environment")
         return False
 
-    if not PRODUCTION and PRODUCTION == env.CFG['env']:
+    if PRODUCTION and PRODUCTION == env.CFG['env']:
         puts("SKIPPING push_media: Not allowed to push to production")
         return False
 
@@ -274,7 +274,7 @@ def push_media():
 
     project.rsync_project(
         remote_dir=env.CFG['basedir'] + '/media',
-        local_dir=BASEDIR + '/media',
+        local_dir=BASEDIR + '/media/',
         upload=True,
         delete=True,
     )
@@ -292,7 +292,7 @@ def pull_media():
     # TODO work with tmp directories on remote
 
     project.rsync_project(
-        remote_dir=env.CFG['basedir'] + '/media',
+        remote_dir=env.CFG['basedir'] + '/media/',
         local_dir=BASEDIR + '/media',
         upload=False,
     )
