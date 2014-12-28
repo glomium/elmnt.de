@@ -15,7 +15,7 @@ server {
     server_name www.elmnt.de;
     charset     utf-8;
 
-    root {{ basedir }}{{ project }};
+    root {{ dir }};
     client_max_body_size 20M;
 
     location /media/ {
@@ -26,11 +26,8 @@ server {
         rewrite ^ https://plus.google.com/100544629037891834363 permanent;
     }
     location / {
-        try_files /build/$uri @production;
-    }
-    location @production {
         include     uwsgi_params;
-        uwsgi_param UWSGI_FASTROUTER_KEY {{ prefix }}-{{ project }};
+        uwsgi_param UWSGI_FASTROUTER_KEY {{ fastrouter_key }};
         uwsgi_pass  unix:/tmp/fastrouter.socket;
     }
 }
