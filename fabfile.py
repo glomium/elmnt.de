@@ -7,97 +7,29 @@ from fabric.contrib import project
 
 import os
 
-PROJECT = "PROJECT"
-APPS = {
-    "PROJECT": {
-        "primary_domain": None,
-        "redirect_domains": [
-        ],
-    }
-}
+
+# SETTINGS ====================================================================
+
+
+PROJECT = "FIXME"
+
+APPS = [
+    "FIXME",
+]
 
 DEPLOY = {
     'dev': {
-        # False/None/Empty or path to (shared) hosting env
-        # if Path the project won't be installed with the cmshosting package
-        'cmshosting': '/var/www/cmshosting',
-        # path to the project
-        'project_path': "%(cmshosting)s/projects/%(project)s",
-        'nginx': "",
-        'use_sudo': True,
-        'ssh_host': 'igelware-group',
-        # overwrite virtualenv executable
-        # 'virtualenv': 'virtualenv',
+        'ssh_host': 'elmnt-server',
+        'basedir': '/var/www/projects/django/%s' % PROJECT,
     },
-}
-DEPLOY_DEFAULT = 'dev'
-
-CMSHOSTING_REMOTE = "/var/www/cmshosting"
-CMSHOSTING_LOCAL = "/home/sbraun/Projects/cmshosting"
-BASEDIR = os.path.dirname( env.real_fabfile )
-
-
-def parse_deploy(config=DEPLOY_DEFAULT):
-    template = DEPLOY.get(config)
-    template['project'] = PROJECT
-
-    deploy = {}
-    if not template.get('cmshosting', False):
-        deploy['use_cmshosting'] = False
-        deploy['cmshosting'] = template['project_path'] % template
-    else:
-        deploy['use_cmshosting'] = True
-        deploy['cmshosting'] = template['cmshosting'] % template
-    deploy['project_path'] = template['project_path'] % template
-    deploy['use_sudo'] = template.get('use_sudo', False)
-    deploy['settings'] = template.get(
-        'settings',
-        'settings_%s_%%s.py' % config
-    )
-    deploy['ssh_host'] = template.get('ssh_host', None)
-    deploy['virtualenv'] = template.get('virtualenv', 'virtualenv')
-
-    return deploy
-
-DEPLOY_INFO = parse_deploy();
-
-# Fab settings
-if DEPLOY_INFO['ssh_host']:
-    env.hosts = [DEPLOY_INFO['ssh_host'],]
-env.use_ssh_config = True
-
-
-DEPLOY_PATH = "%s/projects/%s" % (CMSHOSTING_REMOTE, PROJECT)
-DEPLOY_NGINX = "%s/configs/nginx/%s-%%s.conf" % (CMSHOSTING_REMOTE, PROJECT)
-# Fab settings
-env.hosts = ['igelware-group']
-env.use_ssh_config = True
-
-
-PYTHON = "virtenv/bin/python"
-DJANGO = "virtenv/bin/django-admin.py"
-MANAGE = "manage.py"
-
-# used as template variables for uploaded files
-KWARGS = {
-    'project': PROJECT,
-    'user': env.user,
-    'basedir': DEPLOY_INFO['project_path'],
-    'app': None,
-    'cmshosting': DEPLOY_INFO['cmshosting'],
-    'use_cmshosting': DEPLOY_INFO['use_cmshosting'],
+    'prod': {
+        'ssh_host': 'igelware',
+        'basedir': '/var/www/projects/django/%s' % PROJECT,
+    }
 }
 
-### OLD SETTINGS BELOW THIS LINE ########################################################
-
-CMSHOSTING_REMOTE = "/var/www/cmshosting" # OLD
-
-DEPLOY_PATH = "%s/projects/%s" % (CMSHOSTING_REMOTE, PROJECT)
-DEPLOY_NGINX = "%s/configs/nginx/%s-%%s.conf" % (CMSHOSTING_REMOTE, PROJECT)
-
-
-
-# overwrite this methods ======================================================
+# env for production (disables push for this env)
+PRODUCTION = None
 
 COPY_DB_EXCLUDE = [
     '', # keep me, so we can use join
@@ -105,15 +37,28 @@ COPY_DB_EXCLUDE = [
     'auth.permission', # use natural keys instead
     'sessions', # no need for this data
     'admin.logentry', # no need for this data
-    'south', # FIXME uncomment if using south
     'easy_thumbnails', # FIXME uncomment if using easy_thumbnails
-   #'djcelery', # FIXME uncomment if using celery
 ]
+
+@task
+def dev():
+    set_env("dev")
+
+@task
+def prod():
+    set_env("prod")
+
+BASEDIR = os.path.dirname( env.real_fabfile )
+env.use_ssh_config = True
+
+
+# LOCAL Methods ===============================================================
+
 
 @task
 def static():
     """
-    complies/copies static files
+    complies and copies static files
     """
     js()
     css()
@@ -121,21 +66,23 @@ def static():
         for app in APPS:
             local('cp submodules/bootstrap/fonts/glyphicons-halflings-regular* media/fonts/')
 
+
 @task
 def css():
     """
-    compiles/copies css
+    compiles and copies css
     """
     with lcd(BASEDIR):
-        for app in APPS.keys():
+        for app in APPS:
             local('lessc less/%s.less > bootstrap.css' % app)
             local('yui-compressor --type css -o media/css/%s.min.css bootstrap.css' % app)
         local('rm bootstrap.css')
 
+
 @task
 def js():
     """
-    compiles/copies js
+    compiles and copies js
     """
     with lcd(BASEDIR):
         local('cp submodules/bootstrap/dist/js/bootstrap.min.js media/js/')
@@ -143,13 +90,16 @@ def js():
             local('yui-compressor --type js -o media/js/%s.min.js js/%s.js' % (app, app))
 
 
-# development (fabric-public methods) =========================================
-
-
 @task
 def watchstatic():
-    static()
+    """
+    compiles and copies less and js - if changed
+    """
     import pyinotify
+
+    static()
+    puts("========= DONE ==========")
+
     wm = pyinotify.WatchManager()
 
     excl_filter = pyinotify.ExcludeFilter([
@@ -165,7 +115,7 @@ def watchstatic():
         def process_IN_CLOSE_WRITE(self, event):
             if inc_filter(event.name):
                 static()
-                print "========= DONE =========="
+                puts("========= DONE ==========")
 
     handler = EventHandler()
 
@@ -182,6 +132,9 @@ def watchstatic():
 
 @task
 def init():
+    """
+    initialize apps
+    """
     with lcd(BASEDIR):
         if not os.path.exists("media"):
             local("mkdir media")
@@ -201,6 +154,7 @@ def init():
                 local("mv project_template %s" % app)
                 local("git rm -r project_template")
                 local("sed -i 's/{{ APP }}/%s/g' %s/settings.py" % (app, app))
+                local("sed -i 's/{{ APP }}/%s/g' %s/wsgi.py" % (app, app))
 
             if not os.path.exists('less/%s.less' % app):
                 local("touch less/%s.less" % app)
@@ -210,47 +164,12 @@ def init():
 
 
 @task
-def install():
-    """
-    installs the project locally
-    """
-    with lcd(BASEDIR):
-        local('rm -f %s/database.sqlite' % PROJECT)
-        migrate(remote=False, first=True)
-
-        if files.exists(DEPLOY_PATH):
-            copy_db()
-        elif os.path.exists('fixtures_live.json'):
-            managepy('loaddata fixtures_live.json', False)
-        else:
-            managepy('createsuperuser', False)
-
-        managepy('collectstatic --noinput', False)
-
-        project.rsync_project(
-            remote_dir=DEPLOY_PATH + '/media/',
-            local_dir=BASEDIR + '/media',
-            upload=False,
-        )
-
-@task
-def export_local_db():
+def export_local_db(app=None):
     '''
+    Export local database into fixtures_live.json
     '''
     with lcd(BASEDIR):
-        managepy('dumpdata -n --indent=1 %s > fixtures_live.json' % (' -e '.join(COPY_DB_EXCLUDE)), False)
-
-
-@task
-def copy_db():
-    '''
-    Copy the production DB locally for testing.
-    '''
-    with lcd(BASEDIR):
-        managepy('dumpdata -n --indent=1 %s > %s/dumpdata.json' % (' -e '.join(COPY_DB_EXCLUDE), DEPLOY_PATH))
-        get('%s/dumpdata.json' % DEPLOY_PATH, 'fixtures_live.json')
-        run('rm %s/dumpdata.json' % DEPLOY_PATH)
-        managepy('loaddata fixtures_live.json', False)
+        managepy('dumpdata -n --indent=1 %s > fixtures_local.json' % (' -e '.join(COPY_DB_EXCLUDE)), app)
 
 
 @task
@@ -258,7 +177,7 @@ def start(app=None):
     """
     starts the project locally
     """
-    managepy('runserver 8000', False, app)
+    managepy('runserver 0.0.0.0:8000', app)
 
 
 @task
@@ -266,7 +185,7 @@ def shell(app=None):
     """
     starts a shell locally
     """
-    managepy('shell', False, app)
+    managepy('shell', app)
 
 
 @task
@@ -274,257 +193,176 @@ def test(app=None):
     """
     starts a test locally
     """
-    managepy('test', False, app)
-
-
-# production (fabric-public methods) ==========================================
+    managepy('test', app)
 
 
 @task
-def update_nginx():
+def install():
     """
-    install
-    R: ln -s /var/www/cmshosting/projects/griba/nginx.conf /var/www/cmshosting/configs/nginx/griba-griba.conf
-    R: touch /var/www/cmshosting/configs/uwsgi.ini
-    R: sudo service nginx reload
+    installs the project locally
     """
-    check_sudo()
+    with lcd(BASEDIR): 
+        local('rm -f %s/database.sqlite' % PROJECT)
+        managepy('migrate --noinput')
+
+        pull_db()
+        pull_media()
+
+        if os.path.exists('fixtures_live.json'):
+            managepy('loaddata fixtures_live.json')
+        else:
+            managepy('createsuperuser')
+
+        managepy('collectstatic --noinput')
+
+
+# REMOTE Methods ==============================================================
 
 
 @task
-def install_remote():
+def push_db():
     """
-    install the project on the remote server
+    Copy the production DB from local to remote
     """
-    check_sudo()
+    if not hasattr(env, 'CFG'):
+        puts("You need to load an environment")
+        return False
 
-    if files.exists(DEPLOY_INFO['project_path']):
-        puts("%s already exists on remote" % DEPLOY_INFO['project_path'])
-        exit(1)
+    if PRODUCTION and PRODUCTION == env.CFG['env']:
+        puts("SKIPPING push_db: Not allowed to push to production")
+        return False
 
-    git = local("git remote -v | grep origin | grep push | awk '{ print $2 }'", capture=True)
-    run('git clone %s %s' % (git, DEPLOY_INFO['project_path']))
-
-    if not DEPLOY_INFO['cms_hosting']:
-        # create virtualenv and install requirements
-        # TODO
-        print("TODO: create virtualenv and install requirements")
-        pass
-
-    upgrade_remote_settings()
-
-    # TODO Do this for every APP
-    managepy('syncdb --noinput --all', True)
-    managepy('migrate --fake', True)
-    managepy('collectstatic --noinput', True)
-
-    update_nginx()
-
-
-def upgrade_remote_settings():
-    for app in APPS:
-        files.upload_template(
-            DEPLOY_INFO['settings'] % app,
-            DEPLOY_INFO['project_path'] + '/' + app + '/local_settings.py',
-            context=KWARGS,
-            use_jinja=True,
-        )
+    with lcd(BASEDIR):
+        tmp = run('mktemp -d')
+        put('fixtures_live.json', tmp)
+        sudo('chown -R %s %s' % (env.CFG["user"], tmp))
+        managepy('flush --no-initial-data --noinput', remote=True)
+        managepy('loaddata %s/fixtures_live.json' % tmp, remote=True)
+        sudo('rm -rf %s' % tmp)
 
 
 @task
-def upgrade_remote():
-    if not files.exists(DEPLOY_PATH):
-        puts("%s does not exist on remote" % DEPLOY_PATH)
-        exit(1)
+def pull_db():
+    """
+    Copy the production DB from remote to local
+    """
+    if not hasattr(env, 'CFG'):
+        puts("You need to load an environment")
+        return False
+
+    with lcd(BASEDIR):
+        tmp = sudo('mktemp', user=env.CFG["user"], group=env.CFG["group"])
+        managepy('dumpdata -n --indent=1 %s > %s' % (' -e '.join(COPY_DB_EXCLUDE), tmp), remote=True)
+        get(tmp, 'fixtures_live.json')
+        sudo('rm %s' % tmp)
+        managepy('loaddata fixtures_live.json')
 
 
 @task
-def fast_deploy():
+def push_media():
     """
-    Update code on the servers, no nginx+uwsgi changes!
+    Copy the production media from local to remote
     """
-    if not files.exists(DEPLOY_INFO['project_path']):
-        puts("%s already exists on remote" % DEPLOY_INFO['project_path'])
-        exit(1)
-    local("git push")
-    with cd(DEPLOY_INFO['project_path']):
-        run('git pull')
+    if not hasattr(env, 'CFG'):
+        puts("You need to load an environment")
+        return False
+
+    if PRODUCTION and PRODUCTION == env.CFG['env']:
+        puts("SKIPPING push_media: Not allowed to push to production")
+        return False
+
+    # TODO work with tmp directories on remote
+
+    project.rsync_project(
+        remote_dir=env.CFG['basedir'] + '/media',
+        local_dir=BASEDIR + '/media/',
+        upload=True,
+        delete=True,
+    )
+
+
+@task
+def pull_media():
+    """
+    Copy the production media from remote to local
+    """
+    if not hasattr(env, 'CFG'):
+        puts("You need to load an environment")
+        return False
+
+    # TODO work with tmp directories on remote
+
+    project.rsync_project(
+        remote_dir=env.CFG['basedir'] + '/media/',
+        local_dir=BASEDIR + '/media',
+        upload=False,
+    )
+
+
+@task
+def pull():
+    pull_media()
+    pull_db()
+
+
+@task
+def push():
+    push_media()
+    push_db()
 
 
 @task
 def deploy():
-    """
-    Update code on the servers, no nginx changes!
-    """
-    fast_deploy()
+    if not hasattr(env, 'CFG'):
+        puts("You need to load an environment")
+        return False
 
-    upgrade_remote_settings()
-
-    with cd(DEPLOY_PATH):
-        managepy('collectstatic --noinput')
-        managepy('syncdb --noinput')
-        managepy('migrate')
-
-    run('touch %s/configs/uwsgi.ini' % CMSHOSTING_REMOTE)
+    # this is semi okay ... is syncs all projects, which is a bit overhead,
+    # but the salt state-layout requires this (TODO)
+    # better: sudo('salt-call state.sls projects.django')
+    sudo('salt-call state.highstate')
 
 
-#   # check_sudo()
-#   if not files.exists(DEPLOY_PATH):
-#       puts("Cloning %s from git repository" % PROJECT)
-#       git = local("git remote -v | grep origin | grep push | awk '{ print $2 }'", capture=True)
-#       print(git)
-#   else:
-#       local("git push")
-#       run('git pull')
-#       update_nginx()
-
-#   exit(1)
+# HELPER Methods ==============================================================
 
 
-    """
-    update
-    L: git push
-    R: git pull
-    R: /var/www/cmshosting/virtenv/bin/python manage.py collectstatic --noinput
-    R: /var/www/cmshosting/virtenv/bin/python manage.py syncdb --noinput
-    R: /var/www/cmshosting/virtenv/bin/python manage.py migrate 
-    R: touch /var/www/cmshosting/configs/uwsgi.ini
-    """
+def set_env(e):
+    setattr(env, 'CFG', DEPLOY[e])
 
-#   if not files.exists(DEPLOY_PATH):
-#       puts("Cloning %s from git repository" % PROJECT)
-#       git = local("git remote -v | grep origin | grep push | awk '{ print $2 }'", capture=True)
-#       run('git clone %s %s' % (git, DEPLOY_PATH))
-#       first = True
-#   else:
-#       local("git push")
-#       first = False
+    # store the active environment's key
+    env.CFG['env'] = e
 
-#   if not files.exists(DEPLOY_PATH+VIRTENV):
-#       recreate = True
+    # set hosts
+    env.hosts = [env.CFG['ssh_host'],]
 
-#   with cd(DEPLOY_PATH):
-#       puts("Deploying project %s" % PROJECT)
-#       run('git pull')
-
-#       # update configurations
-#       KWARGS = {
-#           'project': PROJECT,
-#           'prefix': PREFIX,
-#           'user': env.user,
-#           'basedir': DEPLOY_PATH,
-#           'virtenv': VIRTENV,
-#       }
-
-#       files.upload_template('remote_settings.py', PROJECT+'/local_settings.py', context=KWARGS, use_jinja=True)
-#       files.upload_template('templates/'+CFG_NGINX, CFG_NGINX, context=KWARGS, use_jinja=True)
-#       files.upload_template('templates/'+CFG_UWSGI, CFG_UWSGI, context=KWARGS, use_jinja=True)
-#       files.upload_template('templates/'+CFG_SUPERVISOR, CFG_SUPERVISOR, context=KWARGS, use_jinja=True)
-
-#       sudo('ln -fs %s%s %s' % (DEPLOY_PATH, CFG_NGINX, DEPLOY_NGINX))
-#       sudo('ln -fs %s%s %s' % (DEPLOY_PATH, CFG_SUPERVISOR, DEPLOY_SUPERVISOR))
-
-#       # change group to www-data
-#       sudo('chgrp -f www-data .')
-#       sudo('chgrp -fR www-data %s' % PROJECT)
-
-#       if recreate:
-#           run('tox -re production')
-#           local("%s/bin/pip freeze > freeze.txt" % VIRTENV)
-
-#   migrate(first=first)
-
-#   with lcd(BASEDIR):
-#       with cd(DEPLOY_PATH):
-#           if first and (os.path.exists('fixtures_initial.json') or os.path.exists('fixtures_live.json')):
-#               if os.path.exists('fixtures_live.json'):
-#                   files.upload_template('fixtures_live.json', 'fixtures_tmpupload.json', use_jinja=False, backup=False)
-#               else:
-#                   files.upload_template('fixtures_initial.json', 'fixtures_tmpupload.json', use_jinja=False, backup=False)
-#               managepy('loaddata fixtures_tmpupload.json')
-#               run('rm -f fixtures_tmpupload.json')
-
-#   collectstatic()
-#   supervisor('update')
-#   supervisor('restart %s-%s:' % (PREFIX, PROJECT))
-#   nginx("reload")
-#   memcached("restart")
+    # get and save user and group from basedir on remote
+    with settings(hide('running', 'stdout'), host_string=env.CFG['ssh_host']):
+        run_as = sudo('stat -c "%%U %%G" %s' % env.CFG['basedir'])
+    env.CFG['user'], env.CFG['group'] = run_as.split(' ')
 
 
-# server management (fabric-private methods) ==================================
-
-
-def check_sudo():
-    """
-    check if user has sudo permissions
-    """
-    if DEPLOY_INFO['use_sudo']:
-        sudo("uname -a")
-
-
-def nginx(cmd):
-    """
-    Manage the nginx service. For example, `fab nginx:restart`.
-    """
-    sudo('/etc/init.d/nginx %s' % cmd)
-
-
-def memcached(cmd):
-    """
-    Manage the memcached service. For example, `fab memcached:restart`.
-    """
-    return None
-    sudo('/etc/init.d/memcached %s' % cmd)
-
-
-def managepy(cmd, remote=True, app=None):
+def managepy(cmd, app=None, remote=False):
     """
     Helper: run a management command remotely.
     """
     if not app:
-        app = APPS.keys()[0]
+        app = APPS[0]
 
     if remote:
-        with cd(DEPLOY_PATH):
-            run('export DJANGO_SETTINGS_MODULE=%s.settings && %s/%s %s %s' % (app, CMSHOSTING_REMOTE, PYTHON, MANAGE, cmd))
+        with cd(env.CFG['basedir']):
+            sudo(
+                'export DJANGO_SETTINGS_MODULE=%s.settings && virtenv/bin/python manage.py %s' % (
+                    app,
+                    cmd
+                ),
+                user=env.CFG["user"],
+                group=env.CFG["group"],
+            )
     else:
         with lcd(BASEDIR):
-            local('export DJANGO_SETTINGS_MODULE=%s.settings && %s/%s %s %s' % (app, CMSHOSTING_LOCAL, PYTHON, MANAGE, cmd))
-
-
-def collectstatic(remote=True):
-    """
-    Run django collectstatic
-    """
-    managepy('collectstatic --noinput', remote)
-
-
-def migrate(remote=True, first=False):
-    with lcd(BASEDIR):
-        migrations = local("%s/%s -c 'from django import VERSION; print((VERSION[0] == 1 and VERSION[1] >= 7) or (VERSION[0] > 1))'" % (CMSHOSTING_LOCAL, PYTHON), capture=True)
-
-    if migrations == "True":
-        managepy('migrate --noinput', remote)
-
-    elif check_installed_app('south'):
-        if first:
-            managepy('syncdb --noinput --all', remote)
-            managepy('migrate --fake', remote)
-        else:
-            managepy('syncdb --noinput', remote)
-            managepy('migrate', remote)
-    else:
-        managepy('syncdb --noinput', remote)
-
-
-def check_installed_app(app):
-    with lcd(BASEDIR):
-        return bool(local("%s/%s -c 'from %s.settings import INSTALLED_APPS; print(\"%s\" in INSTALLED_APPS)'" % (CMSHOSTING_LOCAL, PYTHON, PROJECT, app), capture=True))
-    return False
-
-
-def supervisor(cmd):
-    """
-    Manage supervisord
-    """
-    sudo('supervisorctl %s' % cmd)
+            local(
+                'export DJANGO_SETTINGS_MODULE=%s.settings && virtenv/bin/python manage.py %s' % (
+                    app,
+                    cmd
+                )
+            )

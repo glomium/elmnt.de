@@ -16,10 +16,6 @@ BASE_DIR = os.path.dirname(__file__)
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = [
-    "{{ APP }}.dev.igelware.de",
-]
-
 ADMINS = (
     ('Sebastian Braun', 'sebastian@elmnt.de'),
 )
@@ -27,6 +23,20 @@ MANAGERS = ADMINS
 INTERNAL_IPS = ('127.0.0.1', '85.25.139.15')
 DEFAULT_FROM_EMAIL="team@igelware.de"
 SERVER_EMAIL="noreply@igelware.de"
+
+MIGRATION_MODULES = {
+    'cms': 'cms.migrations_django',
+    'menus': 'menus.migrations_django',
+    'filer': 'filer.migrations_django',
+    'djangocms_link': 'djangocms_link.migrations_django',
+    'djangocms_googlemap': 'djangocms_googlemap.migrations_django',
+    'djangocms_text_ckeditor': 'djangocms_text_ckeditor.migrations_django',
+    'cmsplugin_filer_file': 'cmsplugin_filer_file.migrations_django',
+    'cmsplugin_filer_folder': 'cmsplugin_filer_folder.migrations_django',
+    'cmsplugin_filer_image': 'cmsplugin_filer_image.migrations_django',
+    'cmsplugin_filer_teaser': 'cmsplugin_filer_teaser.migrations_django',
+    'cmsplugin_filer_video': 'cmsplugin_filer_video.migrations_django',
+}
 
 # Application definition
 INSTALLED_APPS = (
@@ -61,7 +71,7 @@ INSTALLED_APPS = (
     'cms',
     'mptt',
     'menus',
-    'south',
+  # 'south',
     'sekizai',
     'reversion',
   # 'filer',
@@ -80,11 +90,11 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.doc.XViewMiddleware',
+    'django.contrib.admindocs.middleware.XViewMiddleware',
     'cms.middleware.page.CurrentPageMiddleware',
     'cms.middleware.user.CurrentUserMiddleware',
     'cms.middleware.toolbar.ToolbarMiddleware',
-   #'cms.middleware.language.LanguageCookieMiddleware',
+    #'cms.middleware.language.LanguageCookieMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
@@ -141,17 +151,11 @@ CMS_TEMPLATES = (
 )
 
 LANGUAGES = [
-    ('de', "German"),
+    ('de', "Deutsch"),
 ]
 
 CMS_PERMISSION = True
 
-# SOUTH =======================================================================
-
-SOUTH_MIGRATION_MODULES = {
-    'easy_thumbnails': 'easy_thumbnails.south_migrations',
-    'reversion': 'reversion.south_migrations',
-}
 
 # FILER =======================================================================
 
