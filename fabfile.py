@@ -20,11 +20,11 @@ APPS = [
 DEPLOY = {
     'dev': {
         'ssh_host': 'elmnt-server',
-        'basedir': '/var/www/projects/django/%s' % PROJECT,
+        'basedir': '/var/www/django_projects/%s' % PROJECT,
     },
     'prod': {
         'ssh_host': 'igelware',
-        'basedir': '/var/www/projects/django/%s' % PROJECT,
+        'basedir': '/var/www/django_projects/%s' % PROJECT,
     }
 }
 
