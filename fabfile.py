@@ -154,6 +154,7 @@ def init():
                 local("mv project_template %s" % app)
                 local("git rm -r project_template")
                 local("sed -i 's/{{ APP }}/%s/g' %s/settings.py" % (app, app))
+                local("sed -i 's/{{ APP }}/%s/g' %s/wsgi.py" % (app, app))
 
             if not os.path.exists('less/%s.less' % app):
                 local("touch less/%s.less" % app)
