@@ -5,6 +5,8 @@
 
 /\.tox
 /virtenv
+/fixtures_local.json
+/fixtures_live.json
 
 /media/pictures/
 /static
