@@ -28,6 +28,9 @@ DEPLOY = {
     }
 }
 
+SUBMODULES = {
+}
+
 # env for production (disables push for this env)
 PRODUCTION = None
 
@@ -214,6 +217,27 @@ def install():
             managepy('createsuperuser')
 
         managepy('collectstatic --noinput')
+
+
+@task
+def update_submodules(init=False):
+    '''
+    '''
+    with lcd(BASEDIR):
+        for name, git in SUBMODULES.iteritems():
+            repo, branch = git.split("#")
+            if os.path.exists('modules/%s' % name) and not init:
+                local("git subtree pull --prefix modules/%s %s %s --squash" % (name, repo, branch))
+            elif not os.path.exists('modules/%s' % name):
+                repo, branch = git.split("#")
+                local("git subtree add --prefix modules/%s %s %s --squash" % (name, repo, branch))
+
+
+@task
+def init_submodules():
+    '''
+    '''
+    update_submodules(init=True)
 
 
 # REMOTE Methods ==============================================================
