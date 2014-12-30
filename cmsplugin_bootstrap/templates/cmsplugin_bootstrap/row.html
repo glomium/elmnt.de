@@ -1,4 +1,0 @@
-{% load cms_tags %}
-<div class="row{% if instance.css %} {{ instance.css }}{% endif %}">
-{% for plugin in instance.child_plugin_instances %}{% render_plugin plugin %}{% endfor %}
-</div>
