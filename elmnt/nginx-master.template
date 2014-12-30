@@ -12,19 +12,24 @@ server {
 
 server {
     listen 80;
-    server_name www.elmnt.de {{ internal_domain }};
     charset     utf-8;
 
+    server_name www.elmnt.de {{ internal_domain }};
+
     root {{ dir }};
+
     client_max_body_size 20M;
 
     location /media/ {
     }
+
     location /static/ {
     }
+
     location = /+ {
         rewrite ^ https://plus.google.com/100544629037891834363 permanent;
     }
+
     location / {
         include     uwsgi_params;
         uwsgi_param UWSGI_FASTROUTER_KEY {{ fastrouter_key }};
