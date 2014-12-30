@@ -29,6 +29,7 @@ DEPLOY = {
 }
 
 SUBMODULES = {
+    "cmsplugin_bootstrap": "../cmsplugins/bootstrap#master",
 }
 
 # env for production (disables push for this env)
