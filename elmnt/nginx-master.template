@@ -12,7 +12,7 @@ server {
 
 server {
     listen 80;
-    server_name www.elmnt.de;
+    server_name www.elmnt.de {{ internal_domain }};
     charset     utf-8;
 
     root {{ dir }};
