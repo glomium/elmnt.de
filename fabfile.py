@@ -33,7 +33,7 @@ SUBMODULES = {
 }
 
 # env for production (disables push for this env)
-PRODUCTION = None
+PRODUCTION = 'prod'
 
 COPY_DB_EXCLUDE = [
     '', # keep me, so we can use join
