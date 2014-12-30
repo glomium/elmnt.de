@@ -295,14 +295,20 @@ def push_media():
         puts("SKIPPING push_media: Not allowed to push to production")
         return False
 
-    # TODO work with tmp directories on remote
+    tmp = sudo('mktemp -d', user=env.user)
+    sudo('cp -a %s %s' % (env.CFG['basedir'] + '/media/', tmp))
+    sudo('chown -R %s %s' % (env.user,  tmp))
 
     project.rsync_project(
-        remote_dir=env.CFG['basedir'] + '/media',
-        local_dir=BASEDIR + '/media/',
+        remote_dir=tmp + '/media/',
+        local_dir=BASEDIR + '/media',
         upload=True,
         delete=True,
     )
+    sudo('chown -R %s:%s %s' % (env.CFG["user"], env.CFG["group"], tmp))
+    sudo('rm -rf %s' % env.CFG['basedir'] + '/media/')
+    sudo('mv %s %s' % (tmp + '/media/', env.CFG['basedir']))
+    sudo('rm -rf %s' % tmp)
 
 
 @task
@@ -314,14 +320,16 @@ def pull_media():
         puts("You need to load an environment")
         return False
 
-    # TODO work with tmp directories on remote
+    tmp = sudo('mktemp -d', user=env.CFG["user"], group=env.CFG["group"])
+    sudo('cp -a %s %s' % (env.CFG['basedir'] + '/media/', tmp))
+    sudo('chown -R %s %s' % (env.user,  tmp))
 
     project.rsync_project(
-        remote_dir=env.CFG['basedir'] + '/media/',
+        remote_dir=tmp + '/media/',
         local_dir=BASEDIR + '/media',
         upload=False,
     )
-
+    sudo('rm -rf %s' % tmp)
 
 @task
 def pull():
