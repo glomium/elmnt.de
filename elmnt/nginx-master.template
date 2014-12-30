@@ -28,6 +28,6 @@ server {
     location / {
         include     uwsgi_params;
         uwsgi_param UWSGI_FASTROUTER_KEY {{ fastrouter_key }};
-        uwsgi_pass  unix:/tmp/fastrouter.socket;
+        uwsgi_pass  unix:/var/run/uwsgi/fastrouter.socket;
     }
 }
