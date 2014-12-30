@@ -32,7 +32,7 @@ msgstr "Template Startseite"
 
 #: templates/language_chooser.html:6 templates/language_chooser.html.py:7
 msgid "Change language"
-msgstr "Ändere Sprache"
+msgstr "Sprache ändern"
 
 #: templates/language_chooser.html:21
 msgid "current language"

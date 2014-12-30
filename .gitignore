@@ -9,6 +9,7 @@
 /fixtures_live.json
 
 /media/pictures/
+/media/gallery/
 /static
 /elmnt/database\.sqlite
 /elmnt\.egg-info
