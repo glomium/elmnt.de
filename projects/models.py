@@ -80,7 +80,7 @@ class Project(models.Model):
     )
 
     objects = models.Manager()
-    on_site = ProjectsManager()
+    active = ProjectsManager()
 
     def __str__(self):
         return "%s" % self.name
