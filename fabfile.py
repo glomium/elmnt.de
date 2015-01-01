@@ -32,7 +32,7 @@ SUBMODULES = {
 }
 
 # env for production (disables push for this env)
-PRODUCTION = None
+PRODUCTION = 'prod'
 
 COPY_DB_EXCLUDE = [
     '', # keep me, so we can use join
@@ -277,6 +277,7 @@ def pull_db():
     with lcd(BASEDIR):
         tmp = sudo('mktemp', user=env.CFG["user"], group=env.CFG["group"])
         managepy('dumpdata -n --indent=1 %s > %s' % (' -e '.join(COPY_DB_EXCLUDE), tmp), remote=True)
+        sudo('chown %s %s' % (env.user, tmp))
         get(tmp, 'fixtures_live.json')
         sudo('rm %s' % tmp)
         managepy('loaddata fixtures_live.json')
