@@ -347,11 +347,7 @@ def push():
 def deploy():
     if not hasattr(env, 'CFG'):
         puts("You should load an environment!")
-
-    # this is semi okay ... is syncs all projects, which is a bit overhead,
-    # but the salt state-layout requires this (TODO)
-    # better: sudo('salt-call state.sls projects.django')
-    sudo('salt-call state.highstate')
+    sudo('salt-call state.sls django_projects pillar=\'{"django_projects_active": "%s"}\'' % PROJECT)
 
 
 # HELPER Methods ==============================================================
