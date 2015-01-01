@@ -80,6 +80,7 @@ INSTALLED_APPS = (
 
     # own apps
     'groupplaner',
+    'projects',
     'gallery',
     'elmnt',
 )
