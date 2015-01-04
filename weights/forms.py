@@ -62,4 +62,3 @@ class DataForm(forms.ModelForm):
     fields = (
       'weight',
     )
-

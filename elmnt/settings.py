@@ -81,6 +81,7 @@ INSTALLED_APPS = (
     # own apps
     'groupplaner',
     'gallery',
+    'weights',
     'elmnt',
 )
 CRISPY_TEMPLATE_PACK = 'bootstrap3'

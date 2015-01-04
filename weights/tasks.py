@@ -265,35 +265,4 @@ def month_save(pk):
       date__year=last_month.date.strftime('%Y'),
     )
 
-# if False:
-#   if len(objects) == 0:
-#     return False
-
-#   reg = [0,0]
-
-#   for i in range(len(objects)):
-#     reg[0] += float(objects[i].weight)
-#     reg[1] += float(objects[i].calc_vbmi)
-
-#   reg[0] /= len(objects)
-#   reg[1] /= len(objects)
-
-#   self.weight = reg[0]
-#   self.bmi    = reg[1]
-
-#   set = self.previous_month()
-#   if set:
-#     self.dweight = self.weight - set.weight
-#     self.dbmi    = self.bmi    - set.bmi
-#   else:
-#     self.dweight = None
-#     self.dbmi    = None
-
-#   if self.date.month == datetime.now().month and self.date.year == datetime.now().year:
-#     self.date = datetime.now()
-#     self.evaluate = False
-#   else:
-#     self.date = date_end
-#     self.evaluate = True
-
   return True
