@@ -180,7 +180,7 @@ class Data(models.Model):
 
         # calc sums and fill lists
         for date, weight in weight_range:
-            x = (date - self.date).total_seconds() / 3600 / 24
+            x = (date - self.date).total_seconds() / 3600 / 24 / 7
             y = float(weight)
 
             xl.append(x)
