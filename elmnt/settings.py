@@ -83,6 +83,7 @@ INSTALLED_APPS = (
     'projects',
     'gallery',
     'technologies',
+    'weights',
     'elmnt',
 )
 CRISPY_TEMPLATE_PACK = 'bootstrap3'

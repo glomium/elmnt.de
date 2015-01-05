@@ -1,0 +1,44 @@
+{% extends "diet/base.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block title %}{{ block.super  }} - {% trans "Overview" %}{% endblock %}
+
+{% block content %}
+<h1>{% trans "Overview" %}</h1>
+<div class="document">
+  <img alt="" src="{% url "diet_graph" tag="overview" %}" />
+</div>
+
+<h1>{% trans "Table" %}</h1>
+<div class="document">
+<table>
+<thead>
+<tr>
+<td>{% trans "Date" %}</td>
+<td colspan="2">{% trans "Weight" %}</td>
+<td colspan="2">{% trans "BMI" %}</td>
+<td>{% trans "Details" %}</td>
+</tr>
+</thead>
+<tfoot>
+ <tr>
+  <td colspan="6"><a href="{% url "diet_download" %}">{% trans "Download data as csv" %}</a></td>
+ </tr>
+</tfoot>
+<tbody>
+{% for i in table %}
+<tr class="{% cycle 'row1' 'row2' %}">
+ <td>{{ i.date|date:"F Y" }}</td>
+ <td>{{ i.weight|floatformat:2 }}</td>
+ <td>{{ i.dweight|floatformat:2 }}</td>
+ <td>{{ i.bmi|floatformat:2 }}</td>
+ <td>{{ i.dbmi|floatformat:2 }}</td>
+ <td><a href="{{ i.get_absolute_url }}">{% trans "show" %}</a></td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+
+{% endblock %}
