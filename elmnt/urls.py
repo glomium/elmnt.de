@@ -8,6 +8,7 @@ from cms.sitemaps import CMSSitemap
 from gallery.sitemaps import GallerySitemap
 from groupplaner.sitemaps import EventSitemap
 from projects.sitemaps import ProjectSitemap
+from technologies.sitemaps import TechnologySitemap
 
 from django.contrib import admin
 admin.autodiscover()
@@ -20,6 +21,7 @@ SITEMAPS = {
     'gallery': GallerySitemap,
     'groupplaner': EventSitemap,
     'projects': ProjectSitemap,
+    'technologies': TechnologySitemap,
 }
 
 urlpatterns = patterns('',
