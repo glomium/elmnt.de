@@ -154,81 +154,81 @@ def data_save(pk):
   except Data.DoesNotExist:
     return False
 
-  profile = data.user
+# profile = data.user
 
-  height = float(profile.height)
-  dheight = float(profile.dheight)
-  bmitarget = float(profile.bmitarget)
+# height = float(profile.height)
+# dheight = float(profile.dheight)
+# bmitarget = float(profile.bmitarget)
 
-  g_range  = [ float( data.weight ) ]
-  c_range  = [] 
-  end_date = data.date - timedelta(days=1)
+# g_range  = [ float( data.weight ) ]
+# c_range  = [] 
+# end_date = data.date - timedelta(days=1)
 
-  # get start end end date for min/max values
-  start_date = end_date - timedelta(days=61)
+# # get start end end date for min/max values
+# start_date = end_date - timedelta(days=61)
 
-  for d in Data.objects.filter(user=profile, date__range=(start_date,end_date)):
-    g_range.append( float( d.weight ) )
+# for d in Data.objects.filter(user=profile, date__range=(start_date,end_date)):
+#   g_range.append( float( d.weight ) )
 
-  start_date = end_date - timedelta(days=21)
-  q = Data.objects.filter(user=profile, date__range=(start_date,end_date))
+# start_date = end_date - timedelta(days=21)
+# q = Data.objects.filter(user=profile, date__range=(start_date,end_date))
 
-  # do regression
-  if len(q) > 1:
-    x=[ 0 ]
-    y=[ float(data.weight) ]
+# # do regression
+# if len(q) > 1:
+#   x=[ 0 ]
+#   y=[ float(data.weight) ]
 
-    for d in q:
-      x.append((d.date-data.date).days)
-      y.append(float(d.weight))
+#   for d in q:
+#     x.append((d.date-data.date).days)
+#     y.append(float(d.weight))
 
-    # y = a + bx
-    sn = 0
-    sx = 0
-    sy = 0
-    sxx = 0
-    sxy = 0
-    R = 0
+#   # y = a + bx
+#   sn = 0
+#   sx = 0
+#   sy = 0
+#   sxx = 0
+#   sxy = 0
+#   R = 0
 
-    for i in range(len(x)):
-      sn += 1
-      sx += x[i]
-      sy += y[i]
-      sxx += x[i]*x[i]
-      sxy += x[i]*y[i]
+#   for i in range(len(x)):
+#     sn += 1
+#     sx += x[i]
+#     sy += y[i]
+#     sxx += x[i]*x[i]
+#     sxy += x[i]*y[i]
 
-    nenner = sn*sxx-sx*sx
-    a = [(sy*sxx-sx*sxy)/nenner, 0]
-    b = [(sn*sxy-sx*sy)/nenner,  0]
-    for i in range(len(x)):
-      R += pow(y[i]-a[0]-b[0]*x[i],2) 
-    a[1] = pow(R*sxx/(sn-2)/nenner,0.5)
-    b[1] = pow(R*sn/(sn-2)/nenner,0.5)
+#   nenner = sn*sxx-sx*sx
+#   a = [(sy*sxx-sx*sxy)/nenner, 0]
+#   b = [(sn*sxy-sx*sy)/nenner,  0]
+#   for i in range(len(x)):
+#     R += pow(y[i]-a[0]-b[0]*x[i],2) 
+#   a[1] = pow(R*sxx/(sn-2)/nenner,0.5)
+#   b[1] = pow(R*sn/(sn-2)/nenner,0.5)
 
-    c_range.append( a[0] )
+#   c_range.append( a[0] )
 
-    data.calc_vweight = a[0]
-    data.calc_dweight = a[1]
-    data.calc_vslope  = b[0]
-    data.calc_dslope  = b[1]
-    data.calc_vbmi    = a[0]/pow(height,2)
-    data.calc_dbmi    = pow( pow(a[1]/pow(height,2),2) + pow(a[0]*dheight/pow(height,3),2), 0.5)
-  else:
-    data.calc_vweight = None
-    data.calc_dweight = None
-    data.calc_vslope  = None
-    data.calc_dslope  = None
-    data.calc_vbmi    = float(data.weight)/pow(height,2)
-    data.calc_dbmi    = pow( pow(float(data.weight)*dheight/pow(height,3),2), 0.5)
+#   data.calc_vweight = a[0]
+#   data.calc_dweight = a[1]
+#   data.calc_vslope  = b[0]
+#   data.calc_dslope  = b[1]
+#   data.calc_vbmi    = a[0]/pow(height,2)
+#   data.calc_dbmi    = pow( pow(a[1]/pow(height,2),2) + pow(a[0]*dheight/pow(height,3),2), 0.5)
+# else:
+#   data.calc_vweight = None
+#   data.calc_dweight = None
+#   data.calc_vslope  = None
+#   data.calc_dslope  = None
+#   data.calc_vbmi    = float(data.weight)/pow(height,2)
+#   data.calc_dbmi    = pow( pow(float(data.weight)*dheight/pow(height,3),2), 0.5)
 
-  data.min_weight = min(g_range)
-  data.max_weight = max(g_range)
+# data.min_weight = min(g_range)
+# data.max_weight = max(g_range)
 
-  data.save(update_data=False)
+# data.save(update_data=False)
 
-  # update graphs
-  for graph in Graph.objects.filter(user=profile, pretag__in=[ 'overview', 'stats', data.date.strftime('%Y-%m') ]):
-    graph.redraw()
+# # update graphs
+# for graph in Graph.objects.filter(user=profile, pretag__in=[ 'overview', 'stats', data.date.strftime('%Y-%m') ]):
+#   graph.redraw()
 
   # update month
   try:

@@ -8,10 +8,6 @@ urlpatterns = patterns('',
     views.index,
     name='weights-index'),
 
-  url(r'^graph/(?P<tag>.*)\.png$',
-    views.graph,
-    name='weights-graph'),
-
   url(r'^profile/$',
     views.profile,
     name='weights-profile'),
@@ -24,11 +20,15 @@ urlpatterns = patterns('',
     views.download,
     name='weights-download'),
 
-  url(r'^statistic/$',
+  url(r'^api/$',
     views.statistic,
     name='weights-statistic'),
 
-  url(r'^statistic/(?P<year>\d{4})/(?P<month>\d{2})/$',
+  url(r'^api/(?P<year>\d{4})/$',
+    views.statistic_month,
+    name='weights-statistic-year'),
+
+  url(r'^api/(?P<year>\d{4})/(?P<month>\d{2})/$',
     views.statistic_month,
     name='weights-statistic-month'),
 

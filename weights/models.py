@@ -9,7 +9,8 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 
-from datetime import datetime, timedelta
+from datetime import timedelta
+from math import sqrt
 
 
 @python_2_unicode_compatible
@@ -20,8 +21,12 @@ class Profile(models.Model):
     )
     user = models.ForeignKey(
         getattr(settings, 'AUTH_USER_MODEL', 'auth.User'),
-        null=True, blank=False, editable=False,
-        related_name="+", on_delete=models.CASCADE)
+        null=True,
+        blank=False,
+        unique=True,
+        related_name="+",
+        on_delete=models.CASCADE,
+    )
     birth = models.DateField(
         _('birthday'),
         blank=False,
@@ -62,13 +67,13 @@ class Profile(models.Model):
         verbose_name_plural = _('Profiles')
 
     def __str__(self):
-      return self.user
+      return '%s' % self.user
 
 
+@python_2_unicode_compatible
 class Data(models.Model):
     user = models.ForeignKey(
         Profile,
-        unique_for_date="date",
         related_name="data",
     )
     date = models.DateTimeField(
@@ -132,10 +137,110 @@ class Data(models.Model):
     def __str__(self):
         return self.date.isoformat()
 
-    def save(self,update_data=True,*args,**kwargs):
-        super(Data, self).save(*args,**kwargs)
+    def save(self, update_data=True, *args, **kwargs):
+        super(Data, self).save(*args, **kwargs)
         if update_data:
-            data_save.delay(pk=self.pk)
+            self.update_data(save=True)
+
+    def update_data(self, save=False):
+
+        # collect data from profile
+        height = float(self.user.height)
+        dheight = float(self.user.dheight)
+        bmitarget = float(self.user.bmitarget)
+
+        # create date range for 2 month stats
+        date_i_m = self.date - timedelta(days=61)
+        date_i_s = self.date - timedelta(days=21)
+
+        weight_range = self.user.data.filter(
+            date__range=(date_i_m, self.date)
+        ).values_list("weight", flat=True)
+
+        self.min_weight = min(weight_range)
+        self.max_weight = max(weight_range)
+
+        # create date range for calculated data
+        weight_range = self.user.data.filter(
+            date__range=(date_i_s, self.date)
+        ).values_list("date", "weight").order_by('-date')
+
+        # regression data: y = a + bx
+
+        # lists 
+        xl = []
+        yl = []
+
+        # sums
+        sn = 0
+        sx = 0
+        sy = 0
+        sxx = 0
+        sxy = 0
+
+        # calc sums and fill lists
+        for date, weight in weight_range:
+            x = (date - self.date).total_seconds() / 3600 / 24
+            y = float(weight)
+
+            xl.append(x)
+            yl.append(y)
+
+            sn += 1
+            sx += x
+            sy += y
+            sxx += x * x
+            sxy += x * y
+
+        denominator = sn * sxx - sx * sx
+
+        # the denominator is only zero, if there is no variance -> y = a
+        if denominator == 0.:
+            self.calc_vweight = self.weight
+            self.calc_dweight = 0.
+            self.calc_vslope = 0.
+            self.calc_dslope = 0.
+            self.calc_vbmi = float(self.weight) / pow(height, 2)
+            self.calc_dbmi = sqrt(
+                pow(
+                    float(self.weight) * dheight / pow(height, 3),
+                    2
+                )
+            )
+        else:
+            # y = a + bx
+            a = (sy * sxx - sx * sxy) / denominator
+            b = (sn * sxy - sx * sy) / denominator
+
+            self.calc_vweight = a
+            self.calc_vslope = b
+            self.calc_vbmi = a / pow(height, 2)
+
+            # calculate statistical errors
+            if sn > 2:
+                R = 0
+                for i in range(len(xl)):
+                    R += pow(yl[i] - a - xl[i] * b, 2) 
+                a_error = sqrt( R * sxx / (sn-2) / denominator)
+                b_error = sqrt( R * sn / (sn-2) / denominator)
+            else:
+                a_error = 0.
+                b_error = 0.
+
+            self.calc_dweight = a_error
+            self.calc_dslope = b_error
+            self.calc_dbmi = sqrt(
+                pow(
+                    a_error * pow(height, 2),
+                    2
+                ) + pow(
+                    float(a) * dheight / pow(height, 3),
+                    2
+                )
+            )
+
+        if save:
+            self.save(update_data=False)
 
     # get statistics for the statistic page
     def get_stats(self, profile):
@@ -201,71 +306,71 @@ class Data(models.Model):
         val['target_date']  = self.date + timedelta(days=targetrate)
         return val
 
+# @python_2_unicode_compatible
+# class Month(models.Model):
+#   user = models.ForeignKey(
+#       Profile,
+#       unique_for_month="date",
+#       related_name="+",
+#   )
+#   date = models.DateField(
+#       _('date'),
+#       default=now,
+#       blank=False,
+#   )
+#   evaluate = models.BooleanField(
+#       _('evaluate'),
+#       default=False,
+#   )
+#   weight = models.FloatField(
+#       _('weight'),
+#       null=True,
+#       blank=True,
+#   )
+#   dweight = models.FloatField(
+#       _('delta weight'),
+#       null=True,
+#       blank=True,
+#   )
+#   bmi = models.FloatField(
+#       _('bmi'),
+#       null=True,
+#       blank=True,
+#   )
+#   dbmi = models.FloatField(
+#       _('delta bmi'),
+#       null=True,
+#       blank=True,
+#   )
 
-class Month(models.Model):
-    user = models.ForeignKey(
-        Profile,
-        unique_for_month="date",
-        related_name="+",
-    )
-    date = models.DateField(
-        _('date'),
-        default=now,
-        blank=False,
-    )
-    evaluate = models.BooleanField(
-        _('evaluate'),
-        default=False,
-    )
-    weight = models.FloatField(
-        _('weight'),
-        null=True,
-        blank=True,
-    )
-    dweight = models.FloatField(
-        _('delta weight'),
-        null=True,
-        blank=True,
-    )
-    bmi = models.FloatField(
-        _('bmi'),
-        null=True,
-        blank=True,
-    )
-    dbmi = models.FloatField(
-        _('delta bmi'),
-        null=True,
-        blank=True,
-    )
+#   class Meta:
+#       ordering = ['-date']
+#       verbose_name = _('Month')
+#       verbose_name_plural = _('Months')
 
-    class Meta:
-        ordering = ['-date']
-        verbose_name = _('Month')
-        verbose_name_plural = _('Months')
+#   def __str__(self):
+#       return self.date.isoformat()
 
-    def __unicode__(self):
-        return self.date.isoformat()
+#   @models.permalink
+#   def get_absolute_url(self):
+#       return ('diet_statistic_month', None, {
+#           'year': self.date.year,
+#           'month': self.date.strftime('%m'),
+#       })
 
-    @models.permalink
-    def get_absolute_url(self):
-        return ('diet_statistic_month', None, {
-            'year': self.date.year,
-            'month': self.date.strftime('%m'),
-        })
+#   def get_previous_month(self):
+#       date_ende  = datetime( self.date.year, self.date.month, 1) - timedelta(days=1)
+#       date_start = datetime( date_ende.year, date_ende.month, 1)
+#       try:
+#           entry = Month.objects.get(user_id=self.user_id, date__range=(date_start,date_ende))
+#       except Month.DoesNotExist:
+#           entry = None
+#       return entry 
 
-    def get_previous_month(self):
-        date_ende  = datetime( self.date.year, self.date.month, 1) - timedelta(days=1)
-        date_start = datetime( date_ende.year, date_ende.month, 1)
-        try:
-            entry = Month.objects.get(user_id=self.user_id, date__range=(date_start,date_ende))
-        except Month.DoesNotExist:
-            entry = None
-        return entry 
-
-    def save(self,*args,**kwargs):
-        new = False
-        if not self.pk:
-            graph = Graph(user=self.user,pretag=self.date.strftime('%Y-%m'))
-            graph.save()
-        super(Month, self).save(*args,**kwargs)
-        month_save.delay(self.pk)
+#   def save(self,*args,**kwargs):
+#       new = False
+#       if not self.pk:
+#           graph = Graph(user=self.user,pretag=self.date.strftime('%Y-%m'))
+#           graph.save()
+#       super(Month, self).save(*args,**kwargs)
+#       month_save.delay(self.pk)

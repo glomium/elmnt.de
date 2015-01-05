@@ -36,24 +36,6 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
-            name='Month',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('date', models.DateField(default=django.utils.timezone.now, verbose_name='Datum')),
-                ('evaluate', models.BooleanField(default=False, verbose_name='evaluate')),
-                ('weight', models.FloatField(null=True, verbose_name='weight', blank=True)),
-                ('dweight', models.FloatField(null=True, verbose_name='delta weight', blank=True)),
-                ('bmi', models.FloatField(null=True, verbose_name='bmi', blank=True)),
-                ('dbmi', models.FloatField(null=True, verbose_name='delta bmi', blank=True)),
-            ],
-            options={
-                'ordering': ['-date'],
-                'verbose_name': 'Month',
-                'verbose_name_plural': 'Months',
-            },
-            bases=(models.Model,),
-        ),
-        migrations.CreateModel(
             name='Profile',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -62,19 +44,13 @@ class Migration(migrations.Migration):
                 ('height', models.DecimalField(help_text='Your height is used for calculating your BMI (X.XXX m)', verbose_name='H\xf6he', max_digits=4, decimal_places=3)),
                 ('dheight', models.DecimalField(help_text='The error of your height is used to calculate the error of your BMI (X.XXX m)', verbose_name='delta height', max_digits=4, decimal_places=3)),
                 ('bmitarget', models.DecimalField(help_text='Enter Your target BMI (XX.XX)', verbose_name='bmi target', max_digits=4, decimal_places=2)),
-                ('user', models.ForeignKey(related_name='+', editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user', models.ForeignKey(related_name='+', null=True, to=settings.AUTH_USER_MODEL, unique=True)),
             ],
             options={
                 'verbose_name': 'Profile',
                 'verbose_name_plural': 'Profiles',
             },
             bases=(models.Model,),
-        ),
-        migrations.AddField(
-            model_name='month',
-            name='user',
-            field=models.ForeignKey(related_name='+', unique_for_month=b'date', to='weights.Profile'),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='data',
