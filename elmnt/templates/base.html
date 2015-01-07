@@ -29,8 +29,8 @@
                     <ul class="nav navbar-nav navbar-right">
                         {% show_menu 0 0 0 0 "bootstrap_menu.html" %}
                         {% language_chooser "language_chooser.html" %}
-                        <li class="hidden-xs"><a href="{% url "admin:index" %}"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a></li>
                         {% if request.user.is_superuser %}
+                        <li class="hidden-xs"><a href="{% url "admin:index" %}"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a></li>
                         {% endif %}
                     </ul>
                 </div><!--/.nav-collapse -->

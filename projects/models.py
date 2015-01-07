@@ -67,6 +67,7 @@ class Project(models.Model):
     placeholder = PlaceholderField('projects_placeholder')
 
     published = models.BooleanField(_("Is published"), default=True)
+
     modified = models.DateTimeField(
         _("Modified"),
         auto_now=True,
@@ -74,6 +75,7 @@ class Project(models.Model):
         null=True,
         blank=False,
     )
+
     created = models.DateTimeField(
         _("Created"),
         auto_now_add=True,

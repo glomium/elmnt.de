@@ -18,5 +18,11 @@ class TechnologyList(ListView):
 
 class TechnologyDetail(DetailView):
 
+    def get(self, *args, **kwargs):
+        self.object = self.get_object()
+        if hasattr(self.request, 'toolbar'):
+            self.request.toolbar.set_object(self.object)
+        return super(TechnologyDetail, self).get(*args, **kwargs)
+
     def get_queryset(self):
         return Technology.active.all()
