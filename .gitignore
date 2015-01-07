@@ -5,11 +5,10 @@
 
 /\.tox
 /virtenv
-/fixtures_local.json
-/fixtures_live.json
+/static
+/fixtures_*\.json
+/*\.egg-info
+/*/database\.sqlite
 
 /media/pictures/
 /media/gallery/
-/static
-/elmnt/database\.sqlite
-/elmnt\.egg-info
