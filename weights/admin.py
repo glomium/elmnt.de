@@ -27,6 +27,8 @@ class DataAdmin(admin.ModelAdmin):
             'fields': readonly_fields
         }),
     )
+    list_display = ('date', 'user', 'weight', 'calc_vweight', 'calc_vbmi', 'max_weight', 'min_weight')
+    list_display_links = ('date',)
 
 admin.site.register(Profile)
 admin.site.register(Data, DataAdmin)
