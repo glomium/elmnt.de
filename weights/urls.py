@@ -1,35 +1,36 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import url, patterns
 
-import views
+from .views import IndexView
+from .views import json
 
 urlpatterns = patterns('',
 
   url(r'^$',
-    views.index,
+    IndexView.as_view(),
     name='weights-index'),
 
-  url(r'^profile/$',
-    views.profile,
-    name='weights-profile'),
+# url(r'^profile/$',
+#   views.profile,
+#   name='weights-profile'),
 
-  url(r'^overview/$',
-    views.overview,
-    name='weights-overview'),
+# url(r'^overview/$',
+#   views.overview,
+#   name='weights-overview'),
 
-  url(r'^download$',
-    views.download,
-    name='weights-download'),
+# url(r'^download$',
+#   views.download,
+#   name='weights-download'),
 
   url(r'^api/$',
-    views.statistic,
-    name='weights-statistic'),
+    json,
+    name='weights-api'),
 
   url(r'^api/(?P<year>\d{4})/$',
-    views.statistic_month,
-    name='weights-statistic-year'),
+    json,
+    name='weights-api'),
 
   url(r'^api/(?P<year>\d{4})/(?P<month>\d{2})/$',
-    views.statistic_month,
-    name='weights-statistic-month'),
+    json,
+    name='weights-api'),
 
 )

@@ -15,10 +15,6 @@ from math import sqrt
 
 @python_2_unicode_compatible
 class Profile(models.Model):
-    GENDER_CHOICES = (
-        ('M', _('Male')),
-        ('F', _('Female')),
-    )
     user = models.ForeignKey(
         getattr(settings, 'AUTH_USER_MODEL', 'auth.User'),
         null=True,
@@ -26,19 +22,6 @@ class Profile(models.Model):
         unique=True,
         related_name="+",
         on_delete=models.CASCADE,
-    )
-    birth = models.DateField(
-        _('birthday'),
-        blank=False,
-        null=False,
-        help_text=_('Your birthday is used to check your target-BMI'),
-    )
-    gender = models.CharField(
-        _('gender'),
-        max_length=1,
-        choices=GENDER_CHOICES,
-        blank=False,
-        help_text=_('Your gender is used to check yout target-BMI'),
     )
     height = models.DecimalField(
         _('height'),

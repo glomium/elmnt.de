@@ -1,3 +1,47 @@
+#!/usr/bin/python
+# ex:set fileencoding=utf-8:
+
+from django.contrib.auth.decorators import login_required
+from django.http import Http404
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.views.generic import TemplateView
+
+from .models import Profile
+from .models import Data
+
+
+class IndexView(TemplateView):
+    template_name = "weights/index.html"
+
+
+@login_required
+def json(request, year=None, month=None):
+    profile = get_object_or_404(Profile, user=request.user)
+
+    objs = profile.data.all()
+
+    data = {
+        'date': [],
+        'weight': [],
+        'cweight': [],
+        'dweight': [],
+        'max': [],
+        'min': [],
+    }
+
+    for obj in objs:
+        data["date"].append(obj.date.isoformat())
+        data["weight"].append(float(obj.weight))
+        data["cweight"].append(obj.calc_vweight)
+        data["dweight"].append(obj.calc_dweight)
+        data["min"].append(obj.min_weight)
+        data["max"].append(obj.max_weight)
+
+    return JsonResponse(data)
+
+
+"""
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -143,4 +187,4 @@ def download(request):
                       i.calc_dbmi
     ])
   return response
-
+"""
