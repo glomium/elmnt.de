@@ -1,79 +1,53 @@
 {% extends CMS_TEMPLATE %}
 
+{% load i18n sekizai_tags %}
+
 {% block title %}{{ block.super }} Weights{% endblock %}
 
 {% block content %}
+{% addtoblock "js" %}<script src="{{ MEDIA_URL }}js/d3.v3.min.js"></script>{% endaddtoblock %}
+{% addtoblock "js" %}<script src="{{ MEDIA_URL }}js/c3.min.js"></script>{% endaddtoblock %}
+{% addtoblock "css" %}<link href="{{ MEDIA_URL }}css/c3.min.css" rel="stylesheet">{% endaddtoblock %}
 
-<script src="http://d3js.org/d3.v3.js"></script>
 <div id="graph"></div>
-<script>
 
-var margin = {top: 20, right: 20, bottom: 30, left: 50},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
-
-var parseDate = d3.time.format.iso.parse;
-
-var x = d3.time.scale()
-    .range([0, width]);
-
-var y = d3.scale.linear()
-    .range([height, 0]);
-
-var x = d3.scale.linear()
-    .range([0, width]);
-
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
-
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left");
-
-var line = d3.svg.line()
-    .x(function(d) { return x(d.cweight); })
-    .y(function(d) { return y(d.weight); });
-
-var svg = d3.select("#graph").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-d3.json("./api/", function(error, data) {
-
-    // convert dates
-    data.date = data.date.map(parseDate);
-
-    x.domain(d3.extent(data, function(d) { return +d.cweight; }));
-    y.domain(d3.extent(data, function(d) { return +d.weight; }));
-
-    svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
-  
-    svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis)
-        .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text("Price");
-
-    svg.append("path")
-        .datum(data)
-        .attr("class", "line")
-        .attr("d", line);
+{% addtoblock "js" %}<script>
+var chart = c3.generate({
+    bindto: '#graph',
+    size: {
+        height: 450,
+    },
+    data: {
+        url: './api/',
+        x: 'date',
+        xFormat: '%Y-%m-%d %H:%M:%S',
+        types: {
+        },
+        colors: {
+            weight: '#000000',
+            cweight: '#0000ff',
+            cweight_h: '#9999ff',
+            cweight_l: '#9999ff',
+            min: '#aaaaaa',
+            max: '#aaaaaa'
+        },
+        names: {
+            weight: 'Name 1',
+            cweight: 'Name 2'
+        }
+    },
+    axis: {
+        x: {
+            type: 'timeseries',
+            tick: {
+                format: '%m-%d %H:%M',
+                count: 4,
+            }
+        }
+    },
+    legend: {
+        hide: ['cweight_l','cweight_h']
+    }
 });
-
-</script>
-
-{% endblock %}
-
-{% block sidebar %}
-SIDEBAR
+</script>{% endaddtoblock %}
 {% endblock %}
