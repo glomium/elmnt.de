@@ -3,9 +3,11 @@
 
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from django.http import JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
+
+import csv
 
 from .models import Profile
 from .models import Data
@@ -21,24 +23,33 @@ def json(request, year=None, month=None):
 
     objs = profile.data.all()
 
-    data = {
-        'date': [],
-        'weight': [],
-        'cweight': [],
-        'dweight': [],
-        'max': [],
-        'min': [],
-    }
+    response = HttpResponse(content_type='text/csv')
+    # response['Content-Disposition'] = 'attachment; filename=data.csv'
+
+    writer = csv.writer(response)
+    writer.writerow([
+        'date',
+        'weight',
+        'cweight',
+        'cweight_h',
+        'cweight_l',
+        'max',
+        'min',
+    ])
 
     for obj in objs:
-        data["date"].append(obj.date.isoformat())
-        data["weight"].append(float(obj.weight))
-        data["cweight"].append(obj.calc_vweight)
-        data["dweight"].append(obj.calc_dweight)
-        data["min"].append(obj.min_weight)
-        data["max"].append(obj.max_weight)
+        writer.writerow([
+#           obj.date.isoformat(),
+            obj.date.strftime('%Y-%m-%d %H:%M:%S'),
+            '%5.2f' % float(obj.weight),
+            '%5.2f' % obj.calc_vweight,
+            '%5.2f' % (obj.calc_vweight + obj.calc_dweight),
+            '%5.2f' % (obj.calc_vweight - obj.calc_dweight),
+            '%5.2f' % obj.max_weight,
+            '%5.2f' % obj.min_weight,
+    ])
 
-    return JsonResponse(data)
+    return response
 
 
 """
@@ -161,30 +172,4 @@ def statistic_month(request, year, month):
   c['img'] = img
   return render_to_response('diet/statistic_month.html',c,context_instance=RequestContext(request))
 
-@login_required
-def download(request):
-  ''' download data as csv '''
-  if not request.user.is_authenticated():
-    raise Http404
-  q = DietData.objects.filter(user=request.user).order_by('date')
-
-  import csv
-
-  response = HttpResponse(mimetype='text/csv')
-  response['Content-Disposition'] = 'attachment; filename=data.csv'
-
-  writer = csv.writer(response)
-  writer.writerow(['date', 'weight', 'calc weight', 'calc weight error', 'calc slope', 'calc slope error', 'calc bmi', 'calc bmi error'])
-  for i in q:
-    writer.writerow([
-                      i.date.isoformat(),
-                      i.weight,
-                      i.calc_vweight,
-                      i.calc_dweight,
-                      i.calc_vslope,
-                      i.calc_dslope,
-                      i.calc_vbmi,
-                      i.calc_dbmi
-    ])
-  return response
 """
