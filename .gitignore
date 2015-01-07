@@ -3,4 +3,11 @@
 *.pyc
 *-journal
 
-static
+/\.tox
+/virtenv
+/static
+/fixtures_*\.json
+/*\.egg-info
+/*/database\.sqlite
+
+
