@@ -7,20 +7,20 @@ from cms.menu_bases import CMSAttachMenu
 from menus.base import Menu, NavigationNode
 from menus.menu_pool import menu_pool
 
-from .models import Project
+from .models import Technology
 
 
-class ProjectMenu(CMSAttachMenu):
-    name = _("Project Menu")
+class TechnologyMenu(CMSAttachMenu):
+    name = _("Technology Menu")
 
     def get_nodes(self, request):
         nodes = []
-        for project in Project.active.all():
+        for technology in Technology.active.all():
             node = NavigationNode(
-                project.name,
-                project.get_absolute_url(),
-                project.pk
+                technology.name,
+                technology.get_absolute_url(),
+                technology.pk
             )
             nodes.append(node)
         return nodes
-menu_pool.register_menu(ProjectMenu)
+menu_pool.register_menu(TechnologyMenu)

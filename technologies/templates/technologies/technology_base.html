@@ -1,1 +1,10 @@
 {% extends CMS_TEMPLATE %}
+
+{% load cms_tags menu_tags %}
+
+{% block sidebar %}
+<h3>{% page_attribute "page_title" %}:</h3>
+<ul class="nav nav-pills nav-stacked">
+{% show_menu 1 0 0 1 "sidebar_menu.html" %}
+</ul>
+{% endblock %}

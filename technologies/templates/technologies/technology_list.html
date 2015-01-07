@@ -1,1 +1,12 @@
-{% extends "projects/project_base.html" %}
+{% extends "technologies/technology_base.html" %}
+
+{% load cms_tags%}
+
+{% block content %}
+{{ block.super }}
+<ul>
+{% for object in object_list %}
+<li><p><a href="{{ object.get_absolute_url }}">{{ object.name }}</a></p></li>
+{% endfor %}
+</ul>
+{% endblock %}

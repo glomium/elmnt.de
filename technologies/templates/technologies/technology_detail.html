@@ -1,1 +1,16 @@
-{% extends "projects/project_base.html" %}
+{% extends "technologies/technology_base.html" %}
+
+{% load i18n cms_tags %}
+
+{% block title %}{{ block.super }} - {{ object.name }}{% endblock %}
+
+{% block content-title %}{% render_model object "name" %}{% endblock %}
+
+{% block content %}
+{% if object.homepage %}
+<ul>
+    {% if object.homepage %}<li><p>{% trans "Homepage" %}: <a target="_blank" href="{{ object.homepage }}">{{ object.homepage }}</a><p></li>{% endif %}
+</ul>
+{% endif %}
+{% render_placeholder object.placeholder %}
+{% endblock %}
