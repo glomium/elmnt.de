@@ -20,7 +20,7 @@ setup(
         'django>=1.7,<1.8',
         'django-sekizai',
         'psycopg2',
-        'uwsgi',
+#       'uwsgi',
 
         'django-reversion',
         'django-cms',
