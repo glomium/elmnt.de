@@ -13,7 +13,7 @@ from taggit.managers import TaggableManager
 class TechnologyManager(models.Manager):
 
     def get_queryset(self):
-        qs = super(ProjectsManager, self).get_queryset()
+        qs = super(TechnologyManager, self).get_queryset()
         qs = qs.filter(published=True)
         qs = qs.prefetch_related('logo')
         return qs

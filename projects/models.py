@@ -8,6 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from cms.models.fields import PlaceholderField
 from filer.fields.image import FilerImageField
 
+
 STATUS_ALPHA = 'a'
 STATUS_BETA = 'b'
 STATUS_RELEASED = 'r'
@@ -17,6 +18,7 @@ STATUS_CHOICES = (
     (STATUS_RELEASED, _('released')),
 )
 
+
 class ProjectsManager(models.Manager):
 
     def get_queryset(self):
@@ -24,6 +26,7 @@ class ProjectsManager(models.Manager):
         qs = qs.filter(published=True)
         qs = qs.prefetch_related('logo')
         return qs
+
 
 @python_2_unicode_compatible
 class Project(models.Model):
@@ -48,17 +51,17 @@ class Project(models.Model):
     )
     status = models.CharField(
         _('Status'),
-        max_length=100,
+        max_length=1,
         blank=False,
         null=True,
         choices=STATUS_CHOICES,
     )
-    repository = models.URLField(
-        _('Repository'),
-        blank=True,
-    )
     homepage = models.URLField(
         _('Homepage'),
+        blank=True,
+    )
+    repository = models.URLField(
+        _('Repository'),
         blank=True,
     )
     placeholder = PlaceholderField('projects_placeholder')
@@ -88,7 +91,7 @@ class Project(models.Model):
     class Meta:
         verbose_name_plural = _('Projects')
         verbose_name = _('Project')
-        ordering = ['name']
+        ordering = ['-status', 'name']
 
     def object_has_logo(self):
         return bool(self.logo_id)
