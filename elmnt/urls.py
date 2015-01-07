@@ -24,8 +24,10 @@ SITEMAPS = {
     'technologies': TechnologySitemap,
 }
 
-urlpatterns = patterns('',
-    url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': SITEMAPS}),
+urlpatterns = patterns(
+    'django.contrib.sitemaps.views',
+    url(r'^sitemap\.xml$', 'index', {'sitemaps': SITEMAPS}),
+    url(r'^sitemap-(?P<section>\w+)\.xml$', 'sitemap', {'sitemaps': SITEMAPS}),
 )
 
 urlpatterns += i18n_patterns('',

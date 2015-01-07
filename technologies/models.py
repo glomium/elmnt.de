@@ -54,6 +54,7 @@ class Technology(models.Model):
     tags = TaggableManager(blank=True)
 
     published = models.BooleanField(_("Is published"), default=True)
+
     modified = models.DateTimeField(
         _("Modified"),
         auto_now=True,
@@ -61,6 +62,7 @@ class Technology(models.Model):
         null=True,
         blank=False,
     )
+
     created = models.DateTimeField(
         _("Created"),
         auto_now_add=True,

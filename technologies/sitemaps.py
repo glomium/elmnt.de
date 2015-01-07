@@ -3,19 +3,23 @@
 
 from __future__ import unicode_literals
 
+from django.conf import settings
 from django.contrib import sitemaps
 
 from .models import Technology
+from elmnt.i18nsitemap import I18NSitemap  # TODO remove me on django 1.8
 
-class TechnologySitemap(sitemaps.Sitemap):
+
+class TechnologySitemap(I18NSitemap):
     priority = 0.5
     changefreq = 'monthly'
+    i18n = getattr(settings, 'USE_I18N', False)
 
     def items(self):
         return Technology.active.all()
 
     def lastmod(self, item):
-        return item.changed
+        return item.modified
 
     def location(self, item):
         return item.get_absolute_url()

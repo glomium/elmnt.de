@@ -18,5 +18,11 @@ class ProjectList(ListView):
 
 class ProjectDetail(DetailView):
 
+    def get(self, *args, **kwargs):
+        self.object = self.get_object()
+        if hasattr(self.request, 'toolbar'):
+            self.request.toolbar.set_object(self.object)
+        return super(ProjectDetail, self).get(*args, **kwargs)
+
     def get_queryset(self):
         return Project.active.all()
