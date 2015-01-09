@@ -7,6 +7,7 @@ from django.views.generic.detail import SingleObjectTemplateResponseMixin, Singl
 from django.views.generic.edit import FormMixin, ProcessFormView
 from django.views.generic.list import ListView
 from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse_lazy
 from django.utils.timezone import now
 
 from .models import Event, Participent
@@ -20,7 +21,7 @@ class EventList(ListView):
 
 class EventDetail(SingleObjectTemplateResponseMixin, FormMixin, SingleObjectMixin, ProcessFormView):
     model = Event
-    success_url = reverse('groupplaner-list')
+    success_url = reverse_lazy('groupplaner-list')
   
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
