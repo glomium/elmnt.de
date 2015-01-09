@@ -6,7 +6,7 @@ from __future__ import absolute_import
 from django.views.generic.detail import SingleObjectTemplateResponseMixin, SingleObjectMixin
 from django.views.generic.edit import FormMixin, ProcessFormView
 from django.views.generic.list import ListView
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse
 from django.utils.timezone import now
 
 from .models import Event, Participent
@@ -20,7 +20,7 @@ class EventList(ListView):
 
 class EventDetail(SingleObjectTemplateResponseMixin, FormMixin, SingleObjectMixin, ProcessFormView):
     model = Event
-    success_url = reverse_lazy('groupplaner-list')
+    success_url = reverse('groupplaner-list')
   
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -58,7 +58,7 @@ class EventDetail(SingleObjectTemplateResponseMixin, FormMixin, SingleObjectMixi
         return super(EventDetail, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
-        self.request._language_changer = lambda l: '/%s/' % self.request.language  # TODO: update language properly
+        self.request._language_changer = lambda l: reverse('groupplaner-list')
         context = {'object': self.object}
         context.update(kwargs)
         return super(EventDetail, self).get_context_data(**context)
