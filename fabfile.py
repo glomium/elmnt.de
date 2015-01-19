@@ -301,8 +301,8 @@ def push_media():
     sudo('chown -R %s %s' % (env.user,  tmp))
 
     project.rsync_project(
-        remote_dir=tmp + '/media/',
-        local_dir=BASEDIR + '/media',
+        remote_dir=tmp + '/media',
+        local_dir=BASEDIR + '/media/',
         upload=True,
         delete=True,
     )
