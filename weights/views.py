@@ -2,6 +2,7 @@
 # ex:set fileencoding=utf-8:
 
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
 from django.http import Http404
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -18,6 +19,7 @@ class IndexView(TemplateView):
 
 
 @login_required
+@never_cache
 def json(request, year=None, month=None):
     profile = get_object_or_404(Profile, user=request.user)
 
@@ -34,6 +36,7 @@ def json(request, year=None, month=None):
         'cweight_h',
         'cweight_l',
         'max',
+        'mid',
         'min',
     ])
 
@@ -46,6 +49,7 @@ def json(request, year=None, month=None):
             '%5.2f' % (obj.calc_vweight + obj.calc_dweight),
             '%5.2f' % (obj.calc_vweight - obj.calc_dweight),
             '%5.2f' % obj.max_weight,
+            '%5.2f' % (0.5 * obj.max_weight + 0.5 * obj.min_weight),
             '%5.2f' % obj.min_weight,
     ])
 
