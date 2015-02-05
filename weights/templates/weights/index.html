@@ -25,15 +25,13 @@ var chart = c3.generate({
         },
         colors: {
             weight: '#000000',
-            cweight: '#0000ff',
             cweight_h: '#9999ff',
             cweight_l: '#9999ff',
-            min: '#aaaaaa',
-            max: '#aaaaaa'
+            mid: '#000099',
         },
         names: {
-            weight: 'Name 1',
-            cweight: 'Name 2'
+            weight: 'Gewicht',
+            mid: 'Limit'
         }
     },
     axis: {
@@ -46,7 +44,7 @@ var chart = c3.generate({
         }
     },
     legend: {
-        hide: ['cweight_l','cweight_h']
+        hide: ['cweight', 'cweight_l','cweight_h']
     }
 });
 </script>{% endaddtoblock %}

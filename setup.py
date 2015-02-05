@@ -17,7 +17,7 @@ setup(
     install_requires = [
         'pytz',
         'Pillow',
-        'django>=1.7,<1.8',
+        'django>=1.7,<1.7.99',
         'django-sekizai',
         'psycopg2',
 #       'uwsgi',

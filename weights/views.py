@@ -32,12 +32,9 @@ def json(request, year=None, month=None):
     writer.writerow([
         'date',
         'weight',
-        'cweight',
         'cweight_h',
         'cweight_l',
-        'max',
         'mid',
-        'min',
     ])
 
     for obj in objs:
@@ -45,12 +42,9 @@ def json(request, year=None, month=None):
 #           obj.date.isoformat(),
             obj.date.strftime('%Y-%m-%d %H:%M:%S'),
             '%5.2f' % float(obj.weight),
-            '%5.2f' % obj.calc_vweight,
             '%5.2f' % (obj.calc_vweight + obj.calc_dweight),
             '%5.2f' % (obj.calc_vweight - obj.calc_dweight),
-            '%5.2f' % obj.max_weight,
             '%5.2f' % (0.5 * obj.max_weight + 0.5 * obj.min_weight),
-            '%5.2f' % obj.min_weight,
     ])
 
     return response
