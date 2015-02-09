@@ -28,10 +28,24 @@ var chart = c3.generate({
             cweight_h: '#9999ff',
             cweight_l: '#9999ff',
             mid: '#000099',
+            slope: '#ffaa00',
+            slope_h: '#ffaa99',
+            slope_l: '#ffaa99',
         },
         names: {
             weight: 'Gewicht',
-            mid: 'Limit'
+            mid: 'Limit',
+            slope: 'Gewichtsänderung pro Woche',
+        },
+        axes: {
+            weight: 'y',
+            cweight_h: 'y',
+            cweight_l: 'y',
+            mid: 'y',
+            slope: 'y2',
+            cweight: null,
+            slope_h: null,
+            slope_l: null
         }
     },
     axis: {
@@ -41,10 +55,13 @@ var chart = c3.generate({
                 format: '%m-%d %H:%M',
                 count: 4,
             }
+        },
+        y2: {
+            show: true
         }
     },
     legend: {
-        hide: ['cweight', 'cweight_l','cweight_h']
+        hide: ['cweight', 'cweight_l', 'cweight_h', 'slope_l', 'slope_h']
     }
 });
 </script>{% endaddtoblock %}

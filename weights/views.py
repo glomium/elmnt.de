@@ -33,8 +33,12 @@ def json(request, year=None, month=None):
         'date',
         'weight',
         'cweight_h',
+        'cweight',
         'cweight_l',
         'mid',
+        'slope_h',
+        'slope',
+        'slope_l',
     ])
 
     for obj in objs:
@@ -43,8 +47,12 @@ def json(request, year=None, month=None):
             obj.date.strftime('%Y-%m-%d %H:%M:%S'),
             '%5.2f' % float(obj.weight),
             '%5.2f' % (obj.calc_vweight + obj.calc_dweight),
+            '%5.2f' % (obj.calc_vweight),
             '%5.2f' % (obj.calc_vweight - obj.calc_dweight),
             '%5.2f' % (0.5 * obj.max_weight + 0.5 * obj.min_weight),
+            '%3.2f' % (obj.calc_vslope + obj.calc_dslope),
+            '%3.2f' % (obj.calc_vslope),
+            '%3.2f' % (obj.calc_vslope - obj.calc_dslope),
     ])
 
     return response
