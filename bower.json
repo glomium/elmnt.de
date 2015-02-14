@@ -1,7 +1,7 @@
 {
-  "name": "{{ APP }}",
+  "name": "elmnt.de",
   "version": "1.0",
-  "homepage": "http://www.igelware.de",
+  "homepage": "http://www.elmnt.de",
   "authors": [
     "Sebastian Braun <sebastian@elmnt.de>"
   ],
@@ -9,5 +9,6 @@
   "license": "",
   "private": true,
   "dependencies": {
+    "bootstrap": "~3.3.2"
   }
 }

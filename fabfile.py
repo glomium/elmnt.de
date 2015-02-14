@@ -68,7 +68,7 @@ def static():
     css()
     with lcd(BASEDIR):
         for app in APPS:
-            local('cp submodules/bootstrap/fonts/glyphicons-halflings-regular* media/fonts/')
+            local('cp bower_components/bootstrap/fonts/glyphicons-halflings-regular* media/fonts/')
 
 
 @task
@@ -89,7 +89,9 @@ def js():
     compiles and copies js
     """
     with lcd(BASEDIR):
-        local('cp submodules/bootstrap/dist/js/bootstrap.min.js media/js/')
+        local('cp bower_components/jquery/dist/jquery.min.js media/js/')
+        local('cp bower_components/jquery/dist/jquery.min.map media/js/')
+        local('cp bower_components/bootstrap/dist/js/bootstrap.min.js media/js/')
         for app in APPS:
             local('yui-compressor --type js -o media/js/%s.min.js js/%s.js' % (app, app))
 
