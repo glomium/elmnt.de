@@ -68,8 +68,9 @@ def static(bower=True):
     js()
     css()
     with lcd(BASEDIR):
+        local('cp submodules/bootstrap/fonts/glyphicons-halflings-regular* media/fonts/')
         for app in APPS:
-            local('cp submodules/bootstrap/fonts/glyphicons-halflings-regular* media/fonts/')
+            pass
 
 
 @task
