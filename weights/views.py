@@ -6,7 +6,10 @@ from django.views.decorators.cache import never_cache
 from django.http import Http404
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from django.utils.timezone import now
 from django.views.generic import TemplateView
+
+from datetime import timedelta
 
 import csv
 
@@ -23,7 +26,7 @@ class IndexView(TemplateView):
 def json(request, year=None, month=None):
     profile = get_object_or_404(Profile, user=request.user)
 
-    objs = profile.data.all()
+    objs = profile.data.filter(date__gt=now()-timedelta(31))
 
     response = HttpResponse(content_type='text/csv')
     # response['Content-Disposition'] = 'attachment; filename=data.csv'
@@ -33,8 +36,12 @@ def json(request, year=None, month=None):
         'date',
         'weight',
         'cweight_h',
+        'cweight',
         'cweight_l',
         'mid',
+        'slope_h',
+        'slope',
+        'slope_l',
     ])
 
     for obj in objs:
@@ -43,8 +50,12 @@ def json(request, year=None, month=None):
             obj.date.strftime('%Y-%m-%d %H:%M:%S'),
             '%5.2f' % float(obj.weight),
             '%5.2f' % (obj.calc_vweight + obj.calc_dweight),
+            '%5.2f' % (obj.calc_vweight),
             '%5.2f' % (obj.calc_vweight - obj.calc_dweight),
             '%5.2f' % (0.5 * obj.max_weight + 0.5 * obj.min_weight),
+            '%4.3f' % (obj.calc_vslope + obj.calc_dslope),
+            '%4.3f' % (obj.calc_vslope),
+            '%4.3f' % (obj.calc_vslope - obj.calc_dslope),
     ])
 
     return response
