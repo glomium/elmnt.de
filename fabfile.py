@@ -299,7 +299,7 @@ def push_media():
 
     tmp = sudo('mktemp -d', user=env.user)
     sudo('cp -a %s %s' % (env.CFG['basedir'] + '/media/', tmp))
-    sudo('chown -R %s %s' % (env.user,  tmp))
+    sudo('chown -R %s %s' % (env.user, tmp))
 
     project.rsync_project(
         remote_dir=tmp + '/media',
