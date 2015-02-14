@@ -56,12 +56,27 @@ var chart = c3.generate({
                 count: 4,
             }
         },
+        y: {
+            tick: {
+                format: d3.format('.1f kg')
+            }
+        },
         y2: {
-            show: true
+            show: true,
+            tick: {
+                format: d3.format('+.2f')
+            }
         }
     },
     legend: {
         hide: ['cweight', 'cweight_l', 'cweight_h', 'slope_l', 'slope_h']
+    },
+    grid: {
+        y: {
+            lines: [
+                {value: 0.0, text: '', axis: 'y2'}
+            ]
+        }
     }
 });
 </script>{% endaddtoblock %}
