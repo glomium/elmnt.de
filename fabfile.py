@@ -63,6 +63,7 @@ def static():
     """
     complies and copies static files
     """
+    local('bower update')
     js()
     css()
     with lcd(BASEDIR):
