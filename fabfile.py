@@ -59,11 +59,12 @@ env.use_ssh_config = True
 
 
 @task
-def static():
+def static(bower=True):
     """
     complies and copies static files
     """
-    local('bower update')
+    if bower:
+        local('bower update')
     js()
     css()
     with lcd(BASEDIR):
@@ -118,7 +119,7 @@ def watchstatic():
     class EventHandler(pyinotify.ProcessEvent):
         def process_IN_CLOSE_WRITE(self, event):
             if inc_filter(event.name):
-                static()
+                static(bower=False)
                 puts("========= DONE ==========")
 
     handler = EventHandler()
