@@ -77,6 +77,7 @@ INSTALLED_APPS = (
     'reversion',
     'taggit',
     'easy_thumbnails',
+    'crispy_forms',
 
     # own apps
     'groupplaner',
@@ -152,6 +153,7 @@ TEMPLATE_DIRS = (
 CMS_TEMPLATES = (
     ("template_nosidebar.html", gettext("Template without sidebar")),
     ("template_sidebar.html", gettext("Template with sidebar")),
+    ("template_hiddensidebar.html", gettext("Hidden sidebar in tablet and mobile view")),
     ("template_coverpage.html", gettext("Template coverpage")),
 )
 

@@ -1,48 +1,21 @@
-{% extends "base.html" %}
-{% load url from future %}
-{% load i18n %}{% load crispy_forms_tags %}
+{% extends CMS_TEMPLATE %}
 
-{% block title %}{{ block.super }}{% trans "Diet" %}{% endblock %}
+{% load i18n %}
 
-{% block main %}
-<div class="mainrow">
-  <div id="content" class="span8">{% block content %}{% endblock %}</div>
-  <div id="sitebar" class="span4">
-    <ul>
-      <li><a href="{% url "diet_profile"   %}">{% trans "Profile" %}</a></li>
-      <li><a href="{% url "diet_statistic" %}">{% trans "Statistic" %}</a></li>
-      <li><a href="{% url "diet_overview"  %}">{% trans "Overview" %}</a></li>
-    </ul>
-  </div>
-</div>
-{% endblock %}
+{% block title %}{{ block.super }} {% trans "Weights" %}{% endblock %}
 
-{% block Content %}
-
-{% if user.is_authenticated %}
-
-{% if form %}
-<h1>{% trans "Form" %}</h1>
-<div class="document">
-<form action="{% url diet_statistic %}" method="post">
-<table>
-{{ form.as_p }}
-<tr>
-<td></td><td><input type="submit" />{{ formsave }}</td>
-</tr>
-</table>
-</form>
-</div>
-{% endif %}
-
-<h1>Statistic</h1>
-<div class="document">
+{% block sidebar %}{% if profile %}
 <ul>
-{% for stat in statistic %}
-    <li><a href="{{ stat.get_absolute_url }}"> {{ stat.date|date:"F Y" }}</a></li>
-{% endfor %}
+    {% if latest_data %}
+    <li>{% trans "Last" %}: {{ latest_data.date|date:"m. N H:i" }}</li>
+    <li>{% trans "Weight" %}: {{ latest_data.weight }} kg</li>
+    <li>{{ latest_data.calc_vweight|floatformat:2 }}&plusmn;{{ latest_data.calc_dweight|floatformat:2 }} kg</li>
+    <li>{{ latest_data.calc_vslope|floatformat:3 }}&plusmn;{{ latest_data.calc_dslope|floatformat:3 }} kg/{% trans "week" %}</li>
+    <li>{{ latest_data.calc_vbmi|floatformat:3 }}&plusmn;{{ latest_data.calc_dbmi|floatformat:3 }}</li>
+    {% endif %}
+    <li><a href="{% url "weights-create" %}">{% trans "Add data" %}</a></li>
+    <li><a href="{% url "weights-update" %}">{% trans "Update latest entry" %}</a></li>
+    <li><a href="{% url "weights-delete" %}">{% trans "Delete latest entry" %}</a></li>
+    <li><a href="{% url "weights-profile" %}">{% trans "Edit profile" %}</a></li>
 </ul>
-</div>
-{% endif %}
-
-{% endblock %}
+{% endif %}{% endblock %}
