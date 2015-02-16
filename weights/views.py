@@ -2,6 +2,7 @@
 # ex:set fileencoding=utf-8:
 
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from django.views.decorators.cache import never_cache
 from django.http import Http404
 from django.http import HttpResponse
@@ -64,6 +65,9 @@ class AppFormMixin(object):
             raise Http404
         return super(AppFormMixin, self).dispatch(*args, **kwargs)
 
+    def get_success_url(self):
+        return reverse('weights-index')
+
 
 class IndexView(AppMixin, AppFormMixin, TemplateView):
     template_name = "weights/index.html"
@@ -73,19 +77,37 @@ class DataCreateView(AppMixin, AppFormMixin, CreateView):
     model = Data
     form_class = DataForm
 
+    def form_valid(self, form):
+        form.instance.user = self.profile
+        form.instance.date = now()
+        return super(DataCreateView, self).form_valid(form)
+
 
 class DataDeleteView(AppMixin, AppFormMixin, DeleteView):
     model = Data
+
+    def get_object(self):
+        return self.latest_data
 
 
 class DataUpdateView(AppMixin, AppFormMixin, UpdateView):
     model = Data
     form_class = DataForm
 
+    def get_object(self):
+        return self.latest_data
+
+    def form_valid(self, form):
+        form.instance.date = now()
+        return super(DataUpdateView, self).form_valid(form)
+
 
 class ProfileUpdateView(AppMixin, AppFormMixin, UpdateView):
     model = Profile
     form_class = ProfileChangeForm
+
+    def get_object(self):
+        return self.profile
 
 
 @login_required

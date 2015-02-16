@@ -24,6 +24,7 @@ setup(
 
         'django-reversion',
         'django-cms',
+        'django-crispy-forms',
 
         'djangocms-text-ckeditor',
         'djangocms-link',
