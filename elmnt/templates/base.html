@@ -28,10 +28,12 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
                         {% show_menu 0 0 0 0 "bootstrap_menu.html" %}
-                        {% language_chooser "language_chooser.html" %}
                         {% if request.user.is_superuser %}
                         <li class="hidden-xs"><a href="{% url "admin:index" %}"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a></li>
+                        {% elif request.user.is_authenticated %}
+                        <li class="hidden-xs"><p class="navbar-text"><span class="glyphicon glyphicon-user" aria-hidden="true"></span><p></li>
                         {% endif %}
+                        {% language_chooser "language_chooser.html" %}
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
