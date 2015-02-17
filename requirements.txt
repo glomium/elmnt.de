@@ -25,4 +25,5 @@ python-memcached==1.53
 pytz==2014.10
 six==1.9.0
 sqlparse==0.1.14
+uwsgidecorators==1.1.0
 wsgiref==0.1.2
