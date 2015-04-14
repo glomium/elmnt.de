@@ -7,7 +7,7 @@
 {% block sidebar %}{% if profile %}
 <ul>
     {% if latest_data %}
-    <li>{% trans "Last" %}: {{ latest_data.date|date:"m. N H:i" }}</li>
+    <li>{% trans "Last" %}: {{ latest_data.date|date:"d. N H:i" }}</li>
     <li>{% trans "Weight" %}: {{ latest_data.weight }} kg</li>
     <li>{{ latest_data.calc_vweight|floatformat:2 }}&plusmn;{{ latest_data.calc_dweight|floatformat:2 }} kg</li>
     <li>{{ latest_data.calc_vslope|floatformat:3 }}&plusmn;{{ latest_data.calc_dslope|floatformat:3 }} kg/{% trans "week" %}</li>
