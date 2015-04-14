@@ -21,9 +21,10 @@ setup(
         'django-sekizai',
         'psycopg2',
 #       'uwsgi',
+        'uwsgidecorators',
 
         'django-reversion',
-        'django-cms',
+        'django-cms<3.1',
         'django-crispy-forms',
 
         'djangocms-text-ckeditor',
