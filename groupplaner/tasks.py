@@ -23,7 +23,7 @@ def update(num):
     
     # read all weekly events and get days
     weekly = {'0':[],'1':[],'2':[],'3':[],'4':[],'5':[],'6':[]} # weekdays
-    for e in WeeklyEvent.objects.all():
+    for e in WeeklyEvent.objects.filter(active=True):
         weekly[e.day].append( e )
 
     # read all events (connected to weekly)
