@@ -24,7 +24,7 @@ setup(
         'uwsgidecorators',
 
         'django-reversion',
-        'django-cms<3.1',
+        'django-cms<3.0.999',
         'django-crispy-forms',
 
         'djangocms-text-ckeditor',
