@@ -70,6 +70,9 @@ def static(bower=True):
     css()
     with lcd(BASEDIR):
         local('cp bower_components/bootstrap/fonts/glyphicons-halflings-regular* media/fonts/')
+        local('cp bower_components/c3/c3.min.css media/css/')
+        local('cp bower_components/c3/c3.min.js media/js/')
+        local('cp bower_components/d3/d3.min.js media/js/')
         for app in APPS:
             pass
 
