@@ -73,6 +73,8 @@ def static(bower=True):
         local('cp bower_components/c3/c3.min.css media/css/')
         local('cp bower_components/c3/c3.min.js media/js/')
         local('cp bower_components/d3/d3.min.js media/js/')
+        local('cp bower_components/jquery/dist/jquery.min.js media/js/')
+        local('cp bower_components/jquery/dist/jquery.min.map media/js/')
         for app in APPS:
             pass
 
