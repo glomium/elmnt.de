@@ -26,12 +26,10 @@ server {
 
     location /media/ {
         expires 31d;
-        etag on;
     }
 
     location /static/ {
         expires 31d;
-        etag on;
     }
 
     location = /+ {
