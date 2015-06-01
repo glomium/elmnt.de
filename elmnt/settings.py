@@ -198,7 +198,7 @@ THUMBNAIL_ALIASES = {
 # LOCAL SETTINGS ==================================================================
 
 try:
-  from local_settings import *
+    from local_settings import *
 except ImportError:
     import sys
     SECRET_KEY = 'just-a-dummy-key-overwrite-it-in:local_settings.py'
