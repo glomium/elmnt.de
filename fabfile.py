@@ -208,8 +208,9 @@ def install():
     installs the project locally
     """
     with lcd(BASEDIR): 
-        local('rm -f %s/database.sqlite' % PROJECT)
-        managepy('migrate --noinput')
+        for app in APPS:
+            local('rm -f %s/database.sqlite' % app)
+            managepy('migrate --noinput', app)
 
         pull_db()
         pull_media()
