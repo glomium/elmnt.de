@@ -24,9 +24,13 @@ server {
 
     location /favicon.ico {}
 
-    location /media/ {}
+    location /media/ {
+        expires 31d;
+    }
 
-    location /static/ {}
+    location /static/ {
+        expires 31d;
+    }
 
     location = /+ {
         rewrite ^ https://plus.google.com/100544629037891834363 permanent;

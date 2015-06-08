@@ -18,6 +18,7 @@ easy-thumbnails==2.2
 html5lib==1.0b3
 Pillow==2.8.1
 psycopg2==2.6
+python-logstash==0.4.2
 python-memcached==1.54
 pytz==2015.2
 six==1.9.0
