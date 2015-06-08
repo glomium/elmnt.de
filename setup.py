@@ -44,6 +44,7 @@ setup(
 #       'celery==3.0.11',
 #       'amqplib==1.0.2',
 
+        'python-logstash',
         'python-memcached',
 
         'easy_thumbnails',
