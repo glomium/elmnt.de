@@ -40,7 +40,7 @@ COPY_DB_EXCLUDE = [
     'auth.permission', # use natural keys instead
     'sessions', # no need for this data
     'admin.logentry', # no need for this data
-    'easy_thumbnails', # FIXME uncomment if using easy_thumbnails
+    # 'easy_thumbnails', # FIXME uncomment if using easy_thumbnails
 ]
 
 @task
