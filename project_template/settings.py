@@ -25,8 +25,6 @@ DEFAULT_FROM_EMAIL="team@igelware.de"
 SERVER_EMAIL="noreply@igelware.de"
 
 MIGRATION_MODULES = {
-    'cms': 'cms.migrations_django',
-    'menus': 'menus.migrations_django',
 #   'filer': 'filer.migrations_django',
 #   'djangocms_link': 'djangocms_link.migrations_django',
 #   'djangocms_googlemap': 'djangocms_googlemap.migrations_django',
