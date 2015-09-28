@@ -14,7 +14,6 @@ gettext = lambda s: s
 BASE_DIR = os.path.dirname(__file__)
 
 DEBUG = False
-TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     ('Sebastian Braun', 'sebastian@elmnt.de'),
@@ -126,6 +125,8 @@ TEMPLATES = [
         ],
         'APP_DIRS': True,
         'OPTIONS': {
+            # Display fancy error pages, when DEBUG is on
+            'debug': True,
             'context_processors': {
                 # adds 'user' and 'perms' to request
                 'django.contrib.auth.context_processors.auth',
@@ -211,7 +212,6 @@ except ImportError:
     }
 
     DEBUG = True
-    TEMPLATE_DEBUG = DEBUG
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
     CACHES = {
