@@ -6,7 +6,7 @@ import os
 
 CLASSIFIERS = []
 
-VERSION = ("0","4")
+VERSION = ("0","5")
 __version__ = '.'.join(VERSION)
 __docformat__ = 'restructuredtext'
 
@@ -17,9 +17,14 @@ setup(
     install_requires = [
         'pytz',
         'Pillow',
+
         'django>=1.7,<1.7.99',
         'django-sekizai',
+
         'psycopg2',
+        'python-memcached',
+        'python-logstash',
+
 #       'uwsgi',
         'uwsgidecorators',
 
@@ -31,21 +36,6 @@ setup(
         'djangocms-link',
         'djangocms-googlemap',
         'cmsplugin-filer',
-
-#        # ERP
-#       'django-mptt',
-#       'django-filter',
-#       'reportlab<3.0',
-#       'xhtml2pdf',
-
-#       'django-celery==3.0.10',
-#       'kombu==2.4.7',
-#       'billiard==2.7.3.17',
-#       'celery==3.0.11',
-#       'amqplib==1.0.2',
-
-        'python-logstash',
-        'python-memcached',
 
         'easy_thumbnails',
         'django-taggit',
