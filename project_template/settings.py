@@ -120,35 +120,37 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(os.path.abspath(os.path.join(BASE_DIR, '..')), "media")
 MEDIA_URL = '/media/'
 
-TEMPLATES = {
-    'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    'DIRS': [
-        os.path.join(BASE_DIR, "templates"),
-    ],
-    'APP_DIRS': True,
-    'OPTIONS': {
-        'context_processors': {
-            # adds 'user' and 'perms' to request
-            'django.contrib.auth.context_processors.auth',
-            # if debug is true, sql_queries is added to the request
-            'django.core.context_processors.debug',
-            # add LANGUAGES and LANGUAGE_CODE to request
-            'django.core.context_processors.i18n',
-            # add MEDIA_URL to request
-            'django.core.context_processors.media',
-            # add STATIC_URL to request
-            'django.core.context_processors.static',
-            'django.core.context_processors.tz',
-            # adds the request object to the request
-            'django.core.context_processors.request',
-            # adds messages to the request
-            'django.contrib.messages.context_processors.messages',
-            
-            'cms.context_processors.cms_settings',
-            'sekizai.context_processors.sekizai',
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(BASE_DIR, "templates"),
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': {
+                # adds 'user' and 'perms' to request
+                'django.contrib.auth.context_processors.auth',
+                # if debug is true, sql_queries is added to the request
+                'django.core.context_processors.debug',
+                # add LANGUAGES and LANGUAGE_CODE to request
+                'django.core.context_processors.i18n',
+                # add MEDIA_URL to request
+                'django.core.context_processors.media',
+                # add STATIC_URL to request
+                'django.core.context_processors.static',
+                'django.core.context_processors.tz',
+                # adds the request object to the request
+                'django.core.context_processors.request',
+                # adds messages to the request
+                'django.contrib.messages.context_processors.messages',
+                
+                'cms.context_processors.cms_settings',
+                'sekizai.context_processors.sekizai',
+            },
         },
     },
-}
+]
 
 # HAYSTACK ====================================================================
 
