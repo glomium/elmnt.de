@@ -18,7 +18,7 @@ setup(
         'pytz',
         'Pillow',
 
-        'django>=1.7,<1.7.99',
+        'django>=1.8,<1.8.99',
         'django-sekizai',
 
         'psycopg2',
@@ -26,10 +26,10 @@ setup(
         'python-logstash',
 
 #       'uwsgi',
-        'uwsgidecorators',
+#       'uwsgidecorators',
 
+        'django-cms<3.1.999',
         'django-reversion',
-        'django-cms<3.0.999',
         'django-crispy-forms',
 
         'djangocms-text-ckeditor',

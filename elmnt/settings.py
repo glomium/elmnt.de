@@ -14,7 +14,6 @@ gettext = lambda s: s
 BASE_DIR = os.path.dirname(__file__)
 
 DEBUG = False
-TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     ('Sebastian Braun', 'sebastian@elmnt.de'),
@@ -26,12 +25,8 @@ DEFAULT_FROM_EMAIL="sebastian@elmnt.de"
 SERVER_EMAIL="noreply@elmnt.de"
 
 MIGRATION_MODULES = {
-    'cms': 'cms.migrations_django',
-    'menus': 'menus.migrations_django',
-    'filer': 'filer.migrations_django',
     'djangocms_link': 'djangocms_link.migrations_django',
     'djangocms_googlemap': 'djangocms_googlemap.migrations_django',
-    'djangocms_text_ckeditor': 'djangocms_text_ckeditor.migrations_django',
     'cmsplugin_filer_file': 'cmsplugin_filer_file.migrations_django',
     'cmsplugin_filer_folder': 'cmsplugin_filer_folder.migrations_django',
     'cmsplugin_filer_image': 'cmsplugin_filer_image.migrations_django',
@@ -68,10 +63,10 @@ INSTALLED_APPS = (
     'djangocms_link',
     'djangocms_googlemap',
 
-
     'cms',
-    'mptt',
     'menus',
+    'treebeard',
+    'mptt',
     'filer',
     'sekizai',
     'reversion',
@@ -126,20 +121,39 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(os.path.abspath(os.path.join(BASE_DIR, '..')), "media")
 MEDIA_URL = '/media/'
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django.contrib.messages.context_processors.messages',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.request',
-    'django.core.context_processors.media',
-    'django.core.context_processors.static',
-    'cms.context_processors.cms_settings',
-    'sekizai.context_processors.sekizai',
-)
-
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, "templates"),
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(BASE_DIR, "templates"),
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            # Display fancy error pages, when DEBUG is on
+            'debug': True,
+            'context_processors': {
+                # adds 'user' and 'perms' to request
+                'django.contrib.auth.context_processors.auth',
+                # if debug is true, sql_queries is added to the request
+                'django.core.context_processors.debug',
+                # add LANGUAGES and LANGUAGE_CODE to request
+                'django.core.context_processors.i18n',
+                # add MEDIA_URL to request
+                'django.core.context_processors.media',
+                # add STATIC_URL to request
+                'django.core.context_processors.static',
+                'django.core.context_processors.tz',
+                # adds the request object to the request
+                'django.core.context_processors.request',
+                # adds messages to the request
+                'django.contrib.messages.context_processors.messages',
+                
+                'cms.context_processors.cms_settings',
+                'sekizai.context_processors.sekizai',
+            },
+        },
+    },
+]
 
 # ERP =============================================================================
 
@@ -218,7 +232,6 @@ except ImportError:
     }
 
     DEBUG = True
-    TEMPLATE_DEBUG = DEBUG
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
     CACHES = {

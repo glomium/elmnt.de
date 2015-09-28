@@ -102,7 +102,6 @@ class Event(models.Model):
     changed = models.DateTimeField(
         _('changed'),
         auto_now=True,
-        auto_now_add=True,
     )
     added = models.DateTimeField(
         _('added'),

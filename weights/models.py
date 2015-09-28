@@ -15,11 +15,10 @@ from math import sqrt
 
 @python_2_unicode_compatible
 class Profile(models.Model):
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         getattr(settings, 'AUTH_USER_MODEL', 'auth.User'),
         null=True,
         blank=False,
-        unique=True,
         related_name="+",
         on_delete=models.CASCADE,
     )
