@@ -1,12 +1,27 @@
 {% extends "technologies/technology_base.html" %}
 
-{% load cms_tags%}
+{% load cms_tags thumbnail %}
 
 {% block content %}
 {{ block.super }}
-<ul>
 {% for object in object_list %}
-<li><p><a href="{{ object.get_absolute_url }}">{{ object.name }}</a></p></li>
+<div>
+    <p>
+        {% if object.object_has_logo %}
+            <a href="{{ object.get_absolute_url }}">
+                <img src="{% thumbnail object.logo 40x120 %}" alt="{{ object.title }}">
+            </a>
+            {% if object.display_name %}{{ object.name }}{% endif %}
+        {% else %}
+            <a href="{{ object.get_absolute_url }}">
+                <strong>{{ object.name }}</strong>
+            </a>
+        {% endif %}
+        {% if object.text %} - {{ object.text }}{% endif %}
+    </p>
+    <div class="progress" style="height: 6px;">
+        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ object.skill }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ object.skill }}%;"></div>
+    </div>
+</div>
 {% endfor %}
-</ul>
 {% endblock %}

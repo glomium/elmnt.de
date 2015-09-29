@@ -48,6 +48,16 @@ class Technology(models.Model):
         _('Homepage'),
         blank=True,
     )
+    text = models.CharField(
+        _('Help Text'),
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    display_name = models.BooleanField(
+        _('Display Name'),
+        default=True,
+    )
 
     placeholder = PlaceholderField('technologies_placeholder')
 
