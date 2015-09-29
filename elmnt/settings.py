@@ -75,12 +75,12 @@ INSTALLED_APPS = (
     'crispy_forms',
 
     # own apps
-    'groupplaner',
     'projects',
     'gallery',
     'technologies',
     'weights',
     'elmnt',
+    # 'groupplaner', <-- not used anymore
 )
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
