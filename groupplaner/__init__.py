@@ -1,4 +1,7 @@
 #!/usr/bin/python
 # ex:set fileencoding=utf-8:
 
-__version__ = '0.1'
+from __future__ import unicode_literals
+
+
+default_app_config = 'groupplaner.apps.Config'
