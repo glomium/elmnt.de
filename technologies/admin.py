@@ -7,7 +7,7 @@ from models import Technology
 class TechnologyAdmin(admin.ModelAdmin):
     list_display = ('name', 'skill', 'homepage', 'object_has_logo')
     list_display_links = ('name',)
-    list_filter = ('published',)
+    list_filter = ('published', 'tags')
     search_fields = ['name']
     prepopulated_fields = {"slug": ("name", )}
 
