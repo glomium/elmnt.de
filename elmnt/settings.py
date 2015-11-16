@@ -25,7 +25,7 @@ DEFAULT_FROM_EMAIL="sebastian@elmnt.de"
 SERVER_EMAIL="noreply@elmnt.de"
 
 MIGRATION_MODULES = {
-    'djangocms_link': 'djangocms_link.migrations_django',
+#   'djangocms_link': 'djangocms_link.migrations_django',
     'djangocms_googlemap': 'djangocms_googlemap.migrations_django',
     'cmsplugin_filer_file': 'cmsplugin_filer_file.migrations_django',
     'cmsplugin_filer_folder': 'cmsplugin_filer_folder.migrations_django',
