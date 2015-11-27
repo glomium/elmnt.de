@@ -13,11 +13,20 @@
         <link href="{{ MEDIA_URL }}css/elmnt.min.css" rel="stylesheet">{% render_block "css" %}
         <link rel="shortcut icon" href="/favicon.ico" />
     </head>
-    <body>{% cms_toolbar %}{% render_block "body" %}
-        <div id="body-bg"></div>
-        <div class="navbar navbar-default navbar-fixed-top">
+    <body>
+        {% cms_toolbar %}
+        <div id="wrap"></div>
+        <header class="hidden-xs" style="background-image:url({{ MEDIA_URL }}img/tolmin.jpg);">
             <div class="container">
-                <div class="navbar-header">
+            <img class="thumbnail" src="/media/picture.jpg" alt="Profile image example"/>
+            <h1>Sebastian Braun</h1>
+            <p>Aus der Luft &uuml;ber &Ouml;l&uuml;deniz</p>
+            </div>
+        </header>
+        {% render_block "body" %}
+        <div id="nav" class="navbar navbar-elmnt">
+            <div class="container">
+                <div class="navbar-header visible-xs">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -26,7 +35,7 @@
                     <a class="navbar-brand" href="/{{ LANGUAGE_CODE }}/">Sebastian Braun</a>
                 </div>
                 <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav navbar-right">
+                    <ul class="nav navbar-nav">
                         {% show_menu 0 0 0 0 "bootstrap_menu.html" %}
                         {% if request.user.is_superuser %}
                         <li class="hidden-xs"><a href="{% url "admin:index" %}"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a></li>
@@ -38,7 +47,6 @@
                 </div><!--/.nav-collapse -->
             </div>
         </div>
-        {% block showcase %}{% endblock %}
         <div id="main" class="container">{% block base_content %}{% endblock %}</div>
         <footer>
             <div class="container">
@@ -48,6 +56,6 @@
         </footer>
         <script src="{{ MEDIA_URL }}js/jquery.min.js"></script>
         <script src="{{ MEDIA_URL }}js/bootstrap.min.js"></script>
-        {# <script src="{{ MEDIA_URL }}js/elmnt.min.js"></script> #}{% render_block "js" %}
+        <script src="{{ MEDIA_URL }}js/elmnt.min.js"></script>{% render_block "js" %}
     </body>
 </html>
