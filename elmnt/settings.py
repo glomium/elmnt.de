@@ -150,6 +150,8 @@ TEMPLATES = [
                 
                 'cms.context_processors.cms_settings',
                 'sekizai.context_processors.sekizai',
+
+                'elmnt.context_processors.page_header',
             },
         },
     },
@@ -171,7 +173,7 @@ CMS_TEMPLATES = (
 
 LANGUAGES = [
     ('de', "Deutsch"),
-    ('en', "English"),
+#   ('en', "English"),
 ]
 
 CMS_PERMISSION = True

@@ -1,7 +1,7 @@
 /* affix the navbar after scroll below header */
 
 function calc_affix_position() {
-    return $('header img').outerHeight() + $('header img').offset().top + 5px;
+    return $('header img').outerHeight() + $('header img').offset().top + 5;
 }
 
 $('#nav').affix({
