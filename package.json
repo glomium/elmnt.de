@@ -4,13 +4,13 @@
   "repository": [],
   "license": null,
   "devDependencies": {
+    "grunt-autoprefixer": "~2.2.0",
     "grunt-contrib-clean": "~0.7.0",
     "grunt-contrib-coffee": "~0.13.0",
     "grunt-contrib-cssmin": "~0.14.0",
-    "grunt-contrib-sass": "~0.9.2",
     "grunt-contrib-uglify": "~0.11.0",
     "grunt-contrib-watch": "~0.6.1",
-    "grunt-autoprefixer": "~2.2.0"
+    "grunt-sass": "^1.1.0"
   },
   "engines": {
     "node": ">=0.12.0"

@@ -8,8 +8,11 @@ module.exports = ->
         'src/project.coffee.js',
       ]
 
-    # https://www.npmjs.com/package/grunt-contrib-sass
-    # sass:
+    # https://www.npmjs.com/package/grunt-sass
+    sass:
+      compile:
+        files:
+          'src/project.css': 'src/project.scss'
 
     # https://www.npmjs.com/package/grunt-contrib-watch
     # watch:
@@ -53,8 +56,8 @@ module.exports = ->
   @loadNpmTasks "grunt-contrib-clean"
   @loadNpmTasks "grunt-contrib-coffee"
 # @loadNpmTasks "grunt-contrib-cssmin"
-# @loadNpmTasks "grunt-contrib-sass"
   @loadNpmTasks "grunt-contrib-uglify"
 # @loadNpmTasks "grunt-contrib-watch"
+  @loadNpmTasks "grunt-sass"
 
-  @registerTask "default", ["clean:all", "coffee:compile", "uglify:base"]
+  @registerTask "default", ["clean:all", "coffee:compile", "uglify:base", "sass:compile"]
