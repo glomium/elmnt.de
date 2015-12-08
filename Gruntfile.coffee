@@ -14,7 +14,7 @@ module.exports = ->
         bare: true
       compile:
         files:
-          'src/build/project.coffee.js': 'src/project.coffee'
+          'src/build/project.coffee.js': 'src/coffee.js'
 
     # https://www.npmjs.com/package/grunt-contrib-uglify
     uglify:
@@ -26,8 +26,8 @@ module.exports = ->
         preserveComments: 'some'
       compile:
         src: [
+          'src/build/coffee.js',
           'src/project.js',
-          'src/build/project.coffee.js',
         ]
         dest: 'media/js/project.min.js'
 
