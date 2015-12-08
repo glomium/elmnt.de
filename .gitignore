@@ -13,8 +13,7 @@
 /static
 /virtenv
 
-/src/project\.coffee\.js
-/src/project\.css
+/src/build/
 
 /media/pictures/
 /media/gallery/

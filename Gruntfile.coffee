@@ -5,17 +5,16 @@ module.exports = ->
     # https://www.npmjs.com/package/grunt-contrib-clean
     clean: 
       all: [
-        'src/project.coffee.js',
+        'src/build',
       ]
 
-    # https://www.npmjs.com/package/grunt-sass
-    sass:
+    # https://www.npmjs.com/package/grunt-contrib-coffee
+    coffee:
+      options:
+        bare: true
       compile:
         files:
-          'src/project.css': 'src/project.scss'
-
-    # https://www.npmjs.com/package/grunt-contrib-watch
-    # watch:
+          'src/build/project.coffee.js': 'src/project.coffee'
 
     # https://www.npmjs.com/package/grunt-contrib-uglify
     uglify:
@@ -25,39 +24,52 @@ module.exports = ->
           warnings: false
         mangle: true
         preserveComments: 'some'
-      base:
+      compile:
         src: [
-          'src/js/project.js',
-          'src/js/project.coffee.js',
+          'src/project.js',
+          'src/build/project.coffee.js',
         ]
-        dest: 'media/js/base.min.js'
+        dest: 'media/js/project.min.js'
 
-    # https://www.npmjs.com/package/grunt-contrib-coffee
-    coffee:
-      options:
-        bare: true
+    # https://www.npmjs.com/package/grunt-sass
+    sass:
       compile:
         files:
-          'src/project.coffee.js': 'src/project.coffee'
+          'src/build/project.css': 'src/project.scss'
 
     autoprefixer:
-      browsers: [
-        'Android 2.3',
-        'Android >= 4',
-        'Chrome >= 35',
-        'Firefox >= 31',
-        'Explorer >= 9',
-        'iOS >= 7',
-        'Opera >= 12',
-        'Safari >= 7.1'
-      ]
+      options:
+        browsers: [
+          'Android 2.3',
+          'Android >= 4',
+          'Chrome >= 35',
+          'Firefox >= 31',
+          'Explorer >= 9',
+          'iOS >= 7',
+          'Opera >= 12',
+          'Safari >= 7.1'
+        ]
+      compile:
+        src: [
+          'src/build/project.css',
+        ]
+        dest: 'src/build/prefixed.css'
 
-# @loadNpmTasks "grunt-autoprefixer"
+    # https://www.npmjs.com/package/grunt-contrib-cssmin
+    cssmin:
+      compile:
+        files:
+          'media/css/project.min.css': 'src/build/prefixed.css'
+
+    # https://www.npmjs.com/package/grunt-contrib-watch
+    # watch:
+
+  @loadNpmTasks "grunt-autoprefixer"
   @loadNpmTasks "grunt-contrib-clean"
   @loadNpmTasks "grunt-contrib-coffee"
-# @loadNpmTasks "grunt-contrib-cssmin"
+  @loadNpmTasks "grunt-contrib-cssmin"
   @loadNpmTasks "grunt-contrib-uglify"
 # @loadNpmTasks "grunt-contrib-watch"
   @loadNpmTasks "grunt-sass"
 
-  @registerTask "default", ["clean:all", "coffee:compile", "uglify:base", "sass:compile"]
+  @registerTask "default", ["clean", "coffee", "uglify", "sass", "autoprefixer", "cssmin"]
