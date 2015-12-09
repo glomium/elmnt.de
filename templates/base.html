@@ -10,7 +10,7 @@
         <meta name="language" content="{{ LANGUAGE_CODE }}" />
         <meta name="description" content="{% block meta-description %}{% endblock %}" />
         <title>Sebastian Braun - {% block title %}{% endblock %}</title>
-        <link href="{{ MEDIA_URL }}css/elmnt.min.css" rel="stylesheet">{% render_block "css" %}
+        <link href="{{ MEDIA_URL }}css/project.min.css" rel="stylesheet">{% render_block "css" %}
         <link rel="shortcut icon" href="/favicon.ico" />
     </head>
     <body>
@@ -20,7 +20,7 @@
             <header class="hidden-xs" style="background-image:url({{ MEDIA_URL }}{{ page_header.image }});">
                 <div class="container">
                 <h1>Sebastian Braun</h1>
-                <img class="thumbnail" src="/media/picture.jpg" alt=""/>
+                <img class="img-thumbnail" src="/media/picture.jpg" alt=""/>
                 <p>{{ page_header.title }}</p>
                 </div>
             </header>
@@ -51,7 +51,6 @@
             </div>
         </footer>
         <script src="{{ MEDIA_URL }}js/jquery.min.js"></script>
-        <script src="{{ MEDIA_URL }}js/bootstrap.min.js"></script>
-        <script src="{{ MEDIA_URL }}js/elmnt.min.js"></script>{% render_block "js" %}
+        <script src="{{ MEDIA_URL }}js/project.min.js"></script>{% render_block "js" %}
     </body>
 </html>
