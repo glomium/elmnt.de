@@ -16,16 +16,18 @@ module.exports = ->
         files:
           'src/build/project.coffee.js': 'src/coffee.js'
 
+
     # https://www.npmjs.com/package/grunt-contrib-uglify
     uglify:
       options:
-        banner: 'banner'
+        banner: ''
         compress:
           warnings: false
         mangle: true
         preserveComments: 'some'
       compile:
         src: [
+          '../bootstrap/dist/js/bootstrap.min.js',
           'src/build/coffee.js',
           'src/project.js',
         ]
@@ -72,4 +74,8 @@ module.exports = ->
 # @loadNpmTasks "grunt-contrib-watch"
   @loadNpmTasks "grunt-sass"
 
-  @registerTask "default", ["clean", "coffee", "uglify", "sass", "autoprefixer", "cssmin"]
+  @registerTask "buildjs", ["coffee", "uglify"]
+
+  @registerTask "buildcss", ["sass", "autoprefixer", "cssmin"]
+
+  @registerTask "default", ["clean", "buildjs", "buildcss"]
