@@ -20,28 +20,16 @@
             <header class="hidden-xs" style="background-image:url({{ MEDIA_URL }}{{ page_header.image }});">
                 <div class="container">
                 <h1>Sebastian Braun</h1>
-                <img class="img-thumbnail" src="/media/picture.jpg" alt=""/>
+                <img class="img-thumbnail" src="/media/picture.jpg" alt="">
                 <p>{{ page_header.title }}</p>
                 </div>
             </header>
             {% render_block "body" %}
-            <div id="nav" class="navbar navbar-elmnt">
+            <nav class="navbar navbar-full navbar-dark bg-primary" style="position:sticky;top:0;">
                 <div class="container">
-                    <div class="navbar-header visible-xs">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand" href="/{{ LANGUAGE_CODE }}/">Sebastian Braun</a>
-                    </div>
-                    <div class="navbar-collapse collapse">
-                        <ul class="nav navbar-nav">
-                            {% show_menu 0 0 0 0 "bootstrap_menu.html" %}
-                        </ul>
-                    </div><!--/.nav-collapse -->
+                    <ul class="nav navbar-nav">{% show_menu 0 0 0 0 "bootstrap4_menu.html" %}</ul>
                 </div>
-            </div>
+            </nav>
             <div id="main" class="container">{% block base_content %}{% endblock %}</div>
         </div>
         <footer>

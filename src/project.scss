@@ -10,6 +10,10 @@ $font-family-base: 'Open Sans', Tahoma, sans-serif;
 $headings-font-family: 'Ubuntu', Tahoma, sans-serif;
 $headings-font-weight: 700;
 
+$brand-primary: #711bca;
+
+$zindex-navbar: 5;
+
 /*!
  * Bootstrap v4.0.0-alpha.2 (http://getbootstrap.com)
  * Copyright 2011-2015 Twitter, Inc.
@@ -144,28 +148,33 @@ header {
     }
 
     @media (min-width: map-get($grid-breakpoints, 'sm')) {
-        height: 260px;
+        height: 200px;
         div.container {
-            height: 260px;
+            height: 200px;
         }
     }
     @media (min-width: map-get($grid-breakpoints, 'md')) {
+        height: 280px;
+        div.container {
+            height: 280px;
+        }
+    }
+    @media (min-width: map-get($grid-breakpoints, 'lg')) {
         height: 340px;
         div.container {
             height: 340px;
         }
     }
-    @media (min-width: map-get($grid-breakpoints, 'lg')) {
-        height: 380px;
+    @media (min-width: map-get($grid-breakpoints, 'xl')) {
+        height: 400px;
         div.container {
-            height: 380px;
+            height: 400px;
         }
     }
 }
 
 #main {
     margin: ($font-size-base * $line-height) auto;
-    background-color: #ddf; // TODO: REMOVE ME
 }
 
 footer .container {
