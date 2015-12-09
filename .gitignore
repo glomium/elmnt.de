@@ -8,9 +8,12 @@
 
 /\.tox
 /bower_components
+/node_modules
 /fixtures_*\.json
 /static
 /virtenv
+
+/src/build/
 
 /media/pictures/
 /media/gallery/
