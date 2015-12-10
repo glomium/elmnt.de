@@ -50,7 +50,6 @@ INSTALLED_APPS = (
   # 'aldryn_search',
 
     'bootstrap4',
-    'cmsplugin_bootstrap',
   # 'cmsplugin_slider',
   # 'cmsplugin_blueimp',
     'cmsplugin_filer_file',
