@@ -321,7 +321,7 @@ def managepy(cmd, app=None, remote=False):
     if remote:
         with cd(env.CFG['basedir']):
             sudo(
-                'export DJANGO_SETTINGS_MODULE=homepage.settings && virtenv/bin/python manage.py %s' % (
+                'virtenv/bin/python manage.py %s' % (
                     cmd
                 ),
                 user=env.CFG["user"],
@@ -330,7 +330,7 @@ def managepy(cmd, app=None, remote=False):
     else:
         with lcd(BASEDIR):
             local(
-                'export DJANGO_SETTINGS_MODULE=homepage.settings && virtenv/bin/python manage.py %s' % (
+                'export DJANGO_DEBUG_TOOLBAR=True && virtenv/bin/python manage.py %s' % (
                     cmd
                 )
             )

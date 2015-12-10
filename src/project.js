@@ -1,3 +1,3 @@
 $(document).ready(function() {
-    $('nav.navbar-full').Stickyfill();
+    $('#navigation').Stickyfill();
 });

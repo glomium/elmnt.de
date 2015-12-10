@@ -3,14 +3,15 @@
 @import url(http://fonts.googleapis.com/css?family=Ubuntu:700|Open+Sans:400,700);
 
 $body-bg: #fff;
-$body-outer-bg: #d2c5e3;
+$brand-primary: hsl(270deg, 90%, 35%);
+
+$body-outer-bg: hsl(hue($brand-primary), 30%, 85%);
 $body-outer-border: darken($body-outer-bg, 25%);
 
 $font-family-base: 'Open Sans', Tahoma, sans-serif;
 $headings-font-family: 'Ubuntu', Tahoma, sans-serif;
 $headings-font-weight: 700;
 
-$brand-primary: #711bca;
 
 $zindex-navbar: 5;
 
@@ -110,12 +111,12 @@ body {
 }
 
 header {
+    position: relative;
     text-align: center;
     background-size: cover;
     background-color: #000;
     background-repeat: no-repeat;
     background-position: 50% 50%;
-//  margin-bottom: $navbar-height;
 
     div.container {
         position: relative;
@@ -171,6 +172,13 @@ header {
             height: 400px;
         }
     }
+}
+
+#navigation {
+    position: sticky;
+    top: 0;
+    z-index: $zindex-navbar;
+    border-top: 1px solid $body-color;
 }
 
 #main {

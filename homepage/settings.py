@@ -49,6 +49,7 @@ INSTALLED_APPS = (
 
   # 'aldryn_search',
 
+    'bootstrap4',
     'cmsplugin_bootstrap',
   # 'cmsplugin_slider',
   # 'cmsplugin_blueimp',
@@ -165,10 +166,7 @@ TEMPLATES = [
 # CMS =========================================================================
 
 CMS_TEMPLATES = (
-    ("template_nosidebar.html", gettext("Template without sidebar")),
-    ("template_sidebar.html", gettext("Template with sidebar")),
-    ("template_hiddensidebar.html", gettext("Hidden sidebar in tablet and mobile view")),
-    ("template_coverpage.html", gettext("Template coverpage")),
+    ("template_clean.html", gettext("Full width Template")),
 )
 
 LANGUAGES = [
@@ -273,10 +271,14 @@ except ImportError:
         }
     }
 
-    if 'runserver' in sys.argv:
-        INSTALLED_APPS += (
-            'debug_toolbar',
-        )
-        MIDDLEWARE_CLASSES += (
-            'debug_toolbar.middleware.DebugToolbarMiddleware',
-        )
+
+if 'DJANGO_DEBUG_TOOLBAR' in os.environ or True:  # pragma: no cover
+    INSTALLED_APPS += (
+        'debug_toolbar',
+    )
+    MIDDLEWARE_CLASSES += (
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+    )
+    DEBUG_TOOLBAR_CONFIG = {
+        'JQUERY_URL': None,
+    }
