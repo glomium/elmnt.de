@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
+from filer.fields.image import FilerImageField
 
 from cms.models import CMSPlugin
 
@@ -274,3 +275,33 @@ class ColumnClearfix(CMSPlugin):
         return self.hidden
 
 
+class MediaObjectManager(models.Manager):
+
+    def get_queryset(self):
+        qs = super(MediaObjectManager, self).get_queryset()
+        qs = qs.prefetch_related('image')
+        return qs
+
+
+@python_2_unicode_compatible
+class MediaObject(CMSPlugin):
+    """
+    """
+    title = models.CharField(
+        _('Title'),
+        max_length=200,
+        blank=False,
+        null=True,
+    )
+    image = FilerImageField(
+        null=True,
+        blank=True,
+        default=None,
+        verbose_name=_("Image"),
+        on_delete=models.SET_NULL,
+    )
+
+    objects = MediaObjectManager()
+
+    def __str__(self):
+        return self.title or 'Plugin'

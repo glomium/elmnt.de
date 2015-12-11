@@ -13,6 +13,7 @@ from .models import Section
 from .models import Row
 from .models import Column
 from .models import ColumnClearfix
+from .models import MediaObject
 
 
 class SectionPlugin(CMSPluginBase):
@@ -76,3 +77,18 @@ class ColumnClearfixPlugin(CMSPluginBase):
         context['instance'] = instance
         return context
 plugin_pool.register_plugin(ColumnClearfixPlugin)
+
+
+class MediaObjectPlugin(CMSPluginBase):
+    model = MediaObject
+    module = _("Bootstrap4")
+    name = _("MediaObject")
+    render_template = "bootstrap4/mediaobject.html"
+    parent_classes = ['ColumnPlugin', 'SectionPlugin']
+    allow_children = True
+
+    def render(self, context, instance, placeholder):
+        context['instance'] = instance
+        context['image'] = instance.image
+        return context
+plugin_pool.register_plugin(MediaObjectPlugin)

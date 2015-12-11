@@ -1,0 +1,11 @@
+{% load cms_tags %}
+<div class="media">
+  <a class="media-left" href="#">
+    <img class="media-object" src="/media/picture.jpg" alt="Generic placeholder image">
+  </a>
+  <div class="media-body">
+    <h4 class="media-heading">{{ instance.title }}</h4>
+    {{ image }}
+    {% for plugin in instance.child_plugin_instances %}{% render_plugin plugin %}{% endfor %}
+  </div>
+</div>
