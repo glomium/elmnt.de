@@ -66,8 +66,7 @@ def static(bower=True):
     """
     if bower:
         local('bower update')
-    js()
-    css()
+    local('grunt')
     with lcd(BASEDIR):
         local('cp bower_components/bootstrap/fonts/glyphicons-halflings-regular* media/fonts/')
         local('cp bower_components/c3/c3.min.css media/css/')
@@ -77,71 +76,6 @@ def static(bower=True):
         local('cp bower_components/jquery/dist/jquery.min.map media/js/')
         for app in APPS:
             pass
-
-
-@task
-def css():
-    """
-    compiles and copies css
-    """
-    with lcd(BASEDIR):
-        for app in APPS:
-            local('lessc less/%s.less > bootstrap.css' % app)
-            local('yui-compressor --type css -o media/css/%s.min.css bootstrap.css' % app)
-        local('rm bootstrap.css')
-
-
-@task
-def js():
-    """
-    compiles and copies js
-    """
-    with lcd(BASEDIR):
-        local('cp bower_components/jquery/dist/jquery.min.js media/js/')
-        local('cp bower_components/jquery/dist/jquery.min.map media/js/')
-        local('cp bower_components/bootstrap/dist/js/bootstrap.min.js media/js/')
-        for app in APPS:
-            local('yui-compressor --type js -o media/js/%s.min.js js/%s.js' % (app, app))
-
-
-@task
-def watchstatic():
-    """
-    compiles and copies less and js - if changed
-    """
-    import pyinotify
-
-    static()
-    puts("========= DONE ==========")
-
-    wm = pyinotify.WatchManager()
-
-    excl_filter = pyinotify.ExcludeFilter([
-        r'^\..*\.swp$',
-        r'^\..*\.swx$',
-    ])
-    inc_filter = pyinotify.ExcludeFilter([
-        r'.*\.less$',
-        r'.*\.js$',
-    ])
-
-    class EventHandler(pyinotify.ProcessEvent):
-        def process_IN_CLOSE_WRITE(self, event):
-            if inc_filter(event.name):
-                static(bower=False)
-                puts("========= DONE ==========")
-
-    handler = EventHandler()
-
-    notifier = pyinotify.Notifier(wm, handler)
-    wm.add_watch(
-        [BASEDIR+'/js', BASEDIR+'/less'],
-        pyinotify.ALL_EVENTS,
-        rec=True,
-        exclude_filter=excl_filter,
-    )
-    with settings(warn_only=True):
-        notifier.loop()
 
 
 @task
@@ -157,10 +91,6 @@ def init():
             local("mkdir media/fonts")
         if not os.path.exists("static"):
             local("mkdir static")
-        if not os.path.exists("less"):
-            local("mkdir less")
-        if not os.path.exists("js"):
-            local("mkdir js")
         for app in APPS:
             if not os.path.exists(app) and not os.path.isdir(app):
                 if not os.path.exists("project_template"):
@@ -391,8 +321,7 @@ def managepy(cmd, app=None, remote=False):
     if remote:
         with cd(env.CFG['basedir']):
             sudo(
-                'export DJANGO_SETTINGS_MODULE=%s.settings && virtenv/bin/python manage.py %s' % (
-                    app,
+                'virtenv/bin/python manage.py %s' % (
                     cmd
                 ),
                 user=env.CFG["user"],
@@ -401,8 +330,7 @@ def managepy(cmd, app=None, remote=False):
     else:
         with lcd(BASEDIR):
             local(
-                'export DJANGO_SETTINGS_MODULE=%s.settings && virtenv/bin/python manage.py %s' % (
-                    app,
+                'export DJANGO_DEBUG_TOOLBAR=True && virtenv/bin/python manage.py %s' % (
                     cmd
                 )
             )

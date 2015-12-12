@@ -1,6 +1,8 @@
-module.exports = ->
+module.exports = (grunt) ->
 
   @initConfig
+
+    pkg: grunt.file.readJSON "./package.json"
 
     # https://www.npmjs.com/package/grunt-contrib-clean
     clean: 
@@ -20,17 +22,12 @@ module.exports = ->
     # https://www.npmjs.com/package/grunt-contrib-uglify
     uglify:
       options:
-        banner: ''
         compress:
           warnings: false
         mangle: true
-        preserveComments: 'some'
+        preserveComments: /^!|@preserve|@license|@cc_on/i
       compile:
-        src: [
-          '../bootstrap/dist/js/bootstrap.min.js',
-          'src/build/coffee.js',
-          'src/project.js',
-        ]
+        src: grunt.file.readJSON "./src/javascript.json"
         dest: 'media/js/project.min.js'
 
     # https://www.npmjs.com/package/grunt-sass
@@ -64,14 +61,20 @@ module.exports = ->
           'media/css/project.min.css': 'src/build/prefixed.css'
 
     # https://www.npmjs.com/package/grunt-contrib-watch
-    # watch:
+    watch:
+      js:
+        files: ["./src/project.coffee", "./src/project.js", "./src/javascript.json"]
+        tasks: ["buildjs"]
+      css:
+        files: ["./src/project.scss"]
+        tasks: ["buildcss"]
 
   @loadNpmTasks "grunt-autoprefixer"
   @loadNpmTasks "grunt-contrib-clean"
   @loadNpmTasks "grunt-contrib-coffee"
   @loadNpmTasks "grunt-contrib-cssmin"
   @loadNpmTasks "grunt-contrib-uglify"
-# @loadNpmTasks "grunt-contrib-watch"
+  @loadNpmTasks "grunt-contrib-watch"
   @loadNpmTasks "grunt-sass"
 
   @registerTask "buildjs", ["coffee", "uglify"]

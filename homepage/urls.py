@@ -1,8 +1,8 @@
+from django.conf import settings
 from django.conf.urls import patterns, include, url
-from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
+from django.views.generic.base import RedirectView
 
-from django.conf import settings
 
 from cms.sitemaps import CMSSitemap
 from gallery.sitemaps import GallerySitemap
@@ -19,13 +19,17 @@ SITEMAPS = {
     'cmspages': CMSSitemap,
     'gallery': GallerySitemap,
     # 'groupplaner': EventSitemap,
-    'projects': ProjectSitemap,
 }
 
 urlpatterns = patterns(
     'django.contrib.sitemaps.views',
     url(r'^sitemap\.xml$', 'index', {'sitemaps': SITEMAPS}),
     url(r'^sitemap-(?P<section>\w+)\.xml$', 'sitemap', {'sitemaps': SITEMAPS}),
+)
+
+urlpatterns += patterns(
+    '',
+    url(r'^en', RedirectView.as_view(url='/', permanent=True)),
 )
 
 urlpatterns += i18n_patterns('',

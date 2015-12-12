@@ -1,0 +1,55 @@
+{% load i18n cms_tags menu_tags sekizai_tags staticfiles %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="robots" content="all" />
+        <meta name="author" content="Sebastian Braun" />
+        <meta name="copyright" content="Sebastian Braun, {{ YEAR }}" />
+        <meta name="Content-Language" content="{{ LANGUAGE_CODE }}" />
+        <meta name="language" content="{{ LANGUAGE_CODE }}" />
+        <meta name="description" content="{% block meta-description %}{% endblock %}" />
+        <title>Sebastian Braun - {% block title %}{% endblock %}</title>
+        <link href="{{ MEDIA_URL }}css/project.min.css" rel="stylesheet">{% render_block "css" %}
+        <link rel="shortcut icon" href="/favicon.ico" />
+    </head>
+    <body>
+        {% cms_toolbar %}
+        <div id="wrap">
+            <div id="bg"></div>
+            <header class="hidden-xs-down" style="background-image:url({{ MEDIA_URL }}{{ page_header.image }});">
+                <div class="container">
+                <h1>Sebastian Braun</h1>
+                <img class="img-thumbnail hidden-sm-down" src="/media/picture.jpg" alt="">
+                <p>{{ page_header.title }}</p>
+                </div>
+            </header>
+            {% render_block "body" %}
+            <div id="navigation">
+               <nav class="navbar navbar-full navbar-dark bg-primary">
+                   <div class="container">
+                       <a class="navbar-brand hidden-sm-up" href="#">Sebastian Braun</a>
+                       <ul class="nav navbar-nav hidden-xs-down">{% show_menu 0 0 0 0 "bootstrap4/menu.html" %}</ul>
+                       <button class="navbar-toggler pull-xs-right hidden-sm-up" type="button" data-toggle="collapse" data-target="#collapsing_navbar">
+                           &#9776;
+                       </button>
+                   </div>
+               </nav>
+               <div class="collapse hidden-sm-up bg-inverse" id="collapsing_navbar">
+                   <div class="container">
+                       <ul class="nav nav-pills nav-stacked">{% show_menu 0 0 0 0 "bootstrap4/menu.html" %}</ul>
+                   </div>
+               </div>
+            </div>
+            {% block base_content %}{% endblock %}
+        </div>
+        <footer>
+            <div class="container">
+                <p class="pull-right"><a href="#"><span class="glyphicon glyphicon-chevron-up"></span></a></p>
+                {% block footer %}{% endblock %}
+            </div>
+        </footer>
+        <script src="{{ MEDIA_URL }}js/jquery.min.js"></script>
+        <script src="{{ MEDIA_URL }}js/project.min.js"></script>{% render_block "js" %}
+    </body>
+</html>
