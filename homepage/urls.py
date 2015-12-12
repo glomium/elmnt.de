@@ -11,7 +11,7 @@ from importlib import import_module
 admin.autodiscover()
 
 
-if getattr(settings, 'CMSTEMPLATE_I18N_URL', False) or len(getattr(settings, 'LANGUAGES'), []) > 1:
+if getattr(settings, 'CMSTEMPLATE_I18N_URL', False) or len(getattr(settings, 'LANGUAGES', [])) > 1:
     from django.conf.urls.i18n import i18n_patterns
 else:
     i18n_patterns = patterns
