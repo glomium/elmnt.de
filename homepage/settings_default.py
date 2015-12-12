@@ -228,3 +228,9 @@ if 'DJANGO_DEBUG_TOOLBAR' in os.environ:  # pragma: no cover
     DEBUG_TOOLBAR_CONFIG = {
         'JQUERY_URL': None,
     }
+
+# CMS TEMPLATE ====================================================================
+
+CMSTEMPLATE_SITEMAPS = {
+    'cmspages': 'cms.sitemaps.CMSSitemap',
+}

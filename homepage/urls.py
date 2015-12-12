@@ -1,25 +1,28 @@
+# -*- coding: utf-8 -*-
+
 from django.conf import settings
-from django.conf.urls import patterns, include, url
-from django.conf.urls.i18n import i18n_patterns
+from django.conf.urls import patterns
+from django.conf.urls import include
+from django.conf.urls import url
+from django.contrib import admin
 from django.views.generic.base import RedirectView
 
-
-from cms.sitemaps import CMSSitemap
-from gallery.sitemaps import GallerySitemap
-# from groupplaner.sitemaps import EventSitemap
-from projects.sitemaps import ProjectSitemap
-
-from django.contrib import admin
+from importlib import import_module
 admin.autodiscover()
 
-# from djangoerp import sites as djangoerp
-# djangoerp.autodiscover()
 
-SITEMAPS = {
-    'cmspages': CMSSitemap,
-    'gallery': GallerySitemap,
-    # 'groupplaner': EventSitemap,
-}
+if getattr(settings, 'CMSTEMPLATE_I18N_URL', False) or len(getattr(settings, 'LANGUAGES'), []) > 1:
+    from django.conf.urls.i18n import i18n_patterns
+else:
+    i18n_patterns = patterns
+
+
+SITEMAPS = {}
+for key, modulepath in getattr(settings, 'CMSTEMPLATE_SITEMAPS', {}).items():
+    module_path, class_name = modulepath.rsplit('.', 1)
+    module = import_module(module_path)
+    SITEMAPS[key] = getattr(module, class_name)
+
 
 urlpatterns = patterns(
     'django.contrib.sitemaps.views',
