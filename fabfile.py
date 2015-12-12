@@ -298,6 +298,16 @@ def set_env(e):
     env.CFG['user'], env.CFG['group'] = run_as.split(' ')
 
 
+@task
+def update_cmstemplate():
+    with lcd(BASEDIR): 
+        local('git checkout cmstemplate')
+        local('git pull')
+        local('git checkout develop')
+        local('git merge cmstemplate')
+    
+
+
 def managepy(cmd, remote=False):
     """
     Helper: run a management command remotely.
