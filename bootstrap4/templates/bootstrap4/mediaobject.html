@@ -1,0 +1,21 @@
+{% load thumbnail cms_tags %}
+
+
+<div class="media">
+  {% if image %}
+  {% thumbnail image size crop=instance.crop upscale=instance.upscale subject_location=image.subject_location as thumbnail %}
+    {% if link %}
+    <a href="{{ link }}" class="media-left">
+      <img class="media-object" src="{{ thumbnail.url }}" alt="{{ image.alt }}">
+    </a>
+    {% else %}
+    <div class="media-left">
+      <img class="media-object" src="{{ thumbnail.url }}" alt="{{ image.alt }}">
+    </div>
+    {% endif %}
+  {% endif %}
+  <div class="media-body">
+    <h4 class="media-heading">{{ instance.title }}</h4>
+    {% for plugin in instance.child_plugin_instances %}{% render_plugin plugin %}{% endfor %}
+  </div>
+</div>
