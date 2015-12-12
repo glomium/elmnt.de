@@ -1,3 +1,4 @@
+-r requirements_base.txt
 cmsplugin-filer==1.0.0
 Django==1.8.7
 django-appconf==1.0.1

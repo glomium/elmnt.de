@@ -25,7 +25,7 @@ setup(
         'python-memcached',
         'python-logstash',
 
-        'django-cms<3.1.999',
+        'django-cms<3.2.9999',
         'django-reversion',
         'django-crispy-forms<1.5',  # Version 1.5.2 has a missing template
 
