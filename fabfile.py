@@ -13,10 +13,6 @@ import os
 
 PROJECT = "FIXME"
 
-APPS = [
-    "FIXME",
-]
-
 DEPLOY = {
     'dev': {
         'ssh_host': 'elmnt-server',
@@ -40,7 +36,7 @@ COPY_DB_EXCLUDE = [
     'auth.permission', # use natural keys instead
     'sessions', # no need for this data
     'admin.logentry', # no need for this data
-    # 'easy_thumbnails', # FIXME uncomment if using easy_thumbnails
+    'easy_thumbnails', # FIXME uncomment if using easy_thumbnails
 ]
 
 @task
@@ -65,75 +61,14 @@ def static(bower=True):
     """
     if bower:
         local('bower update')
-    js()
-    css()
+    local('grunt')
     with lcd(BASEDIR):
         local('cp bower_components/bootstrap/fonts/glyphicons-halflings-regular* media/fonts/')
-        for app in APPS:
-            pass
-
-
-@task
-def css():
-    """
-    compiles and copies css
-    """
-    with lcd(BASEDIR):
-        for app in APPS:
-            local('lessc less/%s.less > bootstrap.css' % app)
-            local('yui-compressor --type css -o media/css/%s.min.css bootstrap.css' % app)
-        local('rm bootstrap.css')
-
-
-@task
-def js():
-    """
-    compiles and copies js
-    """
-    with lcd(BASEDIR):
-        local('cp bower_components/bootstrap/dist/js/bootstrap.min.js media/js/')
-        for app in APPS:
-            local('yui-compressor --type js -o media/js/%s.min.js js/%s.js' % (app, app))
-
-
-@task
-def watchstatic():
-    """
-    compiles and copies less and js - if changed
-    """
-    import pyinotify
-
-    static()
-    puts("========= DONE ==========")
-
-    wm = pyinotify.WatchManager()
-
-    excl_filter = pyinotify.ExcludeFilter([
-        r'^\..*\.swp$',
-        r'^\..*\.swx$',
-    ])
-    inc_filter = pyinotify.ExcludeFilter([
-        r'.*\.less$',
-        r'.*\.js$',
-    ])
-
-    class EventHandler(pyinotify.ProcessEvent):
-        def process_IN_CLOSE_WRITE(self, event):
-            if inc_filter(event.name):
-                static(bower=False)
-                puts("========= DONE ==========")
-
-    handler = EventHandler()
-
-    notifier = pyinotify.Notifier(wm, handler)
-    wm.add_watch(
-        [BASEDIR+'/js', BASEDIR+'/less'],
-        pyinotify.ALL_EVENTS,
-        rec=True,
-        exclude_filter=excl_filter,
-    )
-    with settings(warn_only=True):
-        notifier.loop()
+        local('cp bower_components/c3/c3.min.css media/css/')
+        local('cp bower_components/c3/c3.min.js media/js/')
+        local('cp bower_components/d3/d3.min.js media/js/')
+        local('cp bower_components/jquery/dist/jquery.min.js media/js/')
+        local('cp bower_components/jquery/dist/jquery.min.map media/js/')
 
 
 @task
@@ -141,65 +76,56 @@ def init():
     """
     initialize apps
     """
-    with lcd(BASEDIR):
-        if not os.path.exists("media"):
-            local("mkdir media")
-            local("mkdir media/js")
-            local("mkdir media/css")
-            local("mkdir media/fonts")
-        if not os.path.exists("static"):
-            local("mkdir static")
-        if not os.path.exists("less"):
-            local("mkdir less")
-        if not os.path.exists("js"):
-            local("mkdir js")
-        for app in APPS:
-            if not os.path.exists(app) and not os.path.isdir(app):
-                if not os.path.exists("project_template"):
-                    local("git checkout project_template -- project_template")
-                local("mv project_template %s" % app)
-                local("git rm -r project_template")
-                local("sed -i 's/{{ APP }}/%s/g' %s/settings.py" % (app, app))
-                local("sed -i 's/{{ APP }}/%s/g' %s/wsgi.py" % (app, app))
+    pass
+#   with lcd(BASEDIR):
+#       if not os.path.exists("media"):
+#           local("mkdir media")
+#           local("mkdir media/js")
+#           local("mkdir media/css")
+#           local("mkdir media/fonts")
+#       if not os.path.exists("static"):
+#           local("mkdir static")
+#           if not os.path.exists(app) and not os.path.isdir(app):
+#               if not os.path.exists("project_template"):
+#                   local("git checkout project_template -- project_template")
+#               local("mv project_template %s" % app)
+#               local("git rm -r project_template")
+#               local("sed -i 's/{{ APP }}/%s/g' %s/settings.py" % (app, app))
+#               local("sed -i 's/{{ APP }}/%s/g' %s/wsgi.py" % (app, app))
 
-            if not os.path.exists('less/%s.less' % app):
-                local("touch less/%s.less" % app)
-
-            if not os.path.exists('js/%s.js' % app):
-                local("touch js/%s.js" % app)
 
 
 @task
-def export_local_db(app=None):
+def export_local_db():
     '''
     Export local database into fixtures_live.json
     '''
     with lcd(BASEDIR):
-        managepy('dumpdata -n --indent=1 %s > fixtures_local.json' % (' -e '.join(COPY_DB_EXCLUDE)), app)
+        managepy('dumpdata -n --indent=1 %s > fixtures_local.json' % (' -e '.join(COPY_DB_EXCLUDE)))
 
 
 @task
-def start(app=None):
+def start():
     """
     starts the project locally
     """
-    managepy('runserver 0.0.0.0:8000', app)
+    managepy('runserver 0.0.0.0:8000')
 
 
 @task
-def shell(app=None):
+def shell(app):
     """
     starts a shell locally
     """
-    managepy('shell', app)
+    managepy('shell')
 
 
 @task
-def test(app=None):
+def test(app):
     """
     starts a test locally
     """
-    managepy('test', app)
+    managepy('test')
 
 
 @task
@@ -208,9 +134,8 @@ def install():
     installs the project locally
     """
     with lcd(BASEDIR): 
-        for app in APPS:
-            local('rm -f %s/database.sqlite' % app)
-            managepy('migrate --noinput', app)
+        local('rm -f database.sqlite')
+        managepy('migrate --noinput', app)
 
         pull_db()
         pull_media()
@@ -373,18 +298,15 @@ def set_env(e):
     env.CFG['user'], env.CFG['group'] = run_as.split(' ')
 
 
-def managepy(cmd, app=None, remote=False):
+def managepy(cmd, remote=False):
     """
     Helper: run a management command remotely.
     """
-    if not app:
-        app = APPS[0]
 
     if remote:
         with cd(env.CFG['basedir']):
             sudo(
-                'export DJANGO_SETTINGS_MODULE=%s.settings && virtenv/bin/python manage.py %s' % (
-                    app,
+                'virtenv/bin/python manage.py %s' % (
                     cmd
                 ),
                 user=env.CFG["user"],
@@ -393,8 +315,7 @@ def managepy(cmd, app=None, remote=False):
     else:
         with lcd(BASEDIR):
             local(
-                'export DJANGO_SETTINGS_MODULE=%s.settings && virtenv/bin/python manage.py %s' % (
-                    app,
+                'export DJANGO_DEBUG_TOOLBAR=True && virtenv/bin/python manage.py %s' % (
                     cmd
                 )
             )
