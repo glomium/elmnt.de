@@ -14,6 +14,7 @@ from .models import Row
 from .models import Column
 from .models import ColumnClearfix
 from .models import MediaObject
+from .models import Image
 
 
 class SectionPlugin(CMSPluginBase):
@@ -21,7 +22,7 @@ class SectionPlugin(CMSPluginBase):
     module = _("Bootstrap4")
     name = _("Section")
     render_template = "bootstrap4/section.html"
-    child_classes = ['RowPlugin']
+    child_classes = ['RowPlugin', 'TextPlugin', 'ImagePlugin', 'MediaObjectPlugin']
     allow_children = True
     require_parent = False
 
@@ -84,11 +85,29 @@ class MediaObjectPlugin(CMSPluginBase):
     module = _("Bootstrap4")
     name = _("MediaObject")
     render_template = "bootstrap4/mediaobject.html"
-    parent_classes = ['ColumnPlugin', 'SectionPlugin']
+    parent_classes = ['ColumnPlugin', 'SectionPlugin', 'MediaObjectPlugin']
     allow_children = True
 
     def render(self, context, instance, placeholder):
+        context['size'] = (instance.size.width, instance.size.height)
         context['instance'] = instance
         context['image'] = instance.image
         return context
 plugin_pool.register_plugin(MediaObjectPlugin)
+
+
+class ImagePlugin(CMSPluginBase):
+    model = Image
+    module = _("Bootstrap4")
+    name = _("Image")
+    render_template = "bootstrap4/image.html"
+    parent_classes = ['ColumnPlugin', 'SectionPlugin', 'MediaObjectPlugin']
+    allow_children = True
+
+    def render(self, context, instance, placeholder):
+        context['size'] = (instance.size.width, instance.size.height)
+        context['instance'] = instance
+        context['image'] = instance.image
+        context['css'] = instance.get_css()
+        return context
+plugin_pool.register_plugin(ImagePlugin)

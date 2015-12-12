@@ -105,6 +105,40 @@ GRID_HIDDEN = (
 
 
 @python_2_unicode_compatible
+class ImageWidth(CMSPlugin):
+    """
+    """
+    PLUGINS = (
+        ('mediaobject', _("MediaObject")),
+        ('image', _("Image")),
+    )
+    plugin = models.CharField(
+        _('Plugin'),
+        max_length=16,
+        blank=False,
+        null=False,
+        choices=PLUGINS,
+        db_index=True,
+    )
+    width = models.PositiveIntegerField(
+        _('Width'),
+        blank=False,
+        null=False,
+    )
+    height = models.PositiveIntegerField(
+        _('Height'),
+        blank=False,
+        null=False,
+    )
+
+    class Meta:
+        unique_together = (('plugin', 'width', 'height'),)
+
+    def __str__(self):
+        return '%sx%s Pixel' % (self.width, self.height)
+
+
+@python_2_unicode_compatible
 class Section(CMSPlugin):
     """
     """
@@ -279,7 +313,7 @@ class MediaObjectManager(models.Manager):
 
     def get_queryset(self):
         qs = super(MediaObjectManager, self).get_queryset()
-        qs = qs.prefetch_related('image')
+        qs = qs.prefetch_related('image', 'size')
         return qs
 
 
@@ -300,8 +334,126 @@ class MediaObject(CMSPlugin):
         verbose_name=_("Image"),
         on_delete=models.SET_NULL,
     )
+    size = models.ForeignKey(
+        ImageWidth,
+        null=False,
+        blank=False,
+        verbose_name=_("Size"),
+        on_delete=models.PROTECT,
+        limit_choices_to={'plugin': 'mediaobject'},
+    )
+
+    crop = models.BooleanField(
+        _('Crop'),
+        default=True,
+    )
+    upscale = models.BooleanField(
+        _('Upscale'),
+        default=True,
+    )
 
     objects = MediaObjectManager()
 
     def __str__(self):
         return self.title or 'Plugin'
+
+
+class ImageManager(models.Manager):
+
+    def get_queryset(self):
+        qs = super(ImageManager, self).get_queryset()
+        qs = qs.prefetch_related('image', 'size')
+        return qs
+
+
+@python_2_unicode_compatible
+class Image(CMSPlugin):
+    """
+    """
+    image = FilerImageField(
+        null=True,
+        blank=True,
+        default=None,
+        verbose_name=_("Image"),
+        on_delete=models.SET_NULL,
+    )
+    size = models.ForeignKey(
+        ImageWidth,
+        null=False,
+        blank=False,
+        verbose_name=_("Size"),
+        on_delete=models.PROTECT,
+        limit_choices_to={'plugin': 'image'},
+    )
+
+    crop = models.BooleanField(
+        _('Crop'),
+        default=True,
+    )
+    upscale = models.BooleanField(
+        _('Upscale'),
+        default=True,
+    )
+
+    align = models.CharField(
+        _('Align'),
+        max_length=1,
+        blank=False,
+        null=False,
+        choices=(
+            ('f', _('Responsive')),
+            ('l', _('Left')),
+            ('c', _('Center')),
+            ('r', _('Right')),
+        ),
+        default='f',
+    )
+
+    shape = models.CharField(
+        _('Shape'),
+        max_length=1,
+        blank=False,
+        null=False,
+        choices=(
+            ('r', _('Rounded')),
+            ('n', _('No style')),
+            ('c', _('Circle')),
+            ('t', _('Thumbnail')),
+        ),
+        default='r',
+    )
+
+    css = models.CharField(
+        _('Additional class'),
+        default='',
+        max_length=40,
+        blank=True,
+        null=True,
+    )
+
+    objects = ImageManager()
+
+    def get_css(self):
+        image = []
+        layer = []
+
+        if self.shape == 'r': image.append('img-rounded')
+        elif self.shape == 't': image.append('img-thumbnail')
+        elif self.shape == 'c': image.append('img-circle')
+
+        if self.align == 'f':
+            image.append('img-fluid')
+            image.append('center-block')
+        elif self.align == 'c': layer.append('text-xs-left')
+        elif self.align == 'l': layer.append('text-xs-left')
+        elif self.align == 'r': layer.append('text-xs-right')
+
+        if self.css: image.append(self.css)
+
+        return {
+            'image': ' '.join(image),
+            'layer': ' '.join(layer),
+        }
+
+    def __str__(self):
+        return 'Image'

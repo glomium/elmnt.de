@@ -1,0 +1,13 @@
+{% load thumbnail %}
+<p class="{{ css.layer }}">
+  {% if image %}
+  {% thumbnail image size crop=instance.crop upscale=instance.upscale subject_location=image.subject_location as thumbnail %}
+    {% if link %}
+    <a href="{{ link }}" class="">
+        <img class="{{ css.image }}" src="{{ thumbnail.url }}" alt="{{ image.alt }}">
+    </a>
+    {% else %}
+    <img class="{{ css.image }}" src="{{ thumbnail.url }}" alt="{{ image.alt }}">
+    {% endif %}
+  {% endif %}
+</p>
