@@ -1,42 +1,31 @@
 #!/usr/bin/python
 # ex:set fileencoding=utf-8:
 
-from setuptools import setup, find_packages
+from setuptools import setup
+from setuptools import find_packages
 import os
 
 CLASSIFIERS = []
 
-VERSION = ("0","5")
+VERSION = ("0","9", "0")
+NAME = os.path.basename(os.path.abspath(os.path.dirname(__file__)))
+
 __version__ = '.'.join(VERSION)
 __docformat__ = 'restructuredtext'
 
+requirements_base = list([req.strip() for req in open(
+    os.path.join(os.path.dirname(__file__), 'requirements_base.txt')
+).readlines()])
+
+requirements_custom = list([req.strip() for req in open(
+    os.path.join(os.path.dirname(__file__), 'requirements_custom.txt')
+).readlines()])
+
 setup(
-    name='elmnt',
+    name=NAME,
     version=__version__,
     packages=[],
-    install_requires = [
-        'pytz',
-        'Pillow',
-
-        'django>=1.8,<1.8.99',
-        'django-sekizai',
-
-        'psycopg2',
-        'python-memcached',
-        'python-logstash',
-
-        'django-cms<3.2.9999',
-        'django-reversion',
-        'django-crispy-forms<1.5',  # Version 1.5.2 has a missing template
-
-        'djangocms-text-ckeditor',
-        'djangocms-link',
-        'djangocms-googlemap',
-        'cmsplugin-filer',
-
-        'easy_thumbnails',
-        'django-taggit',
-    ],
+    install_requires=requirements_base+requirements_custom,
     include_package_data=True,
     zip_safe=False,
 )

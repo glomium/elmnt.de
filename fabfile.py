@@ -13,10 +13,6 @@ import os
 
 PROJECT = "elmnt"
 
-APPS = [
-    "elmnt",
-]
-
 DEPLOY = {
     'dev': {
         'ssh_host': 'elmnt-server',
@@ -29,7 +25,6 @@ DEPLOY = {
 }
 
 SUBMODULES = {
-    "cmsplugin_bootstrap": "../cmsplugins/bootstrap#master",
 }
 
 # env for production (disables push for this env)
@@ -74,8 +69,6 @@ def static(bower=True):
         local('cp bower_components/d3/d3.min.js media/js/')
         local('cp bower_components/jquery/dist/jquery.min.js media/js/')
         local('cp bower_components/jquery/dist/jquery.min.map media/js/')
-        for app in APPS:
-            pass
 
 
 @task
@@ -83,61 +76,56 @@ def init():
     """
     initialize apps
     """
-    with lcd(BASEDIR):
-        if not os.path.exists("media"):
-            local("mkdir media")
-            local("mkdir media/js")
-            local("mkdir media/css")
-            local("mkdir media/fonts")
-        if not os.path.exists("static"):
-            local("mkdir static")
-        for app in APPS:
-            if not os.path.exists(app) and not os.path.isdir(app):
-                if not os.path.exists("project_template"):
-                    local("git checkout project_template -- project_template")
-                local("mv project_template %s" % app)
-                local("git rm -r project_template")
-                local("sed -i 's/{{ APP }}/%s/g' %s/settings.py" % (app, app))
-                local("sed -i 's/{{ APP }}/%s/g' %s/wsgi.py" % (app, app))
+    pass
+#   with lcd(BASEDIR):
+#       if not os.path.exists("media"):
+#           local("mkdir media")
+#           local("mkdir media/js")
+#           local("mkdir media/css")
+#           local("mkdir media/fonts")
+#       if not os.path.exists("static"):
+#           local("mkdir static")
+#           if not os.path.exists(app) and not os.path.isdir(app):
+#               if not os.path.exists("project_template"):
+#                   local("git checkout project_template -- project_template")
+#               local("mv project_template %s" % app)
+#               local("git rm -r project_template")
+#               local("sed -i 's/{{ APP }}/%s/g' %s/settings.py" % (app, app))
+#               local("sed -i 's/{{ APP }}/%s/g' %s/wsgi.py" % (app, app))
 
-            if not os.path.exists('less/%s.less' % app):
-                local("touch less/%s.less" % app)
-
-            if not os.path.exists('js/%s.js' % app):
-                local("touch js/%s.js" % app)
 
 
 @task
-def export_local_db(app=None):
+def export_local_db():
     '''
     Export local database into fixtures_live.json
     '''
     with lcd(BASEDIR):
-        managepy('dumpdata -n --indent=1 %s > fixtures_local.json' % (' -e '.join(COPY_DB_EXCLUDE)), app)
+        managepy('dumpdata -n --indent=1 %s > fixtures_local.json' % (' -e '.join(COPY_DB_EXCLUDE)))
 
 
 @task
-def start(app=None):
+def start():
     """
     starts the project locally
     """
-    managepy('runserver 0.0.0.0:8000', app)
+    managepy('runserver 0.0.0.0:8000')
 
 
 @task
-def shell(app=None):
+def shell(app):
     """
     starts a shell locally
     """
-    managepy('shell', app)
+    managepy('shell')
 
 
 @task
-def test(app=None):
+def test(app):
     """
     starts a test locally
     """
-    managepy('test', app)
+    managepy('test')
 
 
 @task
@@ -146,9 +134,8 @@ def install():
     installs the project locally
     """
     with lcd(BASEDIR): 
-        for app in APPS:
-            local('rm -f %s/database.sqlite' % app)
-            managepy('migrate --noinput', app)
+        local('rm -f database.sqlite')
+        managepy('migrate --noinput', app)
 
         pull_db()
         pull_media()
@@ -311,12 +298,20 @@ def set_env(e):
     env.CFG['user'], env.CFG['group'] = run_as.split(' ')
 
 
-def managepy(cmd, app=None, remote=False):
+@task
+def update_cmstemplate():
+    with lcd(BASEDIR): 
+        local('git checkout cmstemplate')
+        local('git pull')
+        local('git checkout develop')
+        local('git merge cmstemplate')
+    
+
+
+def managepy(cmd, remote=False):
     """
     Helper: run a management command remotely.
     """
-    if not app:
-        app = APPS[0]
 
     if remote:
         with cd(env.CFG['basedir']):

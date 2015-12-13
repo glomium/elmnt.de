@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'filer',
     'sekizai',
     'reversion',
-    'taggit',
     'easy_thumbnails',
     'crispy_forms',
 ]
