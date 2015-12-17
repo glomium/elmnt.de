@@ -4,6 +4,7 @@
   "repository": [],
   "license": null,
   "devDependencies": {
+    "grunt": ">=0.4.2",
     "grunt-autoprefixer": "~2.2.0",
     "grunt-contrib-clean": "~0.7.0",
     "grunt-contrib-coffee": "~0.13.0",
