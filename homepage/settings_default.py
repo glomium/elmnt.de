@@ -176,7 +176,7 @@ LOGGING = {
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
-        }
+        },
         'require_debug_true': {
             '()': 'django.utils.log.RequireDebugTrue'
         },
@@ -186,7 +186,7 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
         'console':{
              'level': 'DEBUG',
              'filters': ['require_debug_true'],
