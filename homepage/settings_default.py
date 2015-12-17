@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'mptt',
     'filer',
     'sekizai',
-    'reversion',
+#   'reversion',
     'easy_thumbnails',
     'crispy_forms',
 ]
