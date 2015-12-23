@@ -77,22 +77,6 @@ def init():
     initialize apps
     """
     pass
-#   with lcd(BASEDIR):
-#       if not os.path.exists("media"):
-#           local("mkdir media")
-#           local("mkdir media/js")
-#           local("mkdir media/css")
-#           local("mkdir media/fonts")
-#       if not os.path.exists("static"):
-#           local("mkdir static")
-#           if not os.path.exists(app) and not os.path.isdir(app):
-#               if not os.path.exists("project_template"):
-#                   local("git checkout project_template -- project_template")
-#               local("mv project_template %s" % app)
-#               local("git rm -r project_template")
-#               local("sed -i 's/{{ APP }}/%s/g' %s/settings.py" % (app, app))
-#               local("sed -i 's/{{ APP }}/%s/g' %s/wsgi.py" % (app, app))
-
 
 
 @task
@@ -304,7 +288,7 @@ def update_cmstemplate():
         local('git checkout cmstemplate')
         local('git pull')
         local('git checkout develop')
-        local('git merge cmstemplate')
+        local('git merge -m "merge" cmstemplate')
     
 
 
