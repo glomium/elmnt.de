@@ -7,7 +7,7 @@ module.exports = (grunt) ->
     # https://www.npmjs.com/package/grunt-contrib-clean
     clean: 
       all: [
-        'src/build',
+        './layout/build',
       ]
 
     # https://www.npmjs.com/package/grunt-contrib-coffee
@@ -16,7 +16,7 @@ module.exports = (grunt) ->
         bare: true
       compile:
         files:
-          'src/build/project.coffee.js': 'src/coffee.js'
+          './layout/build/project.coffee.js': './layout/coffee.js'
 
 
     # https://www.npmjs.com/package/grunt-contrib-uglify
@@ -27,14 +27,14 @@ module.exports = (grunt) ->
         mangle: true
         preserveComments: /^!|@preserve|@license|@cc_on/i
       compile:
-        src: grunt.file.readJSON "./src/javascript.json"
-        dest: 'media/js/bootstrap.min.js'
+        src: grunt.file.readJSON "./layout/javascript.json"
+        dest: './media/js/bootstrap.min.js'
 
     # https://www.npmjs.com/package/grunt-sass
     sass:
       compile:
         files:
-          'src/build/project.css': 'src/project.scss'
+          './layout/build/project.css': './layout/project.scss'
 
     autoprefixer:
       options:
@@ -50,23 +50,23 @@ module.exports = (grunt) ->
         ]
       compile:
         src: [
-          'src/build/project.css',
+          './layout/build/project.css',
         ]
-        dest: 'src/build/prefixed.css'
+        dest: './layout/build/prefixed.css'
 
     # https://www.npmjs.com/package/grunt-contrib-cssmin
     cssmin:
       compile:
         files:
-          'media/css/bootstrap.min.css': 'src/build/prefixed.css'
+          './media/css/bootstrap.min.css': './layout/build/prefixed.css'
 
     # https://www.npmjs.com/package/grunt-contrib-watch
     watch:
       js:
-        files: ["./src/project.coffee", "./src/project.js", "./src/javascript.json"]
+        files: ["./layout/project.coffee", "./layout/project.js", "./layout/javascript.json"]
         tasks: ["buildjs"]
       css:
-        files: ["./src/project.scss"]
+        files: ["./layout/project.scss"]
         tasks: ["buildcss"]
 
   @loadNpmTasks "grunt-autoprefixer"
