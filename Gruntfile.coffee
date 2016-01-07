@@ -28,7 +28,7 @@ module.exports = (grunt) ->
         preserveComments: /^!|@preserve|@license|@cc_on/i
       compile:
         src: grunt.file.readJSON "./src/javascript.json"
-        dest: 'media/js/project.min.js'
+        dest: 'media/js/bootstrap.min.js'
 
     # https://www.npmjs.com/package/grunt-sass
     sass:
@@ -58,7 +58,7 @@ module.exports = (grunt) ->
     cssmin:
       compile:
         files:
-          'media/css/project.min.css': 'src/build/prefixed.css'
+          'media/css/bootstrap.min.css': 'src/build/prefixed.css'
 
     # https://www.npmjs.com/package/grunt-contrib-watch
     watch:
