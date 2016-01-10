@@ -9,6 +9,7 @@
   "license": "",
   "private": true,
   "dependencies": {
-      "bootstrap": "4.0.0-alpha.2"
+    "tether": "~1.1.1",
+    "bootstrap": "4.0.0-alpha.2"
   }
 }
