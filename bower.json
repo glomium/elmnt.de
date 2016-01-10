@@ -9,8 +9,8 @@
   "license": "",
   "private": true,
   "dependencies": {
-    "bootstrap": "~3.3.4",
     "c3": "~0.4.10",
     "Stickyfill": "~1.1.3"
+    "bootstrap": "4.0.0-alpha.2"
   }
 }
