@@ -1,5 +1,7 @@
 User-agent: *
+Disallow: /admin/
 Disallow: /media/
 Disallow: /static/
+Allow: /
 
 Sitemap: http://www.elmnt.de/sitemap.xml
