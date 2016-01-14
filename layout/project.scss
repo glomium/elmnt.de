@@ -24,6 +24,9 @@ $zindex-navbar: 5;
 
 /*! CUSTOM */
 
+// debug toolbar fix
+[hidden="hidden"][style*="display: block;"] { display: block !important; }
+
 // CSS
 // -----------------------------------------------------
 
