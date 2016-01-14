@@ -16,11 +16,11 @@ PROJECT = "FIXME"
 DEPLOY = {
     'dev': {
         'ssh_host': 'elmnt-server',
-        'basedir': '/var/www/django_projects/%s' % PROJECT,
+        'basedir': '/var/www/cmstemplate/%s' % PROJECT,
     },
     'prod': {
         'ssh_host': 'igelware',
-        'basedir': '/var/www/django_projects/%s' % PROJECT,
+        'basedir': '/var/www/cmstemplate/%s' % PROJECT,
     }
 }
 
