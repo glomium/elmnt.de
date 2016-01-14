@@ -120,7 +120,7 @@ TEMPLATES = [
                 'django.core.context_processors.request',
                 # adds messages to the request
                 'django.contrib.messages.context_processors.messages',
-                
+
                 'cms.context_processors.cms_settings',
                 'sekizai.context_processors.sekizai',
             ],
@@ -142,6 +142,30 @@ CMS_PERMISSION = True
 
 
 # FILER =======================================================================
+
+FILER_STORAGES = {
+    'public': {
+        'main': {
+            'ENGINE': 'filer.storage.PublicFileSystemStorage',
+            'OPTIONS': {
+                'location': MEDIA_ROOT,
+                'base_url': MEDIA_URL,
+            },
+            'UPLOAD_TO': 'filer.utils.generate_filename.randomized',
+            'UPLOAD_TO_PREFIX': 'filer',
+        },
+        'thumbnails': {
+            'ENGINE': 'filer.storage.PublicFileSystemStorage',
+            'OPTIONS': {
+                'location': MEDIA_ROOT,
+                'base_url': MEDIA_URL,
+            },
+            'THUMBNAIL_OPTIONS': {
+                'base_dir': 'thumbnails',
+            },
+        },
+    },
+}
 
 #TEXT_SAVE_IMAGE_FUNCTION='cmsplugin_filer_image.integrations.ckeditor.create_image_plugin'
 
