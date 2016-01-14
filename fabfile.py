@@ -185,6 +185,7 @@ def pull_db():
         sudo('chown %s %s' % (env.user, tmp))
         get(tmp, 'fixtures_live.json')
         sudo('rm %s' % tmp)
+        managepy('migrate')
         managepy('loaddata fixtures_live.json')
 
 

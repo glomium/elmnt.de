@@ -15,6 +15,7 @@
 
 /layout/build/
 
-/media/filer_public_thumbnails/
+/media/thumbnails/
+/media/filer/
 
 /homepage/local_settings.py
