@@ -19,7 +19,7 @@ DEPLOY = {
         'basedir': '/var/www/django_projects/%s' % PROJECT,
     },
     'prod': {
-        'ssh_host': 'igelware',
+        'ssh_host': 'djangobmf',
         'basedir': '/var/www/django_projects/%s' % PROJECT,
     }
 }

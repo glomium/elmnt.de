@@ -3,9 +3,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 
-from taggit.managers import TaggableManager
-from easy_thumbnails.fields import ThumbnailerImageField
-from easy_thumbnails.signals import saved_file
 from datetime import datetime
 
 
@@ -19,8 +16,6 @@ class Photo(models.Model):
     image = models.ImageField(upload_to='gallery/')
     created = models.DateTimeField(_('created'), auto_now_add=True)
     modified = models.DateTimeField(_('modified'), auto_now=True)
-
-    tags = TaggableManager(blank=True)
 
     class Meta:
         verbose_name = _('photo')
