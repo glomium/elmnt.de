@@ -15,7 +15,7 @@ ADMINS = (
 )
 
 CMSTEMPLATE_I18N_URL = True
-CMSTEMPLATE_SITEMAPS['gallery'] = 'gallery.sitemaps.GallerySitemap'
+# CMSTEMPLATE_SITEMAPS['gallery'] = 'gallery.sitemaps.GallerySitemap'
 
 MANAGERS = ADMINS
 INTERNAL_IPS = ('127.0.0.1', '85.25.139.15')
