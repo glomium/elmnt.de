@@ -8,6 +8,9 @@ from django.contrib import admin
 from django.views.generic.base import RedirectView
 
 from importlib import import_module
+from collections import OrderedDict
+
+
 admin.autodiscover()
 
 
@@ -18,7 +21,7 @@ else:
 
 
 SITEMAPS = {}
-for key, modulepath in getattr(settings, 'CMSTEMPLATE_SITEMAPS', {}).items():
+for key, modulepath in OrderedDict(sorted(getattr(settings, 'CMSTEMPLATE_SITEMAPS', {}).items())).items():
     module_path, class_name = modulepath.rsplit('.', 1)
     module = import_module(module_path)
     SITEMAPS[key] = getattr(module, class_name)
@@ -28,6 +31,11 @@ urlpatterns = patterns(
     'django.contrib.sitemaps.views',
     url(r'^sitemap\.xml$', 'index', {'sitemaps': SITEMAPS}),
     url(r'^sitemap-(?P<section>\w+)\.xml$', 'sitemap', {'sitemaps': SITEMAPS}),
+)
+
+urlpatterns += patterns(
+    '',
+    url(r'^en', RedirectView.as_view(url='/', permanent=True)),
 )
 
 urlpatterns += i18n_patterns('',
