@@ -25,7 +25,7 @@ SERVER_EMAIL="noreply@elmnt.de"
 # Application definition
 INSTALLED_APPS += [
     # own apps
-    'projects',
+#   'projects',
 #   'gallery',
 #   'technologies',
     'weights',
