@@ -132,6 +132,23 @@ def init_submodules():
 
 
 @task
+def push_fixtures(name):
+    """
+    Copy the DB from local to remote
+    """
+    if not hasattr(env, 'CFG'):
+        puts("You need to load an environment")
+        return False
+
+    with lcd(BASEDIR):
+        tmp = run('mktemp -d')
+        put(name, tmp)
+        sudo('chown -R %s %s' % (env.CFG["user"], tmp))
+        managepy('loaddata %s/%s' % (tmp, name), remote=True)
+        sudo('rm -rf %s' % tmp)
+
+
+@task
 def push_db():
     """
     Copy the DB from local to remote
@@ -220,6 +237,7 @@ def pull_media():
     )
     sudo('rm -rf %s' % tmp)
 
+
 @task
 def pull():
     pull_media()
@@ -265,7 +283,6 @@ def update_cmstemplate():
         local('git checkout develop')
         local('git merge -m "merge" cmstemplate')
     
-
 
 def managepy(cmd, remote=False):
     """
