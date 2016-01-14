@@ -16,11 +16,11 @@ PROJECT = "elmnt"
 DEPLOY = {
     'dev': {
         'ssh_host': 'elmnt-server',
-        'basedir': '/var/www/django_projects/%s' % PROJECT,
+        'basedir': '/var/www/cmstemplate/%s' % PROJECT,
     },
     'prod': {
         'ssh_host': 'djangobmf',
-        'basedir': '/var/www/django_projects/%s' % PROJECT,
+        'basedir': '/var/www/cmstemplate/%s' % PROJECT,
     }
 }
 
@@ -55,23 +55,6 @@ env.use_ssh_config = True
 
 
 @task
-def static(bower=True):
-    """
-    complies and copies static files
-    """
-    if bower:
-        local('bower update')
-    local('grunt')
-    with lcd(BASEDIR):
-        local('cp bower_components/bootstrap/fonts/glyphicons-halflings-regular* media/fonts/')
-        local('cp bower_components/c3/c3.min.css media/css/')
-        local('cp bower_components/c3/c3.min.js media/js/')
-        local('cp bower_components/d3/d3.min.js media/js/')
-        local('cp bower_components/jquery/dist/jquery.min.js media/js/')
-        local('cp bower_components/jquery/dist/jquery.min.map media/js/')
-
-
-@task
 def init():
     """
     initialize apps
@@ -97,15 +80,7 @@ def start():
 
 
 @task
-def shell(app):
-    """
-    starts a shell locally
-    """
-    managepy('shell')
-
-
-@task
-def test(app):
+def test():
     """
     starts a test locally
     """
@@ -159,7 +134,7 @@ def init_submodules():
 @task
 def push_db():
     """
-    Copy the production DB from local to remote
+    Copy the DB from local to remote
     """
     if not hasattr(env, 'CFG'):
         puts("You need to load an environment")
@@ -181,7 +156,7 @@ def push_db():
 @task
 def pull_db():
     """
-    Copy the production DB from remote to local
+    Copy the DB from remote to local
     """
     if not hasattr(env, 'CFG'):
         puts("You need to load an environment")
@@ -199,7 +174,7 @@ def pull_db():
 @task
 def push_media():
     """
-    Copy the production media from local to remote
+    Copy the media from local to remote
     """
     if not hasattr(env, 'CFG'):
         puts("You need to load an environment")
@@ -228,7 +203,7 @@ def push_media():
 @task
 def pull_media():
     """
-    Copy the production media from remote to local
+    Copy the media from remote to local
     """
     if not hasattr(env, 'CFG'):
         puts("You need to load an environment")
@@ -261,7 +236,7 @@ def push():
 def deploy():
     if not hasattr(env, 'CFG'):
         puts("You should load an environment!")
-    sudo('salt-call state.sls django_projects pillar=\'{"django_projects_active": "%s"}\'' % PROJECT)
+    sudo('salt-call state.sls hosting.cmstemplate')
 
 
 # HELPER Methods ==============================================================
