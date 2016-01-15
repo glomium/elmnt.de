@@ -94,7 +94,7 @@ def install():
     """
     with lcd(BASEDIR): 
         local('rm -f database.sqlite')
-        managepy('migrate --noinput', app)
+        local('virtenv/bin/python manage.py migrate --noinput')
 
         pull_db()
         pull_media()
@@ -185,7 +185,7 @@ def pull_db():
         sudo('chown %s %s' % (env.user, tmp))
         get(tmp, 'fixtures_live.json')
         sudo('rm %s' % tmp)
-        managepy('migrate')
+        local('virtenv/bin/python manage.py migrate --noinput')
         managepy('loaddata fixtures_live.json')
 
 
