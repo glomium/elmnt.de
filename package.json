@@ -12,7 +12,11 @@
     "grunt-contrib-cssmin": "~0.14.0",
     "grunt-contrib-uglify": "~0.11.0",
     "grunt-contrib-watch": "~0.6.1",
-    "grunt-sass": "^1.1.0"
+    "grunt-sass": "^1.1.0",
+    "c3": "~0.4.10",
+    "stickyfill": "~1.1.1",
+    "tether": "~1.1.1",
+    "bootstrap": "4.0.0-alpha.2"
   },
   "engines": {
     "node": ">=0.12.0"
