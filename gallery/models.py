@@ -67,7 +67,7 @@ class Photo(models.Model):
                 date = data['DateTimeDigitized']
 
             if date:
-                self.date = datetime.strptime(date, '%Y:%m:%d %I:%M:%S')
+                self.date = datetime.strptime(date, '%Y:%m:%d %H:%M:%S')
                 if settings.USE_TZ:
                     self.date = make_aware(self.date)
             else:
