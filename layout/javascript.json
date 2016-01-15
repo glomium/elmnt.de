@@ -1,15 +1,13 @@
 [
-    "../bootstrap/js/dist/util.js",
-    "../bootstrap/js/dist/alert.js",
-    "../bootstrap/js/dist/button.js",
-    "../bootstrap/js/dist/carousel.js",
-    "../bootstrap/js/dist/collapse.js",
-    "../bootstrap/js/dist/dropdown.js",
-    "../bootstrap/js/dist/modal.js",
-    "../bootstrap/js/dist/scrollspy.js",
-    "../bootstrap/js/dist/tab.js",
-    "./bower_components/Stickyfill/dist/stickyfill.min.js",
-    "./src/project.js",
-    "./src/build/project.coffee.js",
-    "./src/project.js"
+    "./bower_components/bootstrap/js/dist/util.js",
+    "./bower_components/bootstrap/js/dist/alert.js",
+    "./bower_components/bootstrap/js/dist/button.js",
+    "./bower_components/bootstrap/js/dist/carousel.js",
+    "./bower_components/bootstrap/js/dist/collapse.js",
+    "./bower_components/bootstrap/js/dist/dropdown.js",
+    "./bower_components/bootstrap/js/dist/modal.js",
+    "./bower_components/bootstrap/js/dist/scrollspy.js",
+    "./bower_components/bootstrap/js/dist/tab.js",
+    "./layout/build/project.coffee.js",
+    "./layout/project.js"
 ]
