@@ -7,7 +7,7 @@
 // Bootstrap import(s)
 // -----------------------------------------------------
 
-@import "./bower_components/bootstrap/scss/bootstrap.scss"; 
+@import "./node_modules/bootstrap/scss/bootstrap.scss"; 
 
 // debug toolbar fix
 [hidden="hidden"][style*="display: block;"] { display: block !important; }
