@@ -6,6 +6,10 @@
 /*\.egg-info
 /database\.sqlite
 
+/htmlcov
+/\.coverage
+/coverage\.xml
+
 /\.tox
 /node_modules
 /fixtures_*\.json
