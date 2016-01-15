@@ -28,8 +28,8 @@ module.exports = (grunt) ->
         files: [
           {
               expand: true
-              cwd: 'bower_components'
-              src: grunt.file.readJSON "./layout/bower_components.json"
+              cwd: 'node_modules'
+              src: grunt.file.readJSON "./layout/node_modules.json"
               dest: 'media/js/'
               flatten: true
               filter: 'isFile'
