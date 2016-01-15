@@ -7,11 +7,13 @@
     <h1>Galerie</h1>
 <div class="row">
 {% for object in object_list %}
-    {% thumbnail object.image size crop=False upscale=False subject_location=object.image.subject_location as thumbnail %}
+    {% thumbnail object.image size crop=True upscale=True subject_location=object.image.subject_location as thumbnail %}
 <div class="col-sm-6 col-md-4 col-lg-3">
-    <a href="{{ object.get_absolute_url }}">
-        <img class="img-thumbnail center-block" src="{{ MEDIA_URL }}{{ thumbnail }}" alt="{{ object.title }}">
-    </a>
+    <p>
+        <a href="{{ object.get_absolute_url }}">
+            <img class="img-thumbnail center-block" src="{{ MEDIA_URL }}{{ thumbnail }}" alt="{{ object.title }}">
+        </a>
+    </p>
 </div>
 {% endfor %}
 </div>
