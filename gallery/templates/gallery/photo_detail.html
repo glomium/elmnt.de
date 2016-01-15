@@ -7,7 +7,7 @@
 {% block content %}
 <div class="container p-x-0 bg-inverse">
 {% thumbnail object.image size subject_location=object.image.subject_location as thumbnail %}
-<p><img class="img-fluid center-block" src="{{ MEDIA_URL }}{{ thumbnail }}" alt="{{ object.title }}"></p>
+<img class="img-fluid center-block" src="{{ MEDIA_URL }}{{ thumbnail }}" alt="{{ object.title }}">
 </div>
 <ul class="pager">
     {% if object.get_next_by_date %}

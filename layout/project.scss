@@ -131,11 +131,11 @@ header {
     top: 0;
     z-index: $zindex-navbar;
     border-top: 1px solid $body-color;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.40);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.40);
 }
 
 #main {
-    margin: ($font-size-base * $line-height) auto;
+    margin: 0 auto ($font-size-base * $line-height) auto;
 }
 
 footer .container {
