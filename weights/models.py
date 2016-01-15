@@ -23,7 +23,7 @@ class Profile(models.Model):
         on_delete=models.CASCADE,
     )
     height = models.DecimalField(
-        _('height'),
+        _('Height'),
         max_digits=4,
         decimal_places=3,
         blank=False,
@@ -59,12 +59,12 @@ class Data(models.Model):
         related_name="data",
     )
     date = models.DateTimeField(
-        _('date'),
+        _('Date'),
         default=now,
         blank=False, 
     )
     weight = models.DecimalField(
-        _('weight'), 
+        _('Weight'), 
         max_digits=4,
         decimal_places=1,
         blank=False,

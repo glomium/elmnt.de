@@ -3,13 +3,16 @@
 {% load thumbnail i18n %}
 
 {% block content %}
+<div class="container">
+    <h1>Galerie</h1>
 <div class="row">
 {% for object in object_list %}
-<div class="col-sm-3"><div class="thumbnail">
+    {% thumbnail object.image size crop=False upscale=False subject_location=object.image.subject_location as thumbnail %}
+<div class="col-sm-6 col-md-4 col-lg-3">
     <a href="{{ object.get_absolute_url }}">
-      <img class="img-thumbnail" src="{{ object.image|thumbnail_url:'gallery_thumbnail' }}" alt="{{ object.title }}">
+        <img class="img-thumbnail center-block" src="{{ MEDIA_URL }}{{ thumbnail }}" alt="{{ object.title }}">
     </a>
-</div></div>
+</div>
 {% endfor %}
 </div>
 <ul class="pager">
@@ -21,4 +24,5 @@
     <li class="next"><a href="?page={{ page_obj.next_page_number }}">{% trans "Older images" %}</a></li>
     {% endif %}
 </ul>
+</div>
 {% endblock %}
