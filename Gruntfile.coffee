@@ -35,6 +35,17 @@ module.exports = (grunt) ->
               filter: 'isFile'
           },
         ]
+      fonts:
+        files: [
+          {
+              expand: true
+              cwd: 'node_modules'
+              src: grunt.file.readJSON "./layout/fonts.json"
+              dest: 'media/fonts/'
+              flatten: true
+              filter: 'isFile'
+          },
+        ]
 
 
     # https://www.npmjs.com/package/grunt-contrib-uglify
