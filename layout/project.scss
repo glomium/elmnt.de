@@ -177,6 +177,10 @@ footer .container {
     border-top: 1px solid $gray-light;
     color: $gray;
     background: $gray-lighter;
+    p {
+        margin: 0;
+        padding: $font-size-base 0;
+    }
     a {
         color: lighten($gray, 20%);
     }
