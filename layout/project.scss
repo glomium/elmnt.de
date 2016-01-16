@@ -30,9 +30,6 @@ $zindex-navbar: 5;
 // fixed-sticky
 // -----------------------------------------------------
 
-.fixedsticky {
-	position: sticky;
-}
 /* When position: sticky is supported but native behavior is ignored */
 .fixedsticky-withoutfixedfixed .fixedsticky-off,
 .fixed-supported .fixedsticky-off {
@@ -41,12 +38,6 @@ $zindex-navbar: 5;
 .fixedsticky-withoutfixedfixed .fixedsticky-on,
 .fixed-supported .fixedsticky-on {
 	position: fixed;
-}
-.fixedsticky-dummy {
-	display: none;
-}
-.fixedsticky-on + .fixedsticky-dummy {
-	display: block;
 }
 
 // CSS
@@ -164,6 +155,7 @@ header {
 #navigation {
     position: sticky;
     top: 0;
+    width: 100%;
     z-index: $zindex-navbar;
     border-top: 1px solid $body-color;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.40);
