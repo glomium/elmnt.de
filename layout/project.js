@@ -1,3 +1,3 @@
 $(document).ready(function() {
-    $('#navigation').fixedsticky();
+    $('#navigation').Stickyfill();
 });

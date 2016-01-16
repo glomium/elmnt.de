@@ -6,7 +6,6 @@
   "devDependencies": {
     "bootstrap": "4.0.0-alpha.2",
     "c3": "~0.4.10",
-    "fixed-sticky": "^0.1.6",
     "font-awesome": "^4.5.0",
     "grunt": ">=0.4.2",
     "grunt-autoprefixer": "~2.2.0",

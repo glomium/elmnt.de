@@ -8,7 +8,7 @@
     "./node_modules/bootstrap/js/dist/modal.js",
     "./node_modules/bootstrap/js/dist/scrollspy.js",
     "./node_modules/bootstrap/js/dist/tab.js",
-    "./node_modules/fixed-sticky/fixedsticky.js",
+    "./layout/stickyfill.js",
     "./layout/build/project.coffee.js",
     "./layout/project.js"
 ]
