@@ -1,10 +1,9 @@
 {% extends "weights/base.html" %}
 {% load i18n crispy_forms_tags %}
 
-{% block title %}{{ block.super }} {% trans "Confirm delete" %}{% endblock %}
+{% block title %}{{ block.super }}{% trans "Confirm delete" %}{% endblock %}
 
-{% block content %}
-
+{% block weights_content %}
 <h2>{% trans "Confirm delete" %}</h2>
 <form action="{{ request.path }}" method="post">{% csrf_token %}
     <p>Are you sure you want to delete "{{ object }}"?</p>

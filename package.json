@@ -4,6 +4,10 @@
   "repository": [],
   "license": null,
   "devDependencies": {
+    "bootstrap": "4.0.0-alpha.2",
+    "c3": "~0.4.10",
+    "fixed-sticky": "^0.1.6",
+    "font-awesome": "^4.5.0",
     "grunt": ">=0.4.2",
     "grunt-autoprefixer": "~2.2.0",
     "grunt-contrib-clean": "~0.7.0",
@@ -13,16 +17,12 @@
     "grunt-contrib-uglify": "~0.11.0",
     "grunt-contrib-watch": "~0.6.1",
     "grunt-sass": "^1.1.0",
-    "c3": "~0.4.10",
-    "stickyfill": "~1.1.1",
-    "tether": "~1.1.1",
     "jquery": "^2.2.0",
-    "bootstrap": "4.0.0-alpha.2"
+    "tether": "~1.1.1"
   },
   "engines": {
     "node": ">=0.12.0"
   },
   "files": [],
-  "dependencies": {
-  }
+  "dependencies": {}
 }

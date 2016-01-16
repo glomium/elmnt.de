@@ -2,9 +2,9 @@
 
 {% load i18n sekizai_tags %}
 
-{% block title %}{{ block.super }} {% trans "Index" %}{% endblock %}
+{% block title %}{{ block.super }}{% trans "Index" %}{% endblock %}
 
-{% block content %}{% if profile %}
+{% block weights_content %}{% if profile %}
 {% addtoblock "js" %}<script src="{{ MEDIA_URL }}js/d3.min.js"></script>{% endaddtoblock %}
 {% addtoblock "js" %}<script src="{{ MEDIA_URL }}js/c3.min.js"></script>{% endaddtoblock %}
 {% addtoblock "css" %}<link href="{{ MEDIA_URL }}css/c3.min.css" rel="stylesheet">{% endaddtoblock %}
@@ -88,17 +88,3 @@ $(document).ready(function() {
 <div id="graph"></div>
 {% endif %}
 {% endblock %}
-
-{% block sidebar %}{% if profile %}
-{{ block.super }}
-<h4>{% trans "Data" %}</h4>
-<ul>
-    <li><a class="loaddata bg-info" href="{% url "weights-api" %}">Latest Data</a>
-    {% for item in navigation %}
-    {% ifchanged %}
-    <li><a class="loaddata" href="{% url "weights-api" year=item.date.year %}">{% trans "Year" %} {{ item.date|date:"Y" }}</a></li>
-    {% endifchanged %}
-    <li><a class="loaddata" href="{% url "weights-api" year=item.date.year month=item.date.month %}">{{ item.date|date:"F Y" }}</a></li>
-    {% endfor %}
-</ul>
-{% endif %}{% endblock %}

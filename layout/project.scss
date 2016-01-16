@@ -1,6 +1,11 @@
-// TYPOGRAPHY
+// Import fonts
 // -----------------------------------------------------
+
 @import url(http://fonts.googleapis.com/css?family=Ubuntu:700|Open+Sans:400,700);
+@import "./node_modules/font-awesome/scss/font-awesome.scss";
+
+// Overwrite Bootstrap settings
+// -----------------------------------------------------
 
 $body-bg: #fff;
 $brand-primary: hsl(270deg, 90%, 35%);
@@ -14,16 +19,35 @@ $headings-font-weight: 700;
 
 $zindex-navbar: 5;
 
-/*!
- * Bootstrap v4.0.0-alpha.2 (http://getbootstrap.com)
- * Copyright 2011-2015 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- */
+// Bootstrap import(s)
+// -----------------------------------------------------
 
 @import "./node_modules/bootstrap/scss/bootstrap.scss"; 
 
 // debug toolbar fix
 [hidden="hidden"][style*="display: block;"] { display: block !important; }
+
+// fixed-sticky
+// -----------------------------------------------------
+
+.fixedsticky {
+	position: sticky;
+}
+/* When position: sticky is supported but native behavior is ignored */
+.fixedsticky-withoutfixedfixed .fixedsticky-off,
+.fixed-supported .fixedsticky-off {
+	position: static;
+}
+.fixedsticky-withoutfixedfixed .fixedsticky-on,
+.fixed-supported .fixedsticky-on {
+	position: fixed;
+}
+.fixedsticky-dummy {
+	display: none;
+}
+.fixedsticky-on + .fixedsticky-dummy {
+	display: block;
+}
 
 // CSS
 // -----------------------------------------------------

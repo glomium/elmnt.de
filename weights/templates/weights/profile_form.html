@@ -1,9 +1,9 @@
 {% extends "weights/base.html" %}
 {% load i18n crispy_forms_tags %}
 
-{% block title %}{{ block.super }} {% trans "Edit profile" %}{% endblock %}
+{% block title %}{{ block.super }}{% trans "Edit profile" %}{% endblock %}
 
-{% block content %}
+{% block weights_content %}
 <h2>{% trans "Edit profile" %}</h2>
 {% crispy form %}
 {% endblock %}

@@ -2,20 +2,43 @@
 
 {% load i18n %}
 
-{% block title %}{{ block.super }} {% trans "Weights" %}{% endblock %}
+{% block title %}{{ block.super }} - {% endblock %}
 
-{% block sidebar %}{% if profile %}
+{% block content %}
+<section id="app-weights">
+    <div class="container">
+        <div class="buttons">
+        {% if profile %}
+            <a class="btn btn-success" href="{% url "weights-create" %}" title="{% trans "Add data" %}"><i class="fa fa-plus fa-lg fa-fw"></i></a>
+            <a class="btn btn-warning" href="{% url "weights-update" %}" title="{% trans "Update latest entry" %}"><i class="fa fa-edit fa-lg fa-fw"></i></a>
+            <a class="btn btn-danger" href="{% url "weights-delete" %}" title="{% trans "Delete latest entry" %}"><i class="fa fa-trash fa-lg fa-fw"></i></a>
+            <a class="btn btn-info" href="{% url "weights-profile" %}" title="{% trans "Edit Profile" %}"><i class="fa fa-user fa-lg fa-fw"></i></a>
+        {% else %}
+            <a class="btn btn-info" href="{% url "weights-profile" %}" title="{% trans "Create Profile" %}"><i class="fa fa-user-plus fa-lg fa-fw"></i></a>
+        {% endif %}
+        </div>
+        {% block weights_content %}{% endblock %}
+    <ul>
+        {% if latest_data %}
+        <li>{% trans "Last" %}: {{ latest_data.date|date:"d. N H:i" }}</li>
+        <li>{% trans "Weight" %}: {{ latest_data.weight }} kg</li>
+        <li>{{ latest_data.calc_vweight|floatformat:2 }}&plusmn;{{ latest_data.calc_dweight|floatformat:2 }} kg</li>
+        <li>{{ latest_data.calc_vslope|floatformat:3 }}&plusmn;{{ latest_data.calc_dslope|floatformat:3 }} kg/{% trans "week" %}</li>
+        <li>{{ latest_data.calc_vbmi|floatformat:3 }}&plusmn;{{ latest_data.calc_dbmi|floatformat:3 }}</li>
+        {% endif %}
+    </ul>
+
+<h4>{% trans "Data" %}</h4>
 <ul>
-    {% if latest_data %}
-    <li>{% trans "Last" %}: {{ latest_data.date|date:"d. N H:i" }}</li>
-    <li>{% trans "Weight" %}: {{ latest_data.weight }} kg</li>
-    <li>{{ latest_data.calc_vweight|floatformat:2 }}&plusmn;{{ latest_data.calc_dweight|floatformat:2 }} kg</li>
-    <li>{{ latest_data.calc_vslope|floatformat:3 }}&plusmn;{{ latest_data.calc_dslope|floatformat:3 }} kg/{% trans "week" %}</li>
-    <li>{{ latest_data.calc_vbmi|floatformat:3 }}&plusmn;{{ latest_data.calc_dbmi|floatformat:3 }}</li>
-    {% endif %}
-    <li><a href="{% url "weights-create" %}">{% trans "Add data" %}</a></li>
-    <li><a href="{% url "weights-update" %}">{% trans "Update latest entry" %}</a></li>
-    <li><a href="{% url "weights-delete" %}">{% trans "Delete latest entry" %}</a></li>
-    <li><a href="{% url "weights-profile" %}">{% trans "Edit profile" %}</a></li>
+    <li><a class="loaddata bg-info" href="{% url "weights-api" %}">Latest Data</a>
+    {% for item in navigation %}
+    {% ifchanged %}
+    <li><a class="loaddata" href="{% url "weights-api" year=item.date.year %}">{% trans "Year" %} {{ item.date|date:"Y" }}</a></li>
+    {% endifchanged %}
+    <li><a class="loaddata" href="{% url "weights-api" year=item.date.year month=item.date.month %}">{{ item.date|date:"F Y" }}</a></li>
+    {% endfor %}
 </ul>
-{% endif %}{% endblock %}
+    </div>
+
+</section>
+{% endblock %}
