@@ -1,4 +1,6 @@
 User-agent: *
+Disallow: /de/admin/
+Disallow: /en/admin/
 Disallow: /admin/
 Disallow: /media/
 Disallow: /static/
