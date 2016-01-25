@@ -94,6 +94,16 @@ def migrate():
 
 
 @task
+def loaddata(fixture):
+    with lcd(BASEDIR):
+        if not os.path.exists('virtenv') and os.path.exists('docker-compose.yml'):
+            prefix = "/project/"
+        else:
+            prefix = ""
+    managepy_local('loaddata %s%s.json' % (prefix, fixture))
+
+
+@task
 def makemigrations(app):
     with lcd(BASEDIR):
         managepy_local('makemigrations %s' % app)
@@ -112,7 +122,7 @@ def install():
         pull_media()
 
         if os.path.exists('fixtures_live.json'):
-            managepy_local('loaddata fixtures_live.json')
+            loaddata('fixtures_live')
         else:
             managepy_local('createsuperuser')
 
@@ -198,7 +208,7 @@ def pull_db():
         get(tmp, 'fixtures_live.json')
         sudo('rm %s' % tmp)
         migrate()
-        managepy_local('loaddata fixtures_live.json')
+        loaddata('fixtures_live')
 
 
 @task
