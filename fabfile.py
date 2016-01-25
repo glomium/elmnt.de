@@ -76,7 +76,7 @@ def start():
     """
     starts the project locally
     """
-    managepy_local('runserver 0.0.0.0:8000')
+    managepy_local('runserver 0.0.0.0:8000', toolbar=True)
 
 
 @task
@@ -307,12 +307,12 @@ def update_cmstemplate():
         local('git merge -m "merge" cmstemplate')
     
 
-def managepy_local(cmd):
+def managepy_local(cmd, toolbar=False):
     with lcd(BASEDIR):
         if not os.path.exists('virtenv') and os.path.exists('docker-compose.yml'):
-            local('docker-compose run --rm web python manage.py %s' % cmd)
+            local('docker-compose run --rm -e DJANGO_DEBUG_TOOLBAR=%s web python manage.py %s' % (1 if toolbar else '""', cmd))
         else:
-            local('export DJANGO_DEBUG_TOOLBAR=True && virtenv/bin/python manage.py %s' % cmd)
+            local('export DJANGO_DEBUG_TOOLBAR=%s && virtenv/bin/python manage.py %s' % (1 if toolbar else '""', cmd))
 
 
 def managepy_remote(cmd):
