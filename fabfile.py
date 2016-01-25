@@ -299,11 +299,10 @@ def update_cmstemplate():
 
 def managepy_local(cmd):
     with lcd(BASEDIR):
-        local(
-            'export DJANGO_DEBUG_TOOLBAR=True && virtenv/bin/python manage.py %s' % (
-                cmd
-            )
-        )
+        if not os.path.exists('virtenv') and os.path.exists('docker-compose.yml'):
+            local('docker-compose run --rm web python manage.py %s' % cmd)
+        else:
+            local('export DJANGO_DEBUG_TOOLBAR=True && virtenv/bin/python manage.py %s' % cmd)
 
 
 def managepy_remote(cmd):
