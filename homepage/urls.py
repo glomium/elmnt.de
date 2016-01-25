@@ -33,11 +33,6 @@ urlpatterns = patterns(
     url(r'^sitemap-(?P<section>\w+)\.xml$', 'sitemap', {'sitemaps': SITEMAPS}),
 )
 
-urlpatterns += patterns(
-    '',
-    url(r'^en', RedirectView.as_view(url='/', permanent=True)),
-)
-
 urlpatterns += i18n_patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include('cms.urls')),

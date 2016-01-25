@@ -90,7 +90,17 @@ def test():
 @task
 def migrate():
     with lcd(BASEDIR):
-        managepy_local('migrate')
+        managepy_local('migrate --noinput')
+
+
+@task
+def loaddata(fixture):
+    with lcd(BASEDIR):
+        if not os.path.exists('virtenv') and os.path.exists('docker-compose.yml'):
+            prefix = "/project/"
+        else:
+            prefix = ""
+    managepy_local('loaddata %s%s.json' % (prefix, fixture))
 
 
 @task
@@ -106,13 +116,13 @@ def install():
     """
     with lcd(BASEDIR): 
         local('rm -f database.sqlite')
-        local('virtenv/bin/python manage.py migrate --noinput')
+        migrate()
 
         pull_db()
         pull_media()
 
         if os.path.exists('fixtures_live.json'):
-            managepy_local('loaddata fixtures_live.json')
+            loaddata('fixtures_live')
         else:
             managepy_local('createsuperuser')
 
@@ -197,8 +207,8 @@ def pull_db():
         sudo('chown %s %s' % (env.user, tmp))
         get(tmp, 'fixtures_live.json')
         sudo('rm %s' % tmp)
-        local('virtenv/bin/python manage.py migrate --noinput')
-        managepy_local('loaddata fixtures_live.json')
+        migrate()
+        loaddata('fixtures_live')
 
 
 @task
@@ -308,9 +318,7 @@ def managepy_local(cmd):
 def managepy_remote(cmd):
     with cd(env.CFG['basedir']):
         sudo(
-            'virtenv/bin/python manage.py %s' % (
-                cmd
-            ),
+            'virtenv/bin/python manage.py %s' % cmd,
             user=env.CFG["user"],
             group=env.CFG["group"],
         )
