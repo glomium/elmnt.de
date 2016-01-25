@@ -58,7 +58,6 @@ INSTALLED_APPS = [
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 MIDDLEWARE_CLASSES = (
-    'cms.middleware.utils.ApphookReloadMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -281,3 +280,7 @@ if 'DJANGO_DEBUG_TOOLBAR' in os.environ:  # pragma: no cover
     DEBUG_TOOLBAR_CONFIG = {
         'JQUERY_URL': None,
     }
+else:
+    MIDDLEWARE_CLASSES = (
+        'cms.middleware.utils.ApphookReloadMiddleware',
+    ) + MIDDLEWARE_CLASSES

@@ -457,3 +457,37 @@ class Image(CMSPlugin):
 
     def __str__(self):
         return 'Image'
+
+
+@python_2_unicode_compatible
+class Embed(CMSPlugin):
+    """
+    """
+    source = models.BooleanField(
+        _('Source'),
+        default=True,
+    )
+    allow_fullscreen = models.BooleanField(
+        _('Allow fullscreen'),
+        default=False,
+    )
+
+    ratio = models.CharField(
+        _('Ratio'),
+        max_length=5,
+        blank=False,
+        null=False,
+        choices=(
+            ('21by9', _('21:9')),
+            ('16by9', _('16:9')),
+            ('4by3', _('4:3')),
+            ('1by1', _('1:1')),
+        ),
+        default='16by9',
+    )
+
+    def __str__(self):
+        if self.source:
+            return 'Embed %s' % self.source
+        else:
+            return 'Embed'
