@@ -280,3 +280,7 @@ if 'DJANGO_DEBUG_TOOLBAR' in os.environ:  # pragma: no cover
     DEBUG_TOOLBAR_CONFIG = {
         'JQUERY_URL': None,
     }
+else:
+    MIDDLEWARE_CLASSES = (
+        'cms.middleware.utils.ApphookReloadMiddleware',
+    ) + MIDDLEWARE_CLASSES

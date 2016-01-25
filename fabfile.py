@@ -68,7 +68,7 @@ def export_local_db():
     Export local database into fixtures_live.json
     '''
     with lcd(BASEDIR):
-        managepy('dumpdata -n --indent=1 %s > fixtures_local.json' % (' -e '.join(COPY_DB_EXCLUDE)))
+        managepy_local('dumpdata -n --indent=1 %s > fixtures_local.json' % (' -e '.join(COPY_DB_EXCLUDE)))
 
 
 @task
@@ -76,7 +76,7 @@ def start():
     """
     starts the project locally
     """
-    managepy('runserver 0.0.0.0:8000')
+    managepy_local('runserver 0.0.0.0:8000')
 
 
 @task
@@ -84,7 +84,19 @@ def test():
     """
     starts a test locally
     """
-    managepy('test')
+    managepy_local('test')
+
+
+@task
+def migrate():
+    with lcd(BASEDIR):
+        managepy_local('migrate')
+
+
+@task
+def makemigrations(app):
+    with lcd(BASEDIR):
+        managepy_local('makemigrations %s' % app)
 
 
 @task
@@ -100,11 +112,11 @@ def install():
         pull_media()
 
         if os.path.exists('fixtures_live.json'):
-            managepy('loaddata fixtures_live.json')
+            managepy_local('loaddata fixtures_live.json')
         else:
-            managepy('createsuperuser')
+            managepy_local('createsuperuser')
 
-        managepy('collectstatic --noinput')
+        managepy_local('collectstatic --noinput')
 
 
 @task
@@ -144,7 +156,7 @@ def push_fixtures(name):
         tmp = run('mktemp -d')
         put(name, tmp)
         sudo('chown -R %s %s' % (env.CFG["user"], tmp))
-        managepy('loaddata %s/%s' % (tmp, name), remote=True)
+        managepy_remote('loaddata %s/%s' % (tmp, name))
         sudo('rm -rf %s' % tmp)
 
 
@@ -165,8 +177,8 @@ def push_db():
         tmp = run('mktemp -d')
         put('fixtures_live.json', tmp)
         sudo('chown -R %s %s' % (env.CFG["user"], tmp))
-        managepy('flush --no-initial-data --noinput', remote=True)
-        managepy('loaddata %s/fixtures_live.json' % tmp, remote=True)
+        managepy_remote('flush --no-initial-data --noinput')
+        managepy_remote('loaddata %s/fixtures_live.json' % tmp)
         sudo('rm -rf %s' % tmp)
 
 
@@ -181,12 +193,12 @@ def pull_db():
 
     with lcd(BASEDIR):
         tmp = sudo('mktemp', user=env.CFG["user"], group=env.CFG["group"])
-        managepy('dumpdata -n --indent=1 %s > %s' % (' -e '.join(COPY_DB_EXCLUDE), tmp), remote=True)
+        managepy_remote('dumpdata -n --indent=1 %s > %s' % (' -e '.join(COPY_DB_EXCLUDE), tmp))
         sudo('chown %s %s' % (env.user, tmp))
         get(tmp, 'fixtures_live.json')
         sudo('rm %s' % tmp)
         local('virtenv/bin/python manage.py migrate --noinput')
-        managepy('loaddata fixtures_live.json')
+        managepy_local('loaddata fixtures_live.json')
 
 
 @task
@@ -285,24 +297,20 @@ def update_cmstemplate():
         local('git merge -m "merge" cmstemplate')
     
 
-def managepy(cmd, remote=False):
-    """
-    Helper: run a management command remotely.
-    """
+def managepy_local(cmd):
+    with lcd(BASEDIR):
+        if not os.path.exists('virtenv') and os.path.exists('docker-compose.yml'):
+            local('docker-compose run --rm web python manage.py %s' % cmd)
+        else:
+            local('export DJANGO_DEBUG_TOOLBAR=True && virtenv/bin/python manage.py %s' % cmd)
 
-    if remote:
-        with cd(env.CFG['basedir']):
-            sudo(
-                'virtenv/bin/python manage.py %s' % (
-                    cmd
-                ),
-                user=env.CFG["user"],
-                group=env.CFG["group"],
-            )
-    else:
-        with lcd(BASEDIR):
-            local(
-                'export DJANGO_DEBUG_TOOLBAR=True && virtenv/bin/python manage.py %s' % (
-                    cmd
-                )
-            )
+
+def managepy_remote(cmd):
+    with cd(env.CFG['basedir']):
+        sudo(
+            'virtenv/bin/python manage.py %s' % (
+                cmd
+            ),
+            user=env.CFG["user"],
+            group=env.CFG["group"],
+        )

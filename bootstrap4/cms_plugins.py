@@ -15,6 +15,7 @@ from .models import Column
 from .models import ColumnClearfix
 from .models import MediaObject
 from .models import Image
+from .models import Embed
 
 
 class SectionPlugin(CMSPluginBase):
@@ -22,7 +23,7 @@ class SectionPlugin(CMSPluginBase):
     module = _("Bootstrap4")
     name = _("Section")
     render_template = "bootstrap4/section.html"
-    child_classes = ['RowPlugin', 'TextPlugin', 'ImagePlugin', 'MediaObjectPlugin']
+    child_classes = ['RowPlugin', 'EmbedPlugin', 'TextPlugin', 'ImagePlugin', 'MediaObjectPlugin']
     allow_children = True
     require_parent = False
 
@@ -111,3 +112,17 @@ class ImagePlugin(CMSPluginBase):
         context['css'] = instance.get_css()
         return context
 plugin_pool.register_plugin(ImagePlugin)
+
+
+class EmbedPlugin(CMSPluginBase):
+    model = Embed
+    module = _("Bootstrap4")
+    name = _("Embed")
+    render_template = "bootstrap4/embed.html"
+    parent_classes = ['ColumnPlugin', 'SectionPlugin', 'MediaObjectPlugin']
+    allow_children = False
+
+    def render(self, context, instance, placeholder):
+        context['instance'] = instance
+        return context
+plugin_pool.register_plugin(EmbedPlugin)
