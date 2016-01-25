@@ -270,7 +270,7 @@ except ImportError:
         }
     }
 
-if 'DJANGO_DEBUG_TOOLBAR' in os.environ:  # pragma: no cover
+if 'DJANGO_DEBUG_TOOLBAR' in os.environ and os.environ['DJANGO_DEBUG_TOOLBAR']:  # pragma: no cover
     INSTALLED_APPS += (
         'debug_toolbar',
     )
