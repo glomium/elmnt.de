@@ -463,9 +463,11 @@ class Image(CMSPlugin):
 class Embed(CMSPlugin):
     """
     """
-    source = models.BooleanField(
+    source = models.CharField(
         _('Source'),
-        default=True,
+        max_length=255,
+        blank=False,
+        null=True,
     )
     allow_fullscreen = models.BooleanField(
         _('Allow fullscreen'),
@@ -488,6 +490,6 @@ class Embed(CMSPlugin):
 
     def __str__(self):
         if self.source:
-            return 'Embed %s' % self.source
+            return '%s' % self.source
         else:
-            return 'Embed'
+            return 'None'
