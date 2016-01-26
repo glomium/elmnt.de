@@ -36,3 +36,6 @@ pytz==2015.7
 
 # 2016-01-26: current version
 pip==8.0.2
+
+# 2016-01-26: currently unused
+python-logstash==0.4.5
