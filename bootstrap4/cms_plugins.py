@@ -8,6 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
+from djangocms_link.cms_plugins import LinkPlugin as AbstractLinkPlugin
 
 from .models import Section
 from .models import Row
@@ -16,6 +17,7 @@ from .models import ColumnClearfix
 from .models import MediaObject
 from .models import Image
 from .models import Embed
+from .models import Button
 
 
 class SectionPlugin(CMSPluginBase):
@@ -23,7 +25,7 @@ class SectionPlugin(CMSPluginBase):
     module = _("Bootstrap4")
     name = _("Section")
     render_template = "bootstrap4/section.html"
-    child_classes = ['RowPlugin', 'EmbedPlugin', 'TextPlugin', 'ImagePlugin', 'MediaObjectPlugin']
+    child_classes = ['RowPlugin', 'EmbedPlugin', 'TextPlugin', 'ImagePlugin', 'MediaObjectPlugin', "ButtonPlugin"]
     allow_children = True
     require_parent = False
 
@@ -126,3 +128,21 @@ class EmbedPlugin(CMSPluginBase):
         context['instance'] = instance
         return context
 plugin_pool.register_plugin(EmbedPlugin)
+
+
+class ButtonPlugin(AbstractLinkPlugin):
+    model = Button
+    module = _("Bootstrap4")
+    name = _("Button")
+    render_template = "bootstrap4/button.html"
+    parent_classes = ['ColumnPlugin', 'SectionPlugin', 'MediaObjectPlugin', 'TextPlugin']
+    allow_children = False
+    text_enabled = True
+
+    def render(self, context, instance, placeholder):
+        context = super(ButtonPlugin, self).render(context, instance, placeholder)
+        context['size'] = ' btn-%s' % instance.size if instance.size else ''
+        context['color'] = 'btn-%s' % instance.color
+        return context
+
+plugin_pool.register_plugin(ButtonPlugin)

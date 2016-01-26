@@ -7,6 +7,7 @@ from django.utils.translation import ungettext_lazy
 from filer.fields.image import FilerImageField
 
 from cms.models import CMSPlugin
+from djangocms_link.models import AbstractLink
 
 
 GRID_XS = (
@@ -493,3 +494,45 @@ class Embed(CMSPlugin):
             return '%s' % self.source
         else:
             return 'None'
+
+
+class Button(AbstractLink):
+    """
+    """
+    size = models.CharField(
+        _('size'),
+        max_length=5,
+        blank=True,
+        null=False,
+        choices=(
+            ('', _('Normal')),
+            ('lg', _('Large')),
+            ('sm', _('Small')),
+        ),
+        default='',
+    )
+
+    color = models.CharField(
+        _('color'),
+        max_length=20,
+        blank=False,
+        null=True,
+        choices=(
+            ('primary', _('Primary')),
+            ('secondary', _('Secondary')),
+            ('success', _('Success')),
+            ('info', _('Info')),
+            ('warning', _('Warning')),
+            ('danger', _('Danger')),
+            ('primary-outline', _('Primary Outline')),
+            ('secondary-outline', _('Secondary Outline')),
+            ('success-outline', _('Success Outline')),
+            ('info-outline', _('Info Outline')),
+            ('warning-outline', _('Warning Outline')),
+            ('danger-outline', _('Danger Outline')),
+        ),
+        default='secondary',
+    )
+
+    class Meta:
+        abstract = False
