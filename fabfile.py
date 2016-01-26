@@ -94,6 +94,18 @@ def migrate():
 
 
 @task
+def makemigrations(app):
+    with lcd(BASEDIR):
+        managepy_local('makemigrations %s' % app)
+
+
+@task
+def flush():
+    with lcd(BASEDIR):
+        managepy_local('flush --no-initial-data --noinput')
+
+
+@task
 def loaddata(fixture):
     with lcd(BASEDIR):
         if not os.path.exists('virtenv') and os.path.exists('docker-compose.yml'):
@@ -104,29 +116,17 @@ def loaddata(fixture):
 
 
 @task
-def makemigrations(app):
-    with lcd(BASEDIR):
-        managepy_local('makemigrations %s' % app)
-
-
-@task
 def install():
     """
     installs the project locally
     """
     with lcd(BASEDIR): 
-        local('rm -f database.sqlite')
         migrate()
-
-        pull_db()
-        pull_media()
-
+        flush()
         if os.path.exists('fixtures_live.json'):
             loaddata('fixtures_live')
         else:
             managepy_local('createsuperuser')
-
-        managepy_local('collectstatic --noinput')
 
 
 @task
@@ -207,8 +207,7 @@ def pull_db():
         sudo('chown %s %s' % (env.user, tmp))
         get(tmp, 'fixtures_live.json')
         sudo('rm %s' % tmp)
-        migrate()
-        loaddata('fixtures_live')
+        install()
 
 
 @task
