@@ -432,6 +432,11 @@ class Image(CMSPlugin):
         null=True,
     )
 
+    use_source = models.BooleanField(
+        _('Use Source-Image'),
+        default=False,
+    )
+
     objects = ImageManager()
 
     def get_css(self):

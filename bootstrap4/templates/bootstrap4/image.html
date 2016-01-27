@@ -1,3 +1,16 @@
+{% if instance.use_source %}
+<p class="{{ css.layer }}">
+  {% if image %}
+    {% if link %}
+    <a href="{{ link }}" class="">
+        <img class="{{ css.image }}" src="{{ image.url }}" alt="{{ image.alt }}">
+    </a>
+    {% else %}
+    <img class="{{ css.image }}" src="{{ image.url }}" alt="{{ image.alt }}">
+    {% endif %}
+  {% endif %}
+</p>
+{% else %}
 {% load thumbnail %}
 <p class="{{ css.layer }}">
   {% if image %}
@@ -11,3 +24,4 @@
     {% endif %}
   {% endif %}
 </p>
+{% endif %}
