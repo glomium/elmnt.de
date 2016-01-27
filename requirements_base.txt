@@ -4,6 +4,9 @@ Django==1.8.8
 # 2016-01-26: current version
 django-cms==3.2.0
 
+# 2016-01-27: current version
+djangocms-admin-style==1.0.8
+
 # 2016-01-26: update from 1.4.X to current version
 django-crispy-forms==1.6.0
 
