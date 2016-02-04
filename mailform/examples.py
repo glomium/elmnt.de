@@ -33,7 +33,7 @@ class ContactForm(forms.Form):
         max_length=100,
     )
     message = forms.CharField(
-        label=_('Your Message'),
+        label=_('Your message'),
         required=True,
         widget=forms.Textarea,
     )
@@ -48,10 +48,10 @@ class ContactForm(forms.Form):
         helper.field_class = 'col-md-8 col-lg-9 m-b-1'
 
         helper.add_layout(Layout(
-            Field('name', placeholder=_("Your Name")),
+            Field('name', placeholder=_("Your name")),
             Field('email', placeholder=_("Your email")),
             Field('subject', placeholder=_("Subject")),
-            Field('message', placeholder=_("Your Message")),
+            Field('message', placeholder=_("Your message")),
             FormActions(
                   StrictButton(_('Reset'), type="reset", css_class="btn-default"),
                   StrictButton(_('Submit'), type="submit", css_class="btn-primary"),
