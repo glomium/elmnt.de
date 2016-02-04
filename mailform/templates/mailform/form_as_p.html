@@ -1,0 +1,11 @@
+{% if success %}
+<p>
+  <strong>Vielen Dank für Ihre Anfrage, wir werden uns umgehend bei Ihnen melden!</strong>
+</p>
+{% endif %}
+<form action="." method="post">{% csrf_token %}
+{{ form.as_p }}
+<p>
+  <input type="submit" value="Absenden" />
+</p>
+</form>
