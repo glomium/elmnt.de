@@ -4,14 +4,14 @@
 from __future__ import absolute_import
 
 from django import forms
-from django.utils.translation import ugettext_lazy as _
-
 from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext_lazy as _
 
 try:
     from crispy_forms.helper import FormHelper
     from crispy_forms.layout import Layout, Div, HTML
     from crispy_forms.bootstrap import FormActions, StrictButton
+    from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Field
     CRISPY = True
 except ImportError:
     CRISPY = False
@@ -33,26 +33,32 @@ class ContactForm(forms.Form):
         max_length=100,
     )
     message = forms.CharField(
-        label=_('Message'),
+        label=_('Your Message'),
         required=True,
         widget=forms.Textarea,
     )
 
-    def __init__(self,*args,**kwargs):
-        kwargs.update({'prefix': 'cnt'})
-        super(ContactForm,self).__init__(*args,**kwargs)
-        if CRISPY:
-            self.helper = FormHelper(self)
-            self.helper.layout = Layout(
-                'name',
-                'email',
-                'subject',
-                'message',
-                FormActions(
-                      StrictButton(_('Reset'), type="reset", css_class="btn-default"),
-                      StrictButton(_('Submit'), type="submit", css_class="btn-primary"),
-                ),
-            )
+    @property
+    def helper(self):
+        if not CRISPY:
+            return None
+        helper = FormHelper(self)
+        helper.form_method = 'POST'
+        helper.label_class = 'col-md-4 col-lg-3'
+        helper.field_class = 'col-md-8 col-lg-9 m-b-1'
+
+        helper.add_layout(Layout(
+            Field('name', placeholder=_("Your Name")),
+            Field('email', placeholder=_("Your email")),
+            Field('subject', placeholder=_("Subject")),
+            Field('message', placeholder=_("Your Message")),
+            FormActions(
+                  StrictButton(_('Reset'), type="reset", css_class="btn-default"),
+                  StrictButton(_('Submit'), type="submit", css_class="btn-primary"),
+                  css_class="text-right"
+            ),
+        ))
+        return helper
 
     def get_render_template(self):
         if CRISPY:

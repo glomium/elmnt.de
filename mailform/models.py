@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from cms.models import CMSPlugin, Page
 
 FORM_CHOICES = getattr(settings, 'CMSPLUGIN_MAILFORM_CHOICES', [
-  ('cmsplugin_mailform.examples.ContactForm', 'Kontakt-Formular'),
+  ('mailform.examples.ContactForm', 'Kontakt-Formular'),
 ])
 
 @python_2_unicode_compatible
