@@ -25,4 +25,4 @@ class MailformForm(ModelForm):
 
     class Meta:
         model = Mailform
-        include = ('site_email', 'formular' )
+        fields = ('site_email', 'formular', 'success_page')

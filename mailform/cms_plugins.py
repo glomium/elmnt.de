@@ -23,11 +23,21 @@ class MailformPlugin(CMSPluginBase):
     body_template = "mailform/body.txt"
     topic_template = "mailform/topic.txt"
     cache = False
+    # parent_classes = ['ColumnPlugin', 'MediaObjectPlugin']
 
     def render(self, context, instance, placeholder):
         request = context['request']
         component = instance.formular.split('.')
-        mod = __import__('.'.join(component[:-1]), fromlist=[component[-1],])
+
+        try:
+            mod = __import__('.'.join(component[:-1]), fromlist=[component[-1],])
+        except ImportError:
+            context.update({
+                'error': _('Could not import the form'),
+                'form': instance.formular,
+            })
+            return context
+
         formular = getattr(mod, component[-1])
         form = formular( request.POST or None )
 

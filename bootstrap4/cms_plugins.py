@@ -25,7 +25,7 @@ class SectionPlugin(CMSPluginBase):
     module = _("Bootstrap4")
     name = _("Section")
     render_template = "bootstrap4/section.html"
-    child_classes = ['RowPlugin', 'EmbedPlugin', 'TextPlugin', 'ImagePlugin', 'MediaObjectPlugin', "ButtonPlugin"]
+    child_classes = ['RowPlugin', 'EmbedPlugin', 'TextPlugin', 'ImagePlugin', 'MediaObjectPlugin', "ButtonPlugin", "MailformPlugin"]
     allow_children = True
     require_parent = False
 
@@ -88,7 +88,7 @@ class MediaObjectPlugin(CMSPluginBase):
     module = _("Bootstrap4")
     name = _("MediaObject")
     render_template = "bootstrap4/mediaobject.html"
-    parent_classes = ['ColumnPlugin', 'SectionPlugin', 'MediaObjectPlugin']
+    parent_classes = ['ColumnPlugin', 'SectionPlugin']
     allow_children = True
 
     def render(self, context, instance, placeholder):
