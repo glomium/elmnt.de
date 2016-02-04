@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
 
     'bootstrap4',
+    'mailform',
     'djangocms_text_ckeditor',
     'djangocms_link',
 #   'djangocms_googlemap',

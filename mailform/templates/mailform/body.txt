@@ -1,0 +1,2 @@
+Name: {{ data.name }}
+Nachricht: {{ data.message }}
