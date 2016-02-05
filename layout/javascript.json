@@ -1,13 +1,13 @@
 [
-    "./node_modules/bootstrap/js/dist/util.js",
-    "./node_modules/bootstrap/js/dist/alert.js",
-    "./node_modules/bootstrap/js/dist/button.js",
-    "./node_modules/bootstrap/js/dist/carousel.js",
-    "./node_modules/bootstrap/js/dist/collapse.js",
-    "./node_modules/bootstrap/js/dist/dropdown.js",
-    "./node_modules/bootstrap/js/dist/modal.js",
-    "./node_modules/bootstrap/js/dist/scrollspy.js",
-    "./node_modules/bootstrap/js/dist/tab.js",
+    "./node_modules/bootstrap/js/dist/umd/util.js",
+    "./node_modules/bootstrap/js/dist/umd/alert.js",
+    "./node_modules/bootstrap/js/dist/umd/button.js",
+    "./node_modules/bootstrap/js/dist/umd/carousel.js",
+    "./node_modules/bootstrap/js/dist/umd/collapse.js",
+    "./node_modules/bootstrap/js/dist/umd/dropdown.js",
+    "./node_modules/bootstrap/js/dist/umd/modal.js",
+    "./node_modules/bootstrap/js/dist/umd/scrollspy.js",
+    "./node_modules/bootstrap/js/dist/umd/tab.js",
     "./layout/build/project.coffee.js",
     "./layout/project.js"
 ]
