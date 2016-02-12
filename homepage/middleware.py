@@ -12,7 +12,7 @@ class DoNotTrackMiddleware(object):
     """
 
     def process_request(self, request):
-        if request.META.get('HTTP_DNT', '1') == '1':
+        if request.META.get('HTTP_DNT') == '1':
             request.DNT = True
         else:
             request.DNT = False
