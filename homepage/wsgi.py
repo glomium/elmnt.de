@@ -24,14 +24,12 @@ djangoapplication = get_wsgi_application()
 
 def application(*args, **kwargs):
     response = djangoapplication(*args, **kwargs)
-    if UWSGI and hasattr(response, '_request'):
-        request = getattr(response, '_request')
-
-        if hasattr(request, 'user') and request.user.is_authenticated():
-            uwsgi.set_logvar('user', str(request.user.pk))
-
-        uwsgi.set_logvar('dnt', str(getattr(request, 'DNT', None)).lower())
-    else:
-        uwsgi.set_logvar('dnt', 'none')
-
+    if UWSGI:
+        if hasattr(response, '_request'):
+            request = getattr(response, '_request')
+            if hasattr(request, 'user') and request.user.is_authenticated():
+                uwsgi.set_logvar('user', str(request.user.pk))
+            uwsgi.set_logvar('dnt', str(getattr(request, 'DNT', None)).lower())
+        else:
+            uwsgi.set_logvar('dnt', 'none')
     return response
