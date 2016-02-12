@@ -30,9 +30,9 @@ def application(*args, **kwargs):
             if hasattr(request, 'user') and request.user.is_authenticated():
                 uwsgi.set_logvar('django_user', str(request.user))
             else:
-                uwsgi.set_logvar('django_user', 'none')
+                uwsgi.set_logvar('django_user', '')
             uwsgi.set_logvar('django_dnt', str(getattr(request, 'DNT', None)).lower())
         else:
-            uwsgi.set_logvar('django_user', 'none')
+            uwsgi.set_logvar('django_user', '')
             uwsgi.set_logvar('django_dnt', 'none')
     return response
