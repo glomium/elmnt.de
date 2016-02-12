@@ -11,4 +11,27 @@ import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "homepage.settings")
 
 from django.core.wsgi import get_wsgi_application
-application = get_wsgi_application()
+
+try:
+    import uwsgi
+    UWSGI = True
+except ImportError:
+    UWSGI = False
+
+
+djangoapplication = get_wsgi_application()
+
+
+def application(*args, **kwargs):
+    response = djangoapplication(*args, **kwargs)
+    if UWSGI and hasattr(response, '_request'):
+        request = getattr(response, '_request')
+
+        if hasattr(request, 'user') and request.user.is_authenticated():
+            uwsgi.set_logvar('user', str(request.user.pk))
+
+        uwsgi.set_logvar('dnt', str(getattr(request, 'DNT', None)).lower())
+    else:
+        uwsgi.set_logvar('dnt', 'none')
+
+    return response
