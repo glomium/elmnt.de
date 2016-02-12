@@ -67,6 +67,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.contrib.admindocs.middleware.XViewMiddleware',
+    'homepage.middleware.DoNotTrackMiddleware',
     'cms.middleware.page.CurrentPageMiddleware',
     'cms.middleware.user.CurrentUserMiddleware',
     'cms.middleware.toolbar.ToolbarMiddleware',
@@ -121,6 +122,9 @@ TEMPLATES = [
                 'django.core.context_processors.request',
                 # adds messages to the request
                 'django.contrib.messages.context_processors.messages',
+
+                # adds the DoNotTrack as variable to the context
+                'homepage.context_processors.dnt',
 
                 'cms.context_processors.cms_settings',
                 'sekizai.context_processors.sekizai',
