@@ -18,8 +18,8 @@ module.exports = (grunt) ->
       options:
         bare: true
       compile:
-        files:
-          './layout/build/project.coffee.js': './layout/coffee.js'
+        src: grunt.file.readJSON "./layout/coffeescript.json"
+        dest: './layout/build/project.coffee.js'
 
 
     # https://www.npmjs.com/package/grunt-contrib-copy

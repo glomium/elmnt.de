@@ -1,4 +1,5 @@
 [
+    "./node_modules/tether/dist/js/tether.js",
     "./node_modules/bootstrap/dist/js/bootstrap.js",
     "./layout/stickyfill.js",
     "./layout/build/project.coffee.js",
