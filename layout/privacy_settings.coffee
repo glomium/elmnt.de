@@ -1,3 +1,7 @@
+# force linebreak
+###!
+###
+
 PrivacySettings =
     createCookie: (name, value, days) ->
         date = new Date()
