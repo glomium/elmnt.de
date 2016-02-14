@@ -1,4 +1,3 @@
 [
-    "./layout/privacy_settings.coffee",
     "./layout/project.coffee"
 ]
