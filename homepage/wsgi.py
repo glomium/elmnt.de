@@ -34,5 +34,5 @@ def application(*args, **kwargs):
             uwsgi.set_logvar('django_dnt', str(getattr(request, 'DNT', None)).lower())
         else:
             uwsgi.set_logvar('django_user', '')
-            uwsgi.set_logvar('django_dnt', 'none')
+            uwsgi.set_logvar('django_dnt', 'null')
     return response
