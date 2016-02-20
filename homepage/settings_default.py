@@ -241,7 +241,7 @@ LOGGING = {
     'root': {
         'handlers': ['logstash'],
         'level': 'INFO',
-    }
+    },
     'loggers': {
         'django.request': {
             'handlers': ['mail_admins'],
