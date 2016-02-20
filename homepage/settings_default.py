@@ -226,8 +226,24 @@ LOGGING = {
              'class': 'logging.StreamHandler',
              'formatter': 'verbose',
          },
+        'logstash':{
+             'level': 'INFO',
+             'filters': ['require_debug_false'],
+             'class': 'logstash.LogstashHandler',
+             'host': 'localhost',
+             'port': 5959,
+             'version': 1,
+             'message_type': 'django',
+             'fqdn': False,
+             'tags': ["cmstempalte", os.path.basename(BASE_DIR)]
+         },
     },
     'loggers': {
+        '': {
+            'handlers': ['logstash'],
+            'level': 'INFO',
+            'propagate': True,
+        },
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
