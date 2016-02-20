@@ -235,7 +235,7 @@ LOGGING = {
              'version': 1,
              'message_type': 'django',
              'fqdn': False,
-             'tags': ["cmstempalte", os.path.basename(BASE_DIR)]
+             'tags': ["cmstemplate", os.path.basename(BASE_DIR)]
          },
     },
     'loggers': {
