@@ -230,7 +230,7 @@ LOGGING = {
              'level': 'INFO',
              'filters': ['require_debug_false'],
              'class': 'logstash.LogstashHandler',
-             'host': 'localhost',
+             'host': '127.0.0.1',
              'port': 5959,
              'version': 1,
              'message_type': 'django',
@@ -238,11 +238,11 @@ LOGGING = {
              'tags': ["cmstemplate", os.path.basename(BASE_DIR)]
          },
     },
-    'root': {
-        'handlers': ['logstash'],
-        'level': 'INFO',
-    },
     'loggers': {
+        'root': {
+            'handlers': ['logstash'],
+            'level': 'INFO',
+        },
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
