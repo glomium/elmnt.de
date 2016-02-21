@@ -229,7 +229,7 @@ LOGGING = {
         'logstash':{
              'level': 'INFO',
              'filters': ['require_debug_false'],
-             'class': 'logstash.LogstashHandler',
+             'class': 'logstash.TCPLogstashHandler',
              'host': '127.0.0.1',
              'port': 5959,
              'version': 1,
