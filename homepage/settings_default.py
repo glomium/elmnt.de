@@ -238,11 +238,11 @@ LOGGING = {
              'tags': ["cmstemplate", os.path.basename(BASE_DIR)]
          },
     },
+    'root': {
+        'handlers': ['logstash'],
+        'level': 'INFO',
+    },
     'loggers': {
-        'root': {
-            'handlers': ['logstash'],
-            'level': 'INFO',
-        },
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
