@@ -208,7 +208,7 @@ def pull_db():
         if database:
             tmp = sudo('mktemp', user=env.CFG["user"], group=env.CFG["group"])
             sudo(
-                'PGPASSWORD="%s" pg_dump -d %s -h %s -p %s -U %s -x -O -E UTF-8 -Fc > %s' % (
+                'PGPASSWORD="%s" pg_dump -d %s -h %s -p %s -U %s -x -O -E UTF-8 -Fc --no-tablespaces --no-security-labels > %s' % (
                     database['PASSWORD'],
                     database['NAME'],
                     database['HOST'],
@@ -305,7 +305,7 @@ def get_database(config):
     virt = os.path.join(BASEDIR, 'virtenv')
     comp = os.path.join(BASEDIR, 'docker-compose.yml')
     with lcd(BASEDIR):
-        if not os.path.exists(virt) and os.path.exists(comp) or True:
+        if not os.path.exists(virt) and os.path.exists(comp):
             with cd(config['basedir']):
                 with settings(hide('stdout')):
                     database = json.loads(sudo(
