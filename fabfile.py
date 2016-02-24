@@ -208,7 +208,7 @@ def pull_db():
         if database:
             tmp = sudo('mktemp', user=env.CFG["user"], group=env.CFG["group"])
             sudo(
-                'PGPASSWORD="%s" pg_dump -d %s -h %s -p %s -U %s --no-owner --no-acl --no-privileges --no-tablespaces --no-security-labels -E UTF-8 -Fc > %s' % (
+                'PGPASSWORD="%s" pg_dump -d %s -h %s -p %s -U %s --no-owner --no-acl --no-privileges --no-tablespaces --no-security-labels --clean -E UTF-8 > %s' % (
                     database['PASSWORD'],
                     database['NAME'],
                     database['HOST'],
@@ -223,7 +223,9 @@ def pull_db():
             get(tmp, 'pg_database.dump')
             sudo('rm %s' % tmp)
             # TODO install database from dump
-            # PGPASSWORD="$POSTGRES_ENV_POSTGRES_PASSWORD" pg_restore -h $POSTGRES_1_PORT_5432_TCP_ADDR -p $POSTGRES_1_PORT_5432_TCP_PORT -U $POSTGRES_ENV_POSTGRES_USER -Fc -d postgres --no-owner -e /project/pg_database.dump
+            puts('You need to run:')
+            puts('> docker-compose -f dbshell.yml run --rm dbshell /bin/bash')
+            puts('> PGPASSWORD="$POSTGRES_ENV_POSTGRES_PASSWORD" psql -h $POSTGRES_1_PORT_5432_TCP_ADDR -p $POSTGRES_1_PORT_5432_TCP_PORT -U $POSTGRES_ENV_POSTGRES_USER -d postgres -f /project/pg_database.dump')
         else:
             tmp = sudo('mktemp', user=env.CFG["user"], group=env.CFG["group"])
             managepy_remote('dumpdata -n --indent=1 %s > %s' % (' -e '.join(COPY_DB_EXCLUDE), tmp))
