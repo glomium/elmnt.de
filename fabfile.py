@@ -5,6 +5,7 @@ from fabric.api import *
 from fabric.contrib import files
 from fabric.contrib import project
 
+import json
 import os
 
 
@@ -201,13 +202,39 @@ def pull_db():
         puts("You need to load an environment")
         return False
 
+    database = get_database(env.CFG)
+
     with lcd(BASEDIR):
-        tmp = sudo('mktemp', user=env.CFG["user"], group=env.CFG["group"])
-        managepy_remote('dumpdata -n --indent=1 %s > %s' % (' -e '.join(COPY_DB_EXCLUDE), tmp))
-        sudo('chown %s %s' % (env.user, tmp))
-        get(tmp, 'fixtures_live.json')
-        sudo('rm %s' % tmp)
-        install()
+        if database:
+            tmp = sudo('mktemp', user=env.CFG["user"], group=env.CFG["group"])
+            sudo(
+                'PGPASSWORD="%s" pg_dump -d %s -h %s -p %s -U %s --no-owner --no-acl --no-privileges --no-tablespaces --no-security-labels --clean -E UTF-8 > %s' % (
+                    database['PASSWORD'],
+                    database['NAME'],
+                    database['HOST'],
+                    database['PORT'],
+                    database['USER'],
+                    tmp,
+                ),
+                user=env.CFG["user"],
+                group=env.CFG["group"],
+            )
+            sudo('chown %s %s' % (env.user, tmp))
+            get(tmp, 'pg_database.dump')
+            sudo('rm %s' % tmp)
+            # TODO install database from dump
+            puts('-' * 80)
+            puts('(!) You need to run:')
+            puts('> docker-compose -f dbshell.yml run --rm dbshell /bin/bash')
+            puts('> PGPASSWORD="$POSTGRES_ENV_POSTGRES_PASSWORD" psql -h $POSTGRES_1_PORT_5432_TCP_ADDR -p $POSTGRES_1_PORT_5432_TCP_PORT -U $POSTGRES_ENV_POSTGRES_USER -d postgres -f /project/pg_database.dump')
+            puts('-' * 80)
+        else:
+            tmp = sudo('mktemp', user=env.CFG["user"], group=env.CFG["group"])
+            managepy_remote('dumpdata -n --indent=1 %s > %s' % (' -e '.join(COPY_DB_EXCLUDE), tmp))
+            sudo('chown %s %s' % (env.user, tmp))
+            get(tmp, 'fixtures_live.json')
+            sudo('rm %s' % tmp)
+            install()
 
 
 @task
@@ -277,6 +304,27 @@ def deploy():
     if not hasattr(env, 'CFG'):
         puts("You should load an environment!")
     sudo('salt-call state.sls hosting.cmstemplate')
+
+
+def get_database(config):
+    virt = os.path.join(BASEDIR, 'virtenv')
+    comp = os.path.join(BASEDIR, 'docker-compose.yml')
+    with lcd(BASEDIR):
+        if not os.path.exists(virt) and os.path.exists(comp):
+            with cd(config['basedir']):
+                with settings(hide('stdout')):
+                    database = json.loads(sudo(
+                        'python -c "from homepage import settings; import json; print(json.dumps(settings.DATABASES[\'default\']))"',
+                        user=config["user"],
+                        group=config["group"],
+                    ))
+            if database.pop('ENGINE', None) == "django.db.backends.postgresql_psycopg2":
+                if not database.get('PORT') and database.get('HOST'):
+                    database['PORT'] = 5432
+                return database
+            else:
+                return {}
+    return {}
 
 
 # HELPER Methods ==============================================================

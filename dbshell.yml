@@ -1,0 +1,14 @@
+# docker compose file to start a database shell
+
+postgres:
+  image: postgres
+  environment:
+    - POSTGRES_PASSWORD=password
+    - POSTGRES_USER=postgres
+
+dbshell:
+  image: postgres
+  volumes:
+    - .:/project:ro
+  links:
+    - postgres
