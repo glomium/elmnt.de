@@ -30,6 +30,7 @@ INSTALLED_APPS += [
     'gallery',
     'weights',
     'elmnt',
+    'cmspygments',
 ]
 
 TEMPLATES[0]['OPTIONS']['context_processors'] += ['elmnt.context_processors.page_header']
