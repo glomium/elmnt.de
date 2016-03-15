@@ -25,7 +25,7 @@ class SectionPlugin(CMSPluginBase):
     module = _("Bootstrap4")
     name = _("Section")
     render_template = "bootstrap4/section.html"
-    child_classes = ['RowPlugin', 'EmbedPlugin', 'TextPlugin', 'ImagePlugin', 'MediaObjectPlugin', "ButtonPlugin", "MailformPlugin"]
+    # child_classes = ['RowPlugin', 'EmbedPlugin', 'TextPlugin', 'ImagePlugin', 'MediaObjectPlugin', "ButtonPlugin", "MailformPlugin"]
     allow_children = True
     require_parent = False
 
