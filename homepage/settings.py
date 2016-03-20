@@ -10,6 +10,8 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 
 from .settings_default import *
 
+# PROJECT_NAME = None
+
 ADMINS = (
     ('Sebastian Braun', 'sebastian@elmnt.de'),
 )
@@ -22,3 +24,5 @@ SERVER_EMAIL="noreply@elmnt.de"
 # Application definition
 INSTALLED_APPS += [
 ]
+
+exec("settings_auto.py")
