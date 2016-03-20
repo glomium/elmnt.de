@@ -12,7 +12,7 @@ import os
 
 gettext = lambda s: s
 BASE_DIR = os.path.join(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-PROJECT_NAME = None
+PROJECT_NAME = os.environ.get('PROJECT_NAME', None)
 
 DEBUG = False
 
@@ -261,8 +261,19 @@ CMSTEMPLATE_SITEMAPS = {
 
 # SESSION =========================================================================
 
-SESSION_ENGINE = None
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
+if PROJECT_NAME and 'MEMCACHED_PORT_11211_TCP_ADDR' in os.environ:  # pragma: no cover
+    SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+    CACHES = {
+       'default': {
+           'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+           'KEY_PREFIX': PROJECT_NAME,
+           'LOCATION': '%s:%s' % (
+                os.environ.get('MEMCACHED_PORT_11211_TCP_ADDR'),
+                os.environ.get('MEMCACHED_PORT_11211_TCP_PORT', 11211),
+           ),
+        },
+    }
 
 # LOCAL SETTINGS ==================================================================
 

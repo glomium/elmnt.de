@@ -24,5 +24,3 @@ SERVER_EMAIL="noreply@elmnt.de"
 # Application definition
 INSTALLED_APPS += [
 ]
-
-exec("settings_auto.py")
