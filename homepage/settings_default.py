@@ -12,6 +12,7 @@ import os
 
 gettext = lambda s: s
 BASE_DIR = os.path.join(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+PROJECT_NAME = os.environ.get('PROJECT_NAME', None)
 
 DEBUG = False
 
@@ -258,12 +259,12 @@ CMSTEMPLATE_SITEMAPS = {
     'cmspages': 'cms.sitemaps.CMSSitemap',
 }
 
+
 # LOCAL SETTINGS ==================================================================
 
 try:
     from local_settings import *
 except ImportError:
-    import sys
     SECRET_KEY = 'just-a-dummy-key-overwrite-it-in:local_settings.py'
     SITE_ID = 1
 
@@ -289,6 +290,25 @@ except ImportError:
             'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
         }
     }
+
+
+# SESSION =========================================================================
+
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
+if PROJECT_NAME and 'MEMCACHED_PORT_11211_TCP_ADDR' in os.environ:  # pragma: no cover
+    SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+    CACHES = {
+       'default': {
+           'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+           'KEY_PREFIX': PROJECT_NAME,
+           'LOCATION': '%s:%s' % (
+                os.environ.get('MEMCACHED_PORT_11211_TCP_ADDR'),
+                os.environ.get('MEMCACHED_PORT_11211_TCP_PORT', 11211),
+           ),
+        },
+    }
+
+# DEBUG TOOLBAR ===================================================================
 
 if 'DJANGO_DEBUG_TOOLBAR' in os.environ and os.environ['DJANGO_DEBUG_TOOLBAR']:  # pragma: no cover
     INSTALLED_APPS += (
