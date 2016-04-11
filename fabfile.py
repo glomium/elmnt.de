@@ -359,7 +359,7 @@ def managepy_local(cmd, toolbar=False):
     comp = os.path.join(BASEDIR, 'docker-compose.yml')
     with lcd(BASEDIR):
         if not os.path.exists(virt) and os.path.exists(comp):
-            local('docker-compose run --rm -e DJANGO_DEBUG_TOOLBAR=%s web python manage.py %s' % (1 if toolbar else '""', cmd))
+            local('docker-compose run --rm -p 8000:8000 -e DJANGO_DEBUG_TOOLBAR=%s web python manage.py %s' % (1 if toolbar else '""', cmd))
         else:
             local('export DJANGO_DEBUG_TOOLBAR=%s && virtenv/bin/python manage.py %s' % (1 if toolbar else '""', cmd))
 
