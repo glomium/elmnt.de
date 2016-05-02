@@ -8,5 +8,5 @@ from django.apps import AppConfig
 
 class Config(AppConfig):
     name = 'useraccounts'
-    label = 'accounts'
+    label = 'useraccounts'
     verbose_name = "Accounts"

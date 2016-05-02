@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-12 21:29+0200\n"
+"POT-Creation-Date: 2016-04-27 03:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,15 +18,49 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: models.py:21
+#: backends.py:33
+msgid "This account is inactive."
+msgstr ""
+
+#: backends.py:34
+msgid "Login denied - please try again later"
+msgstr ""
+
+#: backends.py:35
+msgid "The login is currently not available"
+msgstr ""
+
+#: forms.py:21
+msgid "Password"
+msgstr ""
+
+#: forms.py:24
+msgid ""
+"Please enter a correct login data. Note that both fields may be case-"
+"sensitive."
+msgstr ""
+
+#: forms.py:42
+msgid "Email or Username"
+msgstr ""
+
+#: forms.py:44
+msgid "Username"
+msgstr "Benutzername"
+
+#: forms.py:46 models.py:167
+msgid "Email"
+msgstr ""
+
+#: models.py:48
 msgid "username"
 msgstr "Username"
 
-#: models.py:24
+#: models.py:51
 msgid "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
 msgstr "150 Zeichen oder weniger. Nur Zahlen, Buchstaben @/./+/-/_"
 
-#: models.py:28
+#: models.py:55
 msgid ""
 "Enter a valid username. This value may contain only letters, numbers and @/./"
 "+/-/_ characters."
@@ -34,48 +68,112 @@ msgstr ""
 "Geben Sie einen gültigen Benutzernamen ein. Es sind nur Buchstaben, Zahlen "
 "und die Zeichen @/./+/-/_erlaubt"
 
-#: models.py:33
+#: models.py:60
 msgid "A user with that username already exists."
 msgstr "Ein Benutzer mit diesem Namen existiert schon"
 
-#: models.py:36
+#: models.py:63
 msgid "first name"
 msgstr "Vorname"
 
-#: models.py:37
+#: models.py:64
 msgid "last name"
 msgstr "Nachname"
 
-#: models.py:38
+#: models.py:65 models.py:108
 msgid "email address"
 msgstr "Email Adresse"
 
-#: models.py:39
+#: models.py:66
+msgid "auth_token"
+msgstr ""
+
+#: models.py:67
 msgid "staff status"
 msgstr ""
 
-#: models.py:40
+#: models.py:68
 msgid "Designates whether the user can log into this admin site."
 msgstr ""
 
-#: models.py:42
+#: models.py:70
 msgid "active"
 msgstr ""
 
-#: models.py:43
+#: models.py:71
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
 msgstr ""
 
-#: models.py:46
+#: models.py:74 models.py:117
+msgid "valid"
+msgstr ""
+
+#: models.py:75
+msgid "Designates if the user has a valid email address."
+msgstr ""
+
+#: models.py:77
 msgid "date joined"
 msgstr ""
 
-#: models.py:53
-msgid "user"
+#: models.py:84
+msgid "User"
 msgstr ""
 
-#: models.py:54
-msgid "users"
+#: models.py:85
+msgid "Users"
+msgstr ""
+
+#: models.py:112
+msgid "primary"
+msgstr ""
+
+#: models.py:121
+msgid "validated"
+msgstr ""
+
+#: models.py:123
+msgid "created"
+msgstr ""
+
+#: models.py:124
+msgid "updated"
+msgstr ""
+
+#: models.py:168
+msgid "Emails"
+msgstr ""
+
+#: templates/useraccounts/logged_out.html:4
+msgid "Home"
+msgstr ""
+
+#: templates/useraccounts/logged_out.html:8
+msgid "Thanks for spending some quality time with the Web site today."
+msgstr ""
+
+#: templates/useraccounts/logged_out.html:10
+msgid "Log in again"
+msgstr ""
+
+#: templates/useraccounts/login.html:19
+msgid "Please correct the error below."
+msgstr ""
+
+#: templates/useraccounts/login.html:19
+msgid "Please correct the errors below."
+msgstr ""
+
+#: templates/useraccounts/login.html:45
+msgid "Forgotten your password or username?"
+msgstr ""
+
+#: templates/useraccounts/login.html:49
+msgid "Log in"
+msgstr ""
+
+#: viewsets.py:58
+msgid "Email is valid"
 msgstr ""
