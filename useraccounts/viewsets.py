@@ -89,7 +89,6 @@ class AccountViewSet(viewsets.ViewSet):
     @list_route(methods=['get', 'post'])
     def validate_password(self, request, **kwargs):
         if self.request.method == "GET":
-            # TODO get help text
             return Response({"help_text": help_text_password()})
         else:
             serializer = self.get_serializer(instance=self.request.user, data=request.data)

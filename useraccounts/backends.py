@@ -69,7 +69,7 @@ class AuthBackend(ModelBackend):
                     validate_email(username)
                     obj = email.objects.filter(
                         is_valid=True,
-                    ).select_related('user').order_by('is_primary').get(mail=username.lower())
+                    ).select_related('user').order_by('is_primary').get(email=username.lower())
                 except ValidationError:
                     pass
                 except email.DoesNotExist:
