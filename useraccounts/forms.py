@@ -10,6 +10,8 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
 
 from .conf import settings
+from .validators import validate_password
+from .validators import help_text_password
 
 
 class AuthenticationForm(forms.Form):
@@ -80,53 +82,41 @@ class AuthenticationForm(forms.Form):
     def get_user(self):
         return self.user_cache
 
-'''
 
-class SetPasswordForm(forms.Form):
+class BootstrapAuthenticationForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super(BootstrapAuthenticationForm, self).__init__(*args, **kwargs)
+        usermodel = get_user_model()
+        self.username_field = usermodel._meta.get_field(usermodel.USERNAME_FIELD)
+        field = self.fields.get('username')
+        field.widget = forms.TextInput(attrs={'placeholder': field.label, 'class': 'form-control'})
+        field = self.fields.get('password')
+        field.widget = forms.PasswordInput(attrs={'placeholder': field.label, 'class': 'form-control'})
+
+
+class PasswordChangeForm(forms.Form):
     """
-    A form that lets a user change set their password without entering the old
-    password
     """
     error_messages = {
         'password_mismatch': _("The two password fields didn't match."),
+        'password_incorrect': _("Your old password was entered incorrectly. Please enter it again."),
     }
-    new_password1 = forms.CharField(label=_("New password"),
-                                    widget=forms.PasswordInput)
-    new_password2 = forms.CharField(label=_("New password confirmation"),
-                                    widget=forms.PasswordInput)
+
+    old_password = forms.CharField(label=_("Old password"), widget=forms.PasswordInput)
+    new_password1 = forms.CharField(label=_("New password"), widget=forms.PasswordInput)
+    new_password2 = forms.CharField(label=_("New password confirmation"), widget=forms.PasswordInput)
 
     def __init__(self, user, *args, **kwargs):
         self.user = user
-        super(SetPasswordForm, self).__init__(*args, **kwargs)
-
-    def clean_new_password2(self):
-        password1 = self.cleaned_data.get('new_password1')
-        password2 = self.cleaned_data.get('new_password2')
-        if password1 and password2:
-            if password1 != password2:
-                raise forms.ValidationError(
-                    self.error_messages['password_mismatch'],
-                    code='password_mismatch',
-                )
-        return password2
+        super(PasswordChangeForm, self).__init__(*args, **kwargs)
+        self.help_text = help_text_password()
 
     def save(self, commit=True):
         self.user.set_password(self.cleaned_data['new_password1'])
         if commit:
             self.user.save()
+        # validation.password_changed(self.cleaned_data['new_password1'], self.user)
         return self.user
-
-
-class PasswordChangeForm(forms.Form):
-    """
-    A form that lets a user change their password by entering their old
-    password.
-    """
-    error_messages = dict(SetPasswordForm.error_messages, **{
-        'password_incorrect': _("Your old password was entered incorrectly. Please enter it again."),
-    })
-    old_password = forms.CharField(label=_("Old password"),
-                                   widget=forms.PasswordInput)
 
     def clean_old_password(self):
         """
@@ -140,8 +130,30 @@ class PasswordChangeForm(forms.Form):
             )
         return old_password
 
-PasswordChangeForm.base_fields = OrderedDict(
-    (k, PasswordChangeForm.base_fields[k])
-    for k in ['old_password', 'new_password1', 'new_password2']
-)
-'''
+    def clean_new_password1(self):
+        password = self.cleaned_data.get('new_password1')
+        validate_password(password, self.user)
+        return password
+
+    def clean_new_password2(self):
+        password1 = self.cleaned_data.get('new_password1')
+        password2 = self.cleaned_data.get('new_password2')
+        if password1 and password2:
+            if password1 != password2:
+                raise forms.ValidationError(
+                    self.error_messages['password_mismatch'],
+                    code='password_mismatch',
+                )
+        return password2
+
+
+class BootstrapPasswordChangeForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super(PasswordChangeForm, self).__init__(*args, **kwargs)
+
+        field = self.fields.get('old_password')
+        field.widget = forms.PasswordInput(attrs={'placeholder': _('Old password'), 'class': 'form-control'})
+        field = self.fields.get('new_password1')
+        field.widget = forms.PasswordInput(attrs={'placeholder': _('New password'), 'class': 'form-control'})
+        field = self.fields.get('new_password2')
+        field.widget = forms.PasswordInput(attrs={'placeholder': _('New password confirmation'), 'class': 'form-control'})

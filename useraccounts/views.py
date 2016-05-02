@@ -17,10 +17,13 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic.base import TemplateView
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import FormView
 
 from .forms import AuthenticationForm
+from .forms import PasswordChangeForm
 from .models import Email
 
 
@@ -58,7 +61,7 @@ class LoginView(FormView):
 
         # Ensure the user-originating redirection url is safe.
         if not is_safe_url(url=redirect_to, host=self.request.get_host()):
-            redirect_to = resolve_url(settings.LOGIN_REDIRECT_URL)
+            redirect_to = resolve_url(self.default_redirect_to)
 
         return redirect_to
 
@@ -92,6 +95,57 @@ class LogoutThenLoginView(LogoutView):
     Logs out the user if he is logged in. Then redirects to the log-in page.
     """
     next_page = settings.LOGIN_URL
+
+
+class PasswordChangeView(FormView):
+    """
+    """
+    form_class = PasswordChangeForm
+    template_name = "useraccounts/password_change_form.html"
+
+    @method_decorator(sensitive_post_parameters())
+    @method_decorator(csrf_protect)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(PasswordChangeView, self).dispatch(request, *args, **kwargs)
+
+    # current_app = None
+    # extra_context = None
+
+    #  def get_object(self, queryset=None):
+    #     return self.request.user
+
+    def get_form_kwargs(self):
+        kwargs = super(PasswordChangeView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.save(commit=True)
+        return super(PasswordChangeView, self).form_valid(form)
+
+
+# ===============================
+
+
+class EmailMixin(object):
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(EmailMixin, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return self.request.user.emails.all()
+
+
+class EmailListView(EmailMixin, ListView):
+    pass
+
+
+class EmailDetailView(EmailMixin, DetailView):
+    pass
+
+# ===============================
 
 
 class EmailValidationView(SingleObjectMixin, TemplateView):

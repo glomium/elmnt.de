@@ -1,57 +1,40 @@
-{% extends "admin/base_site.html" %}
-{% load i18n admin_static %}
+{% extends "base.html" %}
 
-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/login.css" %}" />{% endblock %}
+{% load i18n %}
 
-{% block bodyclass %}{{ block.super }} login{% endblock %}
+{% block title %}{% trans "Login" %}{% endblock %}
 
-{% block usertools %}{% endblock %}
-
-{% block nav-global %}{% endblock %}
-
-{% block content_title %}{% endblock %}
-
-{% block breadcrumbs %}{% endblock %}
-
-{% block content %}
-{% if form.errors and not form.non_field_errors %}
-<p class="errornote">
-{% if form.errors.items|length == 1 %}{% trans "Please correct the error below." %}{% else %}{% trans "Please correct the errors below." %}{% endif %}
-</p>
-{% endif %}
-
-{% if form.non_field_errors %}
-{% for error in form.non_field_errors %}
-<p class="errornote">
-    {{ error }}
-</p>
-{% endfor %}
-{% endif %}
-
-<div id="content-main">
-<form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
-  <div class="form-row">
-    {{ form.username.errors }}
-    {{ form.username.label_tag }} {{ form.username }}
+{% block base_content %}
+<div class="container" style="padding-top: 50px;">
+<div class="row">
+  <div class="col-sm-8 col-md-6 col-lg-4 col-sm-offset-2 col-md-offset-3 col-lg-offset-4">
+    <div class="card">
+        <div class="card-header">
+            {% trans "Please sign in" %}
+        </div>
+        <div class="card-block">
+            <form class="form" role="form" action="" method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="form-group">
+                    {{ form.username }}
+                    {{ form.username.errors }}
+                </div>
+                <div class="form-group">
+                    {{ form.password }}
+                    {{ form.password.errors }}
+                </div>
+                <input class="btn btn-primary btn-block" type="submit" value="{% trans "Login" %}">
+            </form>
+        </div>
+        <div class="card-footer"><small>
+            {% url 'accounts-register:index' as register %}
+            {% blocktrans trimmed %}
+            Please follow <a href="{{ register }}">this</a> Link to create a new account
+            {% endblocktrans %}
+        </small></div>
+    </div>
   </div>
-  <div class="form-row">
-    {{ form.password.errors }}
-    {{ form.password.label_tag }} {{ form.password }}
-    <input type="hidden" name="next" value="{{ next }}" />
-  </div>
-  {% url 'admin_password_reset' as password_reset_url %}
-  {% if password_reset_url %}
-  <div class="password-reset-link">
-    <a href="{{ password_reset_url }}">{% trans 'Forgotten your password or username?' %}</a>
-  </div>
-  {% endif %}
-  <div class="submit-row">
-    <label>&nbsp;</label><input type="submit" value="{% trans 'Log in' %}" />
-  </div>
-</form>
-
-<script type="text/javascript">
-document.getElementById('id_username').focus()
-</script>
+</div>
 </div>
 {% endblock %}
