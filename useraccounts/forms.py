@@ -157,7 +157,7 @@ class PasswordChangeForm(PasswordSetForm):
 
     def __init__(self, user, *args, **kwargs):
         self.user = user
-        super(PasswordChangeForm, self).__init__(*args, **kwargs)
+        super(PasswordChangeForm, self).__init__(user, *args, **kwargs)
         self.help_text = help_text_password()
 
     def save(self, commit=True):
