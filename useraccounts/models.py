@@ -142,11 +142,16 @@ class AbstractEmail(models.Model):
         self.update_primary()
         return data
 
-    def send_validation(self, request=None, skip=False):
-        signer = TimestampSigner(salt=appsettings.VALIDATION_SALT)
-        stamp, crypt = signer.sign(self.email).split(':')[1:3]
+    def get_signer(self):
+        return TimestampSigner(salt=appsettings.VALIDATION_SALT)
 
-        if skip or appsettings.VALIDATION_SEND_MAIL:
+    def get_activation_credentials(self):
+        return self.get_signer().sign(self.email).split(':')[1:3]
+
+    def send_validation(self, request=None, skip=False):
+        stamp, crypt = self.get_activation_credentials()
+
+        if not skip and appsettings.VALIDATION_SEND_MAIL:
             html = None
             if appsettings.VALIDATION_TEMPLATE_HTML:
                 try:
@@ -209,9 +214,8 @@ class AbstractEmail(models.Model):
             logger.info("%s has changed primary email to %s", self.user, self.email)
 
     def check_validation(self, stamp, crypt):
-        signer = TimestampSigner(salt=appsettings.VALIDATION_SALT)
         value = '%s:%s:%s' % (self.email, stamp, crypt)
-        return signer.unsign(value, max_age=(appsettings.VALIDATION_TIMEOUT * 3600))
+        return self.get_signer().unsign(value, max_age=(appsettings.VALIDATION_TIMEOUT * 3600))
 
     def validate(self):
         self.is_valid = True

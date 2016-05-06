@@ -94,7 +94,56 @@ class BootstrapAuthenticationForm(AuthenticationForm):
         field.widget = forms.PasswordInput(attrs={'placeholder': field.label, 'class': 'form-control'})
 
 
-class PasswordChangeForm(forms.Form):
+class PasswordSetForm(forms.Form):
+    """
+    """
+    error_messages = {
+        'password_mismatch': _("The two password fields didn't match."),
+    }
+
+    new_password1 = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
+    new_password2 = forms.CharField(label=_("Password confirmation"), widget=forms.PasswordInput)
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(PasswordSetForm, self).__init__(*args, **kwargs)
+        self.help_text = help_text_password()
+
+    def save(self, commit=True):
+        self.user.set_password(self.cleaned_data['new_password1'])
+        if commit:
+            self.user.save()
+        # validation.password_changed(self.cleaned_data['new_password1'], self.user)
+        return self.user
+
+    def clean_new_password1(self):
+        password = self.cleaned_data.get('new_password1')
+        validate_password(password, self.user)
+        return password
+
+    def clean_new_password2(self):
+        password1 = self.cleaned_data.get('new_password1')
+        password2 = self.cleaned_data.get('new_password2')
+        if password1 and password2:
+            if password1 != password2:
+                raise forms.ValidationError(
+                    self.error_messages['password_mismatch'],
+                    code='password_mismatch',
+                )
+        return password2
+
+
+class BootstrapPasswordSetForm(PasswordSetForm):
+    def __init__(self, *args, **kwargs):
+        super(BootstrapPasswordSetForm, self).__init__(*args, **kwargs)
+
+        field = self.fields.get('new_password1')
+        field.widget = forms.PasswordInput(attrs={'placeholder': _('Password'), 'class': 'form-control'})
+        field = self.fields.get('new_password2')
+        field.widget = forms.PasswordInput(attrs={'placeholder': _('Password confirmation'), 'class': 'form-control'})
+
+
+class PasswordChangeForm(PasswordSetForm):
     """
     """
     error_messages = {
@@ -130,26 +179,10 @@ class PasswordChangeForm(forms.Form):
             )
         return old_password
 
-    def clean_new_password1(self):
-        password = self.cleaned_data.get('new_password1')
-        validate_password(password, self.user)
-        return password
-
-    def clean_new_password2(self):
-        password1 = self.cleaned_data.get('new_password1')
-        password2 = self.cleaned_data.get('new_password2')
-        if password1 and password2:
-            if password1 != password2:
-                raise forms.ValidationError(
-                    self.error_messages['password_mismatch'],
-                    code='password_mismatch',
-                )
-        return password2
-
 
 class BootstrapPasswordChangeForm(PasswordChangeForm):
     def __init__(self, *args, **kwargs):
-        super(PasswordChangeForm, self).__init__(*args, **kwargs)
+        super(BootstrapPasswordChangeForm, self).__init__(*args, **kwargs)
 
         field = self.fields.get('old_password')
         field.widget = forms.PasswordInput(attrs={'placeholder': _('Old password'), 'class': 'form-control'})
