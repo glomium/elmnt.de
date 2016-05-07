@@ -4,12 +4,14 @@
 from __future__ import unicode_literals
 
 from django import forms
-from django.utils.translation import ugettext_lazy as _
-from django.utils.text import capfirst
 from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext_lazy as _
+from django.utils.text import capfirst
 
 from .conf import settings
+from .models import Email
 from .validators import validate_password
 from .validators import help_text_password
 
@@ -27,7 +29,7 @@ class AuthenticationForm(forms.Form):
                            "Note that both fields may be case-sensitive."),
     }
 
-    def __init__(self, request=None, *args, **kwargs):
+    def __init__(self, request=None, field_placeholder=True, field_class='form-control', *args, **kwargs):
         """
         The 'request' parameter is set for custom auth use by subclasses.
         The form data comes in via the standard 'data' kwarg.
@@ -38,7 +40,7 @@ class AuthenticationForm(forms.Form):
 
         # Set the label for the "username" field.
         model = get_user_model()
-        self.username_field = model._meta.get_field(model.USERNAME_FIELD)
+
         if self.fields['username'].label is None:
             if settings.LOGIN_EMAIL and settings.LOGIN_USERNAME:
                 self.fields['username'].label = _("Email or Username")
@@ -48,6 +50,16 @@ class AuthenticationForm(forms.Form):
                 self.fields['username'].label = _("Email")
             else:
                 self.fields['username'].label = capfirst(self.username_field.verbose_name)
+
+        for fieldname in ['username', 'password']:
+            field = self.fields.get(fieldname)
+            if 'placeholder' not in field.widget.attrs and field_placeholder:
+                field.widget.attrs['placeholder'] = field.label
+            if field_class:
+                if 'class' in field.widget.attrs:
+                    field.widget.attrs['class'] += ' ' + field_class
+                else:
+                    field.widget.attrs['class'] = field_class
 
     def clean(self):
         username = self.cleaned_data.get('username')
@@ -83,31 +95,31 @@ class AuthenticationForm(forms.Form):
         return self.user_cache
 
 
-class BootstrapAuthenticationForm(AuthenticationForm):
-    def __init__(self, *args, **kwargs):
-        super(BootstrapAuthenticationForm, self).__init__(*args, **kwargs)
-        usermodel = get_user_model()
-        self.username_field = usermodel._meta.get_field(usermodel.USERNAME_FIELD)
-        field = self.fields.get('username')
-        field.widget = forms.TextInput(attrs={'placeholder': field.label, 'class': 'form-control'})
-        field = self.fields.get('password')
-        field.widget = forms.PasswordInput(attrs={'placeholder': field.label, 'class': 'form-control'})
-
-
 class PasswordSetForm(forms.Form):
     """
     """
     error_messages = {
         'password_mismatch': _("The two password fields didn't match."),
     }
+    field_names = ['new_password1', 'new_password2']
 
     new_password1 = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
     new_password2 = forms.CharField(label=_("Password confirmation"), widget=forms.PasswordInput)
 
-    def __init__(self, user, *args, **kwargs):
+    def __init__(self, user, field_placeholder=True, field_class='form-control', *args, **kwargs):
         self.user = user
         super(PasswordSetForm, self).__init__(*args, **kwargs)
         self.help_text = help_text_password()
+
+        for fieldname in self.field_names:
+            field = self.fields.get(fieldname)
+            if 'placeholder' not in field.widget.attrs and field_placeholder:
+                field.widget.attrs['placeholder'] = field.label
+            if field_class:
+                if 'class' in field.widget.attrs:
+                    field.widget.attrs['class'] += ' ' + field_class
+                else:
+                    field.widget.attrs['class'] = field_class
 
     def save(self, commit=True):
         self.user.set_password(self.cleaned_data['new_password1'])
@@ -133,16 +145,6 @@ class PasswordSetForm(forms.Form):
         return password2
 
 
-class BootstrapPasswordSetForm(PasswordSetForm):
-    def __init__(self, *args, **kwargs):
-        super(BootstrapPasswordSetForm, self).__init__(*args, **kwargs)
-
-        field = self.fields.get('new_password1')
-        field.widget = forms.PasswordInput(attrs={'placeholder': _('Password'), 'class': 'form-control'})
-        field = self.fields.get('new_password2')
-        field.widget = forms.PasswordInput(attrs={'placeholder': _('Password confirmation'), 'class': 'form-control'})
-
-
 class PasswordChangeForm(PasswordSetForm):
     """
     """
@@ -150,14 +152,20 @@ class PasswordChangeForm(PasswordSetForm):
         'password_mismatch': _("The two password fields didn't match."),
         'password_incorrect': _("Your old password was entered incorrectly. Please enter it again."),
     }
+    field_names = ['new_password1', 'new_password2', 'old_password']
 
     old_password = forms.CharField(label=_("Old password"), widget=forms.PasswordInput)
     new_password1 = forms.CharField(label=_("New password"), widget=forms.PasswordInput)
     new_password2 = forms.CharField(label=_("New password confirmation"), widget=forms.PasswordInput)
 
-    def __init__(self, user, *args, **kwargs):
-        self.user = user
-        super(PasswordChangeForm, self).__init__(user, *args, **kwargs)
+    def __init__(self, user, field_placeholder=True, field_class='form-control', *args, **kwargs):
+        super(PasswordChangeForm, self).__init__(
+            user,
+            field_placeholder=field_placeholder,
+            field_class=field_class,
+            *args,
+            **kwargs
+        )
         self.help_text = help_text_password()
 
     def save(self, commit=True):
@@ -180,13 +188,40 @@ class PasswordChangeForm(PasswordSetForm):
         return old_password
 
 
-class BootstrapPasswordChangeForm(PasswordChangeForm):
-    def __init__(self, *args, **kwargs):
-        super(BootstrapPasswordChangeForm, self).__init__(*args, **kwargs)
+class EmailCreateForm(forms.ModelForm):
 
-        field = self.fields.get('old_password')
-        field.widget = forms.PasswordInput(attrs={'placeholder': _('Old password'), 'class': 'form-control'})
-        field = self.fields.get('new_password1')
-        field.widget = forms.PasswordInput(attrs={'placeholder': _('New password'), 'class': 'form-control'})
-        field = self.fields.get('new_password2')
-        field.widget = forms.PasswordInput(attrs={'placeholder': _('New password confirmation'), 'class': 'form-control'})
+    password = forms.CharField(label=_("Password"), widget=forms.PasswordInput())
+
+    def __init__(self, user, request=None, field_placeholder=True, field_class='form-control', *args, **kwargs):
+        self.request = request
+        self.user = user
+        super(EmailCreateForm, self).__init__(*args, **kwargs)
+
+        for fieldname in ['email', 'password']:
+            field = self.fields.get(fieldname)
+            if 'placeholder' not in field.widget.attrs and field_placeholder:
+                field.widget.attrs['placeholder'] = field.label
+            if field_class:
+                if 'class' in field.widget.attrs:
+                    field.widget.attrs['class'] += ' ' + field_class
+                else:
+                    field.widget.attrs['class'] = field_class
+
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        if not self.user.check_password(password):
+            raise ValidationError(_('Invalid password'))
+        return password
+
+    def save(self, commit=True):
+        self.instance.user = self.user
+        if commit:
+            self.instance.save()
+            self.instance.send_validation(self.request)
+        return self.user
+
+    class Meta:
+        model = Email
+        fields = [
+            'email',
+        ]

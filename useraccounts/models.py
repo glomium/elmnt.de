@@ -177,8 +177,9 @@ class AbstractEmail(models.Model):
                     'email': self.email,
                     'stamp': stamp,
                     'crypt': crypt,
-                    'viewname': appsettings.VALIDATION_VIEW_NAME,
+                    'viewname': appsettings.RESOLVE_EMAIL_VALIDATE,
                     'timeout': appsettings.VALIDATION_TIMEOUT,
+                    'request': request,
                 }
 
                 message = EmailMultiAlternatives(subject.render(context).strip(), to=[self.email])
@@ -237,6 +238,7 @@ class AbstractEmail(models.Model):
         verbose_name = _('Email')
         verbose_name_plural = _('Emails')
         abstract = True
+        ordering = ["email"]
 
 
 class User(AbstractUser):

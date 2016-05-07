@@ -35,10 +35,17 @@ class Settings(object):
         "VALIDATION_TIMEOUT": 72,
 
         "VALIDATION_SEND_MAIL": True,
-        "VALIDATION_VIEW_NAME": None,
         "VALIDATION_TEMPLATE_HTML": None,
         "VALIDATION_TEMPLATE_PLAIN": "useraccounts/email_validation.txt",
         "VALIDATION_TEMPLATE_SUBJECT": "useraccounts/email_validation.subject",
+
+        # resolve views
+        "RESOLVE_EMAIL_VALIDATE": None,
+        "REDIRECT_EMAIL_CREATE": None,
+        "REDIRECT_EMAIL_VALIDATE": None,
+        "REDIRECT_EMAIL_UPDATE": None,
+        "REDIRECT_EMAIL_DELETE": None,
+        "REDIRECT_EMAIL_RESEND": None,
 
         # username
         "USERNAME_VALIDATORS": [

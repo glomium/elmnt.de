@@ -4,11 +4,13 @@
 from __future__ import unicode_literals
 
 from django.conf import settings
+from django.contrib.auth import authenticate
 from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
+from django.http import Http404
 from django.shortcuts import redirect
 from django.shortcuts import resolve_url
 from django.utils.decorators import method_decorator
@@ -18,12 +20,17 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic.base import TemplateView
 from django.views.generic.list import ListView
-from django.views.generic.detail import DetailView
+# from django.views.generic.detail import DetailView
 from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.edit import CreateView
+from django.views.generic.edit import DeleteView
 from django.views.generic.edit import FormView
+from django.views.generic.edit import UpdateView
 
+from .conf import settings as appsettings
 from .forms import AuthenticationForm
 from .forms import PasswordChangeForm
+from .forms import EmailCreateForm
 from .models import Email
 
 
@@ -109,12 +116,6 @@ class PasswordChangeView(FormView):
     def dispatch(self, request, *args, **kwargs):
         return super(PasswordChangeView, self).dispatch(request, *args, **kwargs)
 
-    # current_app = None
-    # extra_context = None
-
-    #  def get_object(self, queryset=None):
-    #     return self.request.user
-
     def get_form_kwargs(self):
         kwargs = super(PasswordChangeView, self).get_form_kwargs()
         kwargs['user'] = self.request.user
@@ -123,9 +124,6 @@ class PasswordChangeView(FormView):
     def form_valid(self, form):
         form.save(commit=True)
         return super(PasswordChangeView, self).form_valid(form)
-
-
-# ===============================
 
 
 class EmailMixin(object):
@@ -138,30 +136,134 @@ class EmailMixin(object):
         return self.request.user.emails.all()
 
 
+class EmailEditMixin(EmailMixin):
+    slug_field = 'email'
+    slug_url_kwarg = 'email'
+
+    def get_queryset(self):
+        return super(EmailEditMixin, self).get_queryset().filter(is_primary=False)
+
+
 class EmailListView(EmailMixin, ListView):
     pass
 
 
-class EmailDetailView(EmailMixin, DetailView):
-    pass
+class EmailDeleteView(EmailEditMixin, DeleteView):
+    template_name = "useraccounts/email_delete_view.html"
+    success_url = appsettings.REDIRECT_EMAIL_DELETE
 
-# ===============================
+    def get_success_url(self):
+        if self.success_url:
+            return resolve_url(self.success_url)
+
+
+class EmailCreateView(EmailEditMixin, CreateView):
+    form_class = EmailCreateForm
+    template_name = "useraccounts/email_create_view.html"
+    success_url = appsettings.REDIRECT_EMAIL_CREATE
+
+    def get_form_kwargs(self):
+        kwargs = super(EmailCreateView, self).get_form_kwargs()
+        kwargs.update({"request": self.request, "user": self.request.user})
+        return kwargs
+
+    def get_success_url(self):
+        if self.success_url:
+            return resolve_url(self.success_url)
+
+
+class EmailUpdateView(SingleObjectMixin, TemplateView):
+    template_name = "useraccounts/email_update_view.html"
+    success_url = appsettings.REDIRECT_EMAIL_UPDATE
+    slug_field = 'email'
+    slug_url_kwarg = 'email'
+
+    @method_decorator(never_cache)
+    def dispatch(self, request, *args, **kwargs):
+        return super(EmailUpdateView, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return self.request.user.emails.filter(is_primary=False, is_valid=True)
+
+    def get_success_url(self):
+        return self.success_url
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_primary = True
+        self.object.save()
+
+        success_url = self.get_success_url()
+        if success_url:
+            next_page = resolve_url(success_url)
+            if next_page:
+                return HttpResponseRedirect(next_page)
+        return super(EmailUpdateView, self).get(request, *args, **kwargs)
+
+
+class EmailResendView(SingleObjectMixin, TemplateView):
+    template_name = "useraccounts/email_resend_view.html"
+    success_url = appsettings.REDIRECT_EMAIL_RESEND
+    slug_field = 'email'
+    slug_url_kwarg = 'email'
+
+    @method_decorator(never_cache)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(EmailResendView, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return self.request.user.emails.all().filter(is_valid=False)
+
+    def get_success_url(self):
+        if self.success_url:
+            return resolve_url(self.success_url)
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.send_validation(request=self.request, skip=False)
+        success_url = self.get_success_url()
+        if success_url:
+            return HttpResponseRedirect(next_page)
+        return super(EmailResendView, self).get(request, *args, **kwargs)
 
 
 class EmailValidationView(SingleObjectMixin, TemplateView):
     template_name = "useraccounts/email_validation_view.html"
+    success_url = appsettings.REDIRECT_EMAIL_VALIDATE
+    slug_field = 'email'
+    slug_url_kwarg = 'email'
 
-    @method_decorator(sensitive_post_parameters())
     @method_decorator(never_cache)
-    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super(EmailValidationView, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        return self.request.user.emails.all()
+        return Email.objects.filter(is_valid=False)
+
+    def get_success_url(self):
+        if self.success_url:
+            return resolve_url(self.success_url)
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if not self.object.check_validation(self.kwargs.get('stamp', None), self.kwargs.get('crypt', None)):
+            raise Http404
+
+        self.object.validate()
+
+        # # autologin user
+        # if not self.request.user.is_authenticated():
+        #     user = authenticate(username=self.object.user.username, request=self.request, require_password=False)
+        #     login(self.request, user)
+
+        success_url = self.get_success_url()
+        if success_url:
+            return HttpResponseRedirect(success_url)
+        return super(EmailResendView, self).get(request, *args, **kwargs)
+
 
 '''
-
 # Avoid shadowing the login() and logout() views below.
 from django.contrib.auth import (
     REDIRECT_FIELD_NAME, get_user_model, login as auth_login,
@@ -433,5 +535,4 @@ class CreateEmailView(FormView):
 
 class ValidateEmailView(FormView):
     pass
-
 '''
