@@ -138,6 +138,7 @@ class AbstractEmail(models.Model):
         return self.email
 
     def save(self, *args, **kwargs):
+        self.email = self.email.lower()
         data = super(AbstractEmail, self).save(*args, **kwargs)
         self.update_primary()
         return data
@@ -226,6 +227,7 @@ class AbstractEmail(models.Model):
             self.is_primary = True
             self.update_primary()
             user_validated.send(sender=self.__class__, user=self.user)
+            self.user.save()
             logger.info("%s is now valid", self.user)
 
         self.validated = timezone.now()

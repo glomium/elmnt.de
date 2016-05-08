@@ -207,6 +207,9 @@ class EmailCreateForm(forms.ModelForm):
                 else:
                     field.widget.attrs['class'] = field_class
 
+    def clean_email(self):
+        return self.cleaned_data.get('email').lower()
+
     def clean_password(self):
         password = self.cleaned_data.get('password')
         if not self.user.check_password(password):
