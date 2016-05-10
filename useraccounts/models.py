@@ -9,6 +9,8 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.core.mail.message import EmailMultiAlternatives
+from django.core.signing import BadSignature
+from django.core.signing import SignatureExpired
 from django.core.signing import TimestampSigner
 from django.core.urlresolvers import reverse
 from django.core.urlresolvers import NoReverseMatch
@@ -24,6 +26,7 @@ from .signals import email_changed
 from .signals import email_validated
 from .signals import user_validated
 from .signals import validation_send
+from .signals import password_restore_send
 from .validators import validate_username
 # from .validators import validate_password
 
@@ -143,11 +146,17 @@ class AbstractEmail(models.Model):
         self.update_primary()
         return data
 
-    def get_signer(self):
+    def get_validation_signer(self):
         return TimestampSigner(salt=appsettings.VALIDATION_SALT)
 
+    def get_restore_signer(self):
+        return TimestampSigner(salt=appsettings.RESTORE_SALT)
+
     def get_activation_credentials(self):
-        return self.get_signer().sign(self.email).split(':')[1:3]
+        return self.get_validation_signer().sign(self.email).split(':')[1:3]
+
+    def get_restore_credentials(self):
+        return self.get_restore_signer().sign(self.user.password).split(':')[1:3]
 
     def send_validation(self, request=None, skip=False):
         stamp, crypt = self.get_activation_credentials()
@@ -201,6 +210,76 @@ class AbstractEmail(models.Model):
         logger.info("%s has requested an email-validation for %s", self.user, self.email)
         return (stamp, crypt)
 
+    def send_restore(self, request=None, skip=False):
+        stamp, crypt = self.get_restore_credentials()
+
+        if not skip and appsettings.RESTORE_SEND_MAIL:
+            html = None
+            if appsettings.RESTORE_TEMPLATE_HTML:
+                try:
+                    html = get_template(appsettings.RESTORE_TEMPLATE_HTML)
+                except TemplateDoesNotExist:
+                    pass
+
+            plain = None
+            if appsettings.RESTORE_TEMPLATE_PLAIN:
+                try:
+                    plain = get_template(appsettings.RESTORE_TEMPLATE_PLAIN)
+                except TemplateDoesNotExist:
+                    pass
+
+            try:
+                subject = get_template(appsettings.RESTORE_TEMPLATE_SUBJECT)
+            except TemplateDoesNotExist:
+                subject = None
+
+            if subject and (html or plain):
+                context = {
+                    'user': self.user,
+                    'email': self.email,
+                    'stamp': stamp,
+                    'crypt': crypt,
+                    'viewname': appsettings.RESOLVE_PASSWORD_RESTORE,
+                    'timeout': appsettings.RESTORE_TIMEOUT,
+                    'request': request,
+                }
+
+                message = EmailMultiAlternatives(subject.render(context).strip(), to=[self.email])
+
+                if plain and html:
+                    message.body = plain.render(context).strip()
+                    message.attach_alternative(html.render(context).strip(), "text/html")
+                elif html:
+                    message.body = html.render(context).strip()
+                    message.content_subtype = "html"
+                else:
+                    message.body = plain.render(context).strip()
+                message.send()
+            else:
+                logger.critical("No subject or text provided for password restore. Sending validation-mail to %s aborted", self.email)
+
+        password_restore_send.send(sender=self.__class__, user=self.user, email=self.email, stamp=stamp, crypt=crypt, skip=skip)
+        logger.info("%s has requested a password restore for %s", self.user, self.email)
+        return (stamp, crypt)
+
+    def check_validation(self, stamp, crypt):
+        value = '%s:%s:%s' % (self.email, stamp, crypt)
+        try:
+            return self.get_validation_signer().unsign(value, max_age=(appsettings.VALIDATION_TIMEOUT * 3600))
+        except BadSignature:
+            return None
+        except SignatureExpired:
+            return None
+
+    def check_restore(self, stamp, crypt):
+        value = '%s:%s:%s' % (self.user.password, stamp, crypt)
+        try:
+            return self.get_restore_signer().unsign(value, max_age=(appsettings.RESTORE_TIMEOUT * 3600))
+        except BadSignature:
+            return None
+        except SignatureExpired:
+            return None
+
     def update_primary(self):
 
         # update the users email address, if they don't match
@@ -214,10 +293,6 @@ class AbstractEmail(models.Model):
             self.__class__.objects.filter(user=self.user).exclude(pk=self.pk).update(is_primary=False)
             email_changed.send(sender=self.__class__, user=self.user, email=self.email)
             logger.info("%s has changed primary email to %s", self.user, self.email)
-
-    def check_validation(self, stamp, crypt):
-        value = '%s:%s:%s' % (self.email, stamp, crypt)
-        return self.get_signer().unsign(value, max_age=(appsettings.VALIDATION_TIMEOUT * 3600))
 
     def validate(self):
         self.is_valid = True

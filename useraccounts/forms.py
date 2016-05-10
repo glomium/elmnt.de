@@ -188,6 +188,47 @@ class PasswordChangeForm(PasswordSetForm):
         return old_password
 
 
+class PasswordRecoverForm(forms.Form):
+
+    error_messages = {
+        'email_notfound': _("This email address is invalid."),
+    }
+
+    email = forms.CharField(label=_("Email"))
+
+    def __init__(self, request=None, field_placeholder=True, field_class='form-control', *args, **kwargs):
+        self.request = request
+        super(PasswordRecoverForm, self).__init__(*args, **kwargs)
+
+        for fieldname in ['email']:
+            field = self.fields.get(fieldname)
+            if 'placeholder' not in field.widget.attrs and field_placeholder:
+                field.widget.attrs['placeholder'] = field.label
+            if field_class:
+                if 'class' in field.widget.attrs:
+                    field.widget.attrs['class'] += ' ' + field_class
+                else:
+                    field.widget.attrs['class'] = field_class
+
+    def clean_email(self):
+        data = self.cleaned_data.get('email').lower()
+        count = Email.objects.filter(email=data, is_valid=True).count()
+        if count == 0:
+            raise forms.ValidationError(
+                self.error_messages['email_notfound'],
+                code='email_notfound',
+            )
+        return data
+
+    def save(self, commit=True):
+        email = Email.objects.select_related('user').get(
+            email=self.cleaned_data.get('email').lower(),
+            is_valid=True,
+        )
+        email.send_restore(self.request)
+        return email
+
+
 class EmailCreateForm(forms.ModelForm):
 
     password = forms.CharField(label=_("Password"), widget=forms.PasswordInput())

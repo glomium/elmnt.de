@@ -33,19 +33,32 @@ class Settings(object):
         # Email validation
         "VALIDATION_SALT": "useraccounts.email",
         "VALIDATION_TIMEOUT": 72,
-
         "VALIDATION_SEND_MAIL": True,
         "VALIDATION_TEMPLATE_HTML": None,
         "VALIDATION_TEMPLATE_PLAIN": "useraccounts/email_validation.txt",
         "VALIDATION_TEMPLATE_SUBJECT": "useraccounts/email_validation.subject",
 
+        # Password restore
+        "RESTORE_SALT": "useraccounts.restore",
+        "RESTORE_TIMEOUT": 24,
+        "RESTORE_SEND_MAIL": True,
+        "RESTORE_TEMPLATE_HTML": None,
+        "RESTORE_TEMPLATE_PLAIN": "useraccounts/email_restore.txt",
+        "RESTORE_TEMPLATE_SUBJECT": "useraccounts/email_restore.subject",
+
         # resolve views
+        "RESTORE_AUTOLOGIN": True,
         "RESOLVE_EMAIL_VALIDATE": None,
+        "RESOLVE_PASSWORD_RESTORE": None,
+
         "REDIRECT_EMAIL_CREATE": None,
         "REDIRECT_EMAIL_VALIDATE": None,
         "REDIRECT_EMAIL_UPDATE": None,
         "REDIRECT_EMAIL_DELETE": None,
         "REDIRECT_EMAIL_RESEND": None,
+
+        "REDIRECT_RESTORE_CREATE": None,
+        "REDIRECT_RESTORE_SUCCESS": None,
 
         # username
         "USERNAME_VALIDATORS": [

@@ -17,3 +17,5 @@ email_validated = Signal(providing_args=['user', 'email'])
 user_validated = Signal(providing_args=['user'])
 # send whenever a validation is send
 validation_send = Signal(providing_args=['user', 'email', 'stamp', 'crypt', 'skip'])
+# send whenever a password restore request is send
+password_restore_send = Signal(providing_args=['user', 'email', 'stamp', 'crypt', 'skip'])
