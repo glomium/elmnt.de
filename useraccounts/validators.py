@@ -111,30 +111,32 @@ class BaseCountValidator(object):
 
     def validate(self, password, user=None):
         if self.count(password) < self.min_length:
-            raise ValidationError(
-                ungettext(
-                    "The password must contain at least one %(name)s.",
-                    "The password must contain at least %(min_length)d %(name_plural)s.",
-                    self.min_length,
-                ),
-                code='number_count_too_short',
-                params={
-                    'min_length': self.min_length,
-                    'name': self.verbose_name,
-                    'name_plural': self.verbose_name_plural
-                },
-            )
+            if self.min_length > 1:
+                raise ValidationError(
+                    _("The password must contain at least %(min_length)d %(name)s."),
+                    code='number_count_too_short',
+                    params={
+                        'min_length': self.min_length,
+                        'name': self.verbose_name_plural,
+                    },
+                )
+            else:
+                raise ValidationError(
+                    _("The password must contain at least %(name)s."),
+                    code='number_count_too_short',
+                    params={
+                        'name': self.verbose_name,
+                    },
+                )
 
     def get_help_text(self):
-        return ungettext(
-            "The password must contain at least one %(name)s.",
-            "The password must contain at least %(min_length)d %(name_plural)s.",
-            self.min_length,
-        ) % {
-            'min_length': self.min_length,
-            'name': self.verbose_name,
-            'name_plural': self.verbose_name_plural
-        }
+        if self.min_length > 1:
+            return _("The password must contain at least %(name)s.") % self.verbose_name
+        else:
+            return _("The password must contain at least %(min_length)d %(name)s.") % {
+                'min_length': self.min_length,
+                'name_plural': self.verbose_name_plural
+            }
 
 class RegexValidator(object):
     expression = r'.*'
@@ -159,7 +161,7 @@ class RegexValidator(object):
 
 
 class NumericCharCountValidator(BaseCountValidator):
-    verbose_name = _("number")
+    verbose_name = _("one number")
     verbose_name_plural = _("numbers")
 
     def count(self, password):
@@ -171,7 +173,7 @@ class NumericCharCountValidator(BaseCountValidator):
 
 
 class LowerCharCountValidator(BaseCountValidator):
-    verbose_name = _("lower character")
+    verbose_name = _("one lower character")
     verbose_name_plural = _("lower characters")
 
     def count(self, password):
@@ -183,7 +185,7 @@ class LowerCharCountValidator(BaseCountValidator):
 
 
 class UpperCharCountValidator(BaseCountValidator):
-    verbose_name = _("upper character")
+    verbose_name = _("one upper character")
     verbose_name_plural = _("upper characters")
 
     def count(self, password):
@@ -195,7 +197,7 @@ class UpperCharCountValidator(BaseCountValidator):
 
 
 class SpecialCharCountValidator(BaseCountValidator):
-    verbose_name = _("special character")
+    verbose_name = _("one special character")
     verbose_name_plural = _("special characters")
 
     def count(self, password):
