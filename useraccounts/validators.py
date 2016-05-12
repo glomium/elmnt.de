@@ -135,7 +135,7 @@ class BaseCountValidator(object):
         else:
             return _("The password must contain at least %(min_length)d %(name)s.") % {
                 'min_length': self.min_length,
-                'name_plural': self.verbose_name_plural
+                'name': self.verbose_name_plural
             }
 
 class RegexValidator(object):
