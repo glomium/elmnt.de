@@ -106,28 +106,6 @@ class LogoutThenLoginView(LogoutView):
     next_page = settings.LOGIN_URL
 
 
-class PasswordChangeView(FormView):
-    """
-    """
-    form_class = PasswordChangeForm
-    template_name = "useraccounts/password_change_form.html"
-
-    @method_decorator(sensitive_post_parameters())
-    @method_decorator(csrf_protect)
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super(PasswordChangeView, self).dispatch(request, *args, **kwargs)
-
-    def get_form_kwargs(self):
-        kwargs = super(PasswordChangeView, self).get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
-
-    def form_valid(self, form):
-        form.save(commit=True)
-        return super(PasswordChangeView, self).form_valid(form)
-
-
 class EmailMixin(object):
 
     @method_decorator(login_required)
@@ -292,9 +270,37 @@ class PasswordRecoverView(FormView):
         return self.request.path
 
 
+class PasswordChangeView(FormView):
+    """
+    """
+    form_class = PasswordChangeForm
+    success_url = appsettings.REDIRECT_CHANGE_SUCCESS
+    template_name = "useraccounts/password_change_form.html"
+
+    @method_decorator(sensitive_post_parameters())
+    @method_decorator(csrf_protect)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(PasswordChangeView, self).dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super(PasswordChangeView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.save(commit=True)
+        return super(PasswordChangeView, self).form_valid(form)
+
+    def get_success_url(self):
+        if self.success_url:
+            return resolve_url(self.success_url)
+        return self.request.path
+
+
 class PasswordSetView(SingleObjectMixin, FormView):
     template_name = "useraccounts/password_set_form.html"
-    success_url = appsettings.REDIRECT_RESTORE_SUCCESS or settings.LOGIN_REDIRECT_URL
+    success_url = appsettings.REDIRECT_RESTORE_SUCCESS
     form_class = PasswordSetForm
     slug_field = 'email'
     slug_url_kwarg = 'email'

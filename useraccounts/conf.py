@@ -58,7 +58,9 @@ class Settings(object):
         "REDIRECT_EMAIL_RESEND": None,
 
         "REDIRECT_RESTORE_CREATE": None,
-        "REDIRECT_RESTORE_SUCCESS": None,
+        "REDIRECT_RESTORE_SUCCESS": djsettings.LOGIN_REDIRECT_URL,
+
+        "REDIRECT_CHANGE_SUCCESS": djsettings.LOGIN_REDIRECT_URL,
 
         # username
         "USERNAME_VALIDATORS": [
