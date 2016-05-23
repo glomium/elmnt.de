@@ -87,6 +87,11 @@ class AuthBackend(ModelBackend):
                         if self.user_can_authenticate(obj.user):
                             self.login_success(username, "email", obj.user)
                             return obj.user
+                        else:
+                            raise ValidationError(
+                                self.error_messages['inactive'],
+                                code='inactive',
+                            )
                         return None
                     self.login_failed(request, username, "email", now, obj.user)
                     return None
@@ -111,6 +116,11 @@ class AuthBackend(ModelBackend):
                         if self.user_can_authenticate(user):
                             self.login_success(username, "username", user)
                             return user
+                        else:
+                            raise ValidationError(
+                                self.error_messages['inactive'],
+                                code='inactive',
+                            )
                         return None
                     self.login_failed(request, username, "username", now, user)
                     return None
@@ -128,6 +138,11 @@ class AuthBackend(ModelBackend):
                 if self.user_can_authenticate(user):
                     self.login_success(token, "token", user)
                     return user
+                else:
+                    raise ValidationError(
+                        self.error_messages['inactive'],
+                        code='inactive',
+                    )
                 self.login_failed(request, token, "token", now, user)
                 return None
 
