@@ -1,15 +1,16 @@
+{% load i18n %}
 {% if error %}
 {{ error }} - {{ form }}
 {% else %}
 {% if success %}
 <p>
-  <strong>Vielen Dank für Ihre Anfrage, wir werden uns umgehend bei Ihnen melden!</strong>
+  <strong>{% trans "Thank you! Your message has been successfully sent. We will contact you very soon!" %}</strong>
 </p>
 {% endif %}
 <form action="." method="post">{% csrf_token %}
 {{ form.as_p }}
 <p>
-  <input type="submit" value="Absenden" />
+<input type="submit" value="{% trans 'Send' %}" />
 </p>
 </form>
 {% endif %}

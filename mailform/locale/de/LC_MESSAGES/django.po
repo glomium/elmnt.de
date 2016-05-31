@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-04 05:21+0100\n"
+"POT-Creation-Date: 2016-05-30 10:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -52,12 +52,36 @@ msgstr "Absenden"
 
 #: forms.py:16 forms.py:19 models.py:28
 msgid "Success page"
-msgstr ""
+msgstr "Erfolgsseite"
 
 #: models.py:18
 msgid "Email recipient"
-msgstr ""
+msgstr "Empfänger"
 
 #: models.py:21
 msgid "Formular"
+msgstr "Formular"
+
+#: templates/mailform/body.txt:2 templates/mailform/contact_email.txt:2
+msgid "Name"
+msgstr "Name"
+
+#: templates/mailform/body.txt:3
+msgid "Message"
+msgstr "Nachricht"
+
+#: templates/mailform/contact_topic.txt:1
+msgid "Contact"
+msgstr "Kontakt"
+
+#: templates/mailform/crispy_form.html:9 templates/mailform/form_as_p.html:7
+msgid ""
+"Thank you! Your message has been successfully sent. We will contact you very "
+"soon!"
 msgstr ""
+"Vielen Dank für Ihre Anfrage, wir werden uns umgehend bei"
+"ihnen melden!"
+
+#: templates/mailform/form_as_p.html:13
+msgid "Send"
+msgstr "Absenden"

@@ -1,1 +1,1 @@
-[HP:Kontakt] {{ data.subject }} ({{ data.name }})
+{% load i18n %}[{% trans "Contact" %}]: {{ data.subject }} ({{ data.name }})

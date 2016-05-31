@@ -1,1 +1,1 @@
-[melaniewiegmann.de] {{ data.subject }}
+{{ data.subject }}

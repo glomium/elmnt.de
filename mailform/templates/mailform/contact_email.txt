@@ -1,3 +1,6 @@
-Name: {{ data.name }}
+{% load i18n %}{% spaceless %}
+{% trans "Name" %}: {{ data.name }}
+
 
 {{ data.message }}
+{% endspaceless %}
