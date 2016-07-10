@@ -1,2 +1,4 @@
-Name: {{ data.name }}
-Nachricht: {{ data.message }}
+{% load i18n %}{% spaceless %}
+{% trans "Name" %}: {{ data.name }}
+{% trans "Message" %}: {{ data.message }}
+{% endspaceless %}

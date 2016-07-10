@@ -1,6 +1,6 @@
 # 2016-02-21: release 1.9.X is incompatible with django-cms
-# 2016-03-15: update from 1.8.9 to current version
-Django==1.8.11
+# 2016-04-11: update from 1.8.11 to current version
+Django==1.8.12
 
 # 2016-03-15: update from 3.2.0 to current version
 django-cms==3.2.3

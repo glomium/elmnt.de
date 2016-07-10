@@ -22,15 +22,17 @@ INTERNAL_IPS = ('127.0.0.1', '85.25.139.15')
 DEFAULT_FROM_EMAIL="sebastian@elmnt.de"
 SERVER_EMAIL="noreply@elmnt.de"
 
+AUTH_USER_MODEL="useraccounts.User"
+
 # Application definition
 INSTALLED_APPS += [
+    'rest_framework',
     # own apps
-#   'projects',
-#   'technologies',
     'gallery',
     'weights',
     'elmnt',
     'cmspygments',
+    'paragliding',
 ]
 
 TEMPLATES[0]['OPTIONS']['context_processors'] += ['elmnt.context_processors.page_header']
