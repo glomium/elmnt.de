@@ -32,6 +32,7 @@ INSTALLED_APPS += [
     'weights',
     'elmnt',
     'cmspygments',
+    'paragliding',
 ]
 
 TEMPLATES[0]['OPTIONS']['context_processors'] += ['elmnt.context_processors.page_header']
