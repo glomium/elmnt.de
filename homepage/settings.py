@@ -26,7 +26,7 @@ AUTH_USER_MODEL="useraccounts.User"
 
 # Application definition
 INSTALLED_APPS += [
-    'useraccounts',
+    'rest_framework',
     # own apps
     'gallery',
     'weights',

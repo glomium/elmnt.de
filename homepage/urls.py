@@ -7,11 +7,18 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.views.generic.base import RedirectView
 
+from rest_framework.routers import DefaultRouter
+
 from importlib import import_module
 from collections import OrderedDict
 
+from gallery.viewsets import PhotoViewSet
+
 
 admin.autodiscover()
+router = DefaultRouter()
+
+router.register(r'gallery', PhotoViewSet)
 
 
 if getattr(settings, 'CMSTEMPLATE_I18N_URL', False) or len(getattr(settings, 'LANGUAGES', [])) > 1:
@@ -32,6 +39,9 @@ urlpatterns = patterns(
     url(r'^sitemap\.xml$', 'index', {'sitemaps': SITEMAPS}),
     url(r'^sitemap-(?P<section>\w+)\.xml$', 'sitemap', {'sitemaps': SITEMAPS}),
 )
+urlpatterns += [
+    url(r'^api/', include(router.urls)),
+]
 
 urlpatterns += patterns(
     '',
