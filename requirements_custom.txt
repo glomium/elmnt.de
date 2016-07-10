@@ -1,3 +1,3 @@
 pygments==2.1.3
 djangorestframework==3.3.3
-git+https://github.com/glomium/paragliding@master
+-e git+https://github.com/glomium/paragliding@730a813545a6528aea174011e7ff4d3a286ae1f9#egg=paragliding
