@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # ex:set fileencoding=utf-8:
 
-from django.conf.urls import url, patterns
+from django.conf.urls import url
 
 from .views import PhotoListView
 from .views import PhotoDetailView
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(
         r'^$',
         PhotoListView.as_view(),
@@ -17,4 +17,4 @@ urlpatterns = patterns('',
         PhotoDetailView.as_view(),
         name='gallery-picture',
     ),
-)
+]

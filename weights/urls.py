@@ -1,5 +1,4 @@
 from django.conf.urls import url
-from django.conf.urls import patterns
 
 from .views import IndexView
 from .views import DataCreateView
@@ -8,7 +7,7 @@ from .views import DataUpdateView
 from .views import ProfileUpdateView
 from .views import csv_view
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(
         r'^$',
         IndexView.as_view(),
@@ -49,4 +48,4 @@ urlpatterns = patterns('',
         ProfileUpdateView.as_view(),
         name='weights-profile',
     ),
-)
+]
