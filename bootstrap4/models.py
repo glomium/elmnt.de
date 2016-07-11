@@ -328,12 +328,13 @@ class MediaObject(CMSPlugin):
         blank=False,
         null=True,
     )
-    image = FilerImageField(
+    picture2 = FilerImageField(
         null=True,
         blank=True,
         default=None,
         verbose_name=_("Image"),
         on_delete=models.SET_NULL,
+        related_name="+",
     )
     size = models.ForeignKey(
         ImageWidth,
@@ -371,12 +372,13 @@ class ImageManager(models.Manager):
 class Image(CMSPlugin):
     """
     """
-    image = FilerImageField(
+    picture = FilerImageField(
         null=True,
         blank=True,
         default=None,
         verbose_name=_("Image"),
         on_delete=models.SET_NULL,
+        related_name="+",
     )
     size = models.ForeignKey(
         ImageWidth,
