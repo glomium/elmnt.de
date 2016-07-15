@@ -43,3 +43,6 @@ pip==8.1.2
 
 # 2016-07-11: update to current version
 python-logstash==0.4.6
+
+# 2016-07-15: htmlib 0.999999999 has import errors (from html5lib import sanitizer)
+html5lib==0.9999999
