@@ -328,7 +328,7 @@ class MediaObject(CMSPlugin):
         blank=False,
         null=True,
     )
-    picture2 = FilerImageField(
+    picture = FilerImageField(
         null=True,
         blank=True,
         default=None,
