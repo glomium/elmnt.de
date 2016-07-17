@@ -23,6 +23,7 @@ DEFAULT_FROM_EMAIL="sebastian@elmnt.de"
 SERVER_EMAIL="noreply@elmnt.de"
 
 AUTH_USER_MODEL="useraccounts.User"
+AUTHENTICATION_BACKENDS = ['useraccounts.backends.AuthBackend']
 
 # Application definition
 INSTALLED_APPS += [

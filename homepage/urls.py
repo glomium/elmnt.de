@@ -18,11 +18,17 @@ from collections import OrderedDict
 from gallery.viewsets import PhotoViewSet
 from paragliding.views import parse_igc_file
 from paragliding.views import TrackViewSet
+from useraccounts.viewsets import AccountViewSet
+from useraccounts.viewsets import EmailViewSet
+from useraccounts.viewsets import UserViewSet
 
 
 admin.autodiscover()
 router = DefaultRouter()
 
+router.register(r'email', EmailViewSet)
+router.register(r'account', AccountViewSet, base_name="account")
+router.register(r'user', UserViewSet)
 router.register(r'gallery', PhotoViewSet)
 router.register(r'paragliding', TrackViewSet, base_name="track")
 
