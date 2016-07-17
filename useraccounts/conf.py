@@ -14,7 +14,6 @@ class Settings(object):
         # Enable login via...
         "LOGIN_EMAIL": True,
         "LOGIN_USERNAME": True,
-        "LOGIN_TOKEN": False,
 
         # Login security
         "CACHE_PREFIX": "useraccounts",

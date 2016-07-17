@@ -46,7 +46,6 @@ class AuthBackend(ModelBackend):
         # get variables
         request = kwargs.pop('request', None)
         require_password = kwargs.pop('require_password', True)
-        token = kwargs.pop('token', None)
         username = kwargs.pop('username', kwargs.pop('email', None))
         password = kwargs.pop('password', None)
 
@@ -62,7 +61,7 @@ class AuthBackend(ModelBackend):
             self.throttle_ip(request.META['REMOTE_ADDR'], now)
 
         # get user by username or email or password
-        if username and password and not token:
+        if username and password:
 
             # try to find the user by their email
             if settings.LOGIN_EMAIL:
@@ -125,28 +124,7 @@ class AuthBackend(ModelBackend):
                     self.login_failed(request, username, "username", now, user)
                     return None
 
-        # get the user by token
-        elif settings.LOGIN_TOKEN and token and not username and not password:
-            try:
-                user = model._default_manager.objects.get(auth_token=token)
-            except model.DoesNotExist:
-                pass
-            else:
-                if settings.THROTTLE_USER:
-                    self.throttle_user(user.pk, now)
-
-                if self.user_can_authenticate(user):
-                    self.login_success(token, "token", user)
-                    return user
-                else:
-                    raise ValidationError(
-                        self.error_messages['inactive'],
-                        code='inactive',
-                    )
-                self.login_failed(request, token, "token", now, user)
-                return None
-
-        self.login_failed(request, username or token, "nomatch", now)
+            self.login_failed(request, username, "nomatch", now)
 
     def user_can_authenticate(self, user):
         """
