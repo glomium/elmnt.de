@@ -14,6 +14,8 @@ ADMINS = (
     ('Sebastian Braun', 'sebastian@elmnt.de'),
 )
 
+CMS_TOOLBAR_ANONYMOUS_ON = False
+
 CMSTEMPLATE_I18N_URL = True
 CMSTEMPLATE_SITEMAPS['gallery'] = 'gallery.sitemaps.GallerySitemap'
 
