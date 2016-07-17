@@ -20,7 +20,7 @@ from paragliding.views import parse_igc_file
 from paragliding.views import TrackViewSet
 from useraccounts.forms import AuthenticationForm
 from useraccounts.viewsets import EmailViewSet
-from useraccounts.viewsets import UserViewSet
+# from useraccounts.viewsets import UserViewSet
 
 
 admin.autodiscover()
@@ -28,7 +28,7 @@ admin.site.login_form = AuthenticationForm
 router = DefaultRouter()
 
 router.register(r'email', EmailViewSet)
-router.register(r'user', UserViewSet)
+# router.register(r'user', UserViewSet)
 router.register(r'gallery', PhotoViewSet)
 router.register(r'paragliding', TrackViewSet, base_name="track")
 
