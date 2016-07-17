@@ -69,7 +69,7 @@ def export_local_db():
     Export local database into fixtures_live.json
     '''
     with lcd(BASEDIR):
-        managepy_local('dumpdata -n --indent=1 %s > fixtures_local.json' % (' -e '.join(COPY_DB_EXCLUDE)))
+        managepy_local('dumpdata --natural-foreign --indent=1 %s > fixtures_local.json' % (' -e '.join(COPY_DB_EXCLUDE)))
 
 
 @task
@@ -103,7 +103,7 @@ def makemigrations(app):
 @task
 def flush():
     with lcd(BASEDIR):
-        managepy_local('flush --no-initial-data --noinput')
+        managepy_local('flush --noinput')
 
 
 @task
@@ -188,7 +188,7 @@ def push_db():
         tmp = run('mktemp -d')
         put('fixtures_live.json', tmp)
         sudo('chown -R %s %s' % (env.CFG["user"], tmp))
-        managepy_remote('flush --no-initial-data --noinput')
+        managepy_remote('flush --noinput')
         managepy_remote('loaddata %s/fixtures_live.json' % tmp)
         sudo('rm -rf %s' % tmp)
 
@@ -230,7 +230,7 @@ def pull_db():
             puts('-' * 80)
         else:
             tmp = sudo('mktemp', user=env.CFG["user"], group=env.CFG["group"])
-            managepy_remote('dumpdata -n --indent=1 %s > %s' % (' -e '.join(COPY_DB_EXCLUDE), tmp))
+            managepy_remote('dumpdata --natural-foreign --indent=1 %s > %s' % (' -e '.join(COPY_DB_EXCLUDE), tmp))
             sudo('chown %s %s' % (env.user, tmp))
             get(tmp, 'fixtures_live.json')
             sudo('rm %s' % tmp)

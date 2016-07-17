@@ -94,7 +94,7 @@ class MediaObjectPlugin(CMSPluginBase):
     def render(self, context, instance, placeholder):
         context['size'] = (instance.size.width, instance.size.height)
         context['instance'] = instance
-        context['image'] = instance.image
+        context['image'] = instance.picture
         return context
 plugin_pool.register_plugin(MediaObjectPlugin)
 
@@ -110,7 +110,7 @@ class ImagePlugin(CMSPluginBase):
     def render(self, context, instance, placeholder):
         context['size'] = (instance.size.width, instance.size.height)
         context['instance'] = instance
-        context['image'] = instance.image
+        context['image'] = instance.picture
         context['css'] = instance.get_css()
         return context
 plugin_pool.register_plugin(ImagePlugin)

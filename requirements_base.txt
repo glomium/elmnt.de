@@ -30,7 +30,7 @@ djangocms-googlemap==0.5.1
 djangocms-link==1.8.1
 
 # 2016-07-11: update from 2.9.0 to current version
-djangocms-text-ckeditor==2.9.0
+djangocms-text-ckeditor==3.0.1
 
 # 2016-07-11: current version
 psycopg2==2.6.2
