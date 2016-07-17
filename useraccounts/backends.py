@@ -40,7 +40,7 @@ class AuthBackend(ModelBackend):
         """
         # set variables
         model = get_user_model()
-        email = model.emails.related.related_model().__class__
+        email = model.emails.rel.related_model().__class__
         now = datetime.now()
 
         # get variables
